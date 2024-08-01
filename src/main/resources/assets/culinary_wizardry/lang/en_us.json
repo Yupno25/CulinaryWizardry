@@ -1,3 +1,5 @@
 {
-  "item.culinary_wizardry.example_item": "Example Item"
+  "item.culinary_wizardry.example_item": "Example Item",
+
+  "block.culinary_wizardry.example_block": "Example Block"
 }

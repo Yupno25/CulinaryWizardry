@@ -1,6 +1,7 @@
 package com.yupno.culinary_wizardry;
 
 import com.mojang.logging.LogUtils;
+import com.yupno.culinary_wizardry.block.ModBlocks;
 import com.yupno.culinary_wizardry.item.ModItems;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -31,6 +32,7 @@ public class CulinaryWizardryMod
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModItems.register(eventBus);
+        ModBlocks.register(eventBus);
 
         eventBus.addListener(this::setup);
 
