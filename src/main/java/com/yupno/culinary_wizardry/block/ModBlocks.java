@@ -1,6 +1,7 @@
 package com.yupno.culinary_wizardry.block;
 
 import com.yupno.culinary_wizardry.CulinaryWizardryMod;
+import com.yupno.culinary_wizardry.item.ModCreativeModeTab;
 import com.yupno.culinary_wizardry.item.ModItems;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
@@ -21,7 +22,8 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> EXAMPLE_BLOCK = registerBlock("example_block",
             () -> new Block(BlockBehaviour.Properties.of(Material.METAL)
-                    .strength(9f).requiresCorrectToolForDrops()), CreativeModeTab.TAB_MISC);
+                    .strength(9f).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
 
 
 

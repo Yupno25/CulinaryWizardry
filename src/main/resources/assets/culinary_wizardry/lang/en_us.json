@@ -1,5 +1,7 @@
 {
   "item.culinary_wizardry.example_item": "Example Item",
 
-  "block.culinary_wizardry.example_block": "Example Block"
+  "block.culinary_wizardry.example_block": "Example Block",
+
+  "itemGroup.culinary_wizardry_tab": "Culinary Wizardry"
 }
