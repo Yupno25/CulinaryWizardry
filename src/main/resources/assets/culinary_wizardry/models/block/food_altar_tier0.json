@@ -1,0 +1,12 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "particle": "culinary_wizardry:block/food_altar_tier0_top",
+    "down": "culinary_wizardry:block/food_altar_tier0_bottom",
+    "west": "culinary_wizardry:block/food_altar_tier0_side",
+    "north": "culinary_wizardry:block/food_altar_tier0_side",
+    "east": "culinary_wizardry:block/food_altar_tier0_side",
+    "south": "culinary_wizardry:block/food_altar_tier0_side",
+    "up": "culinary_wizardry:block/food_altar_tier0_top"
+  }
+}

@@ -24,7 +24,9 @@ public class ModBlocks {
             () -> new Block(BlockBehaviour.Properties.of(Material.METAL)
                     .strength(9f).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
 
-
+    public static final RegistryObject<Block> FOOD_ALTAR_TIER0 = registerBlock("food_altar_tier0",
+            () -> new Block(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2.5F).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
 
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab) {
