@@ -1,6 +1,7 @@
 package com.yupno.culinary_wizardry.block;
 
-import com.yupno.culinary_wizardry.CulinaryWizardryMod;
+import com.yupno.culinary_wizardry.CulinaryWizardry;
+import com.yupno.culinary_wizardry.block.custom.FoodAltarTier0Block;
 import com.yupno.culinary_wizardry.item.ModCreativeModeTab;
 import com.yupno.culinary_wizardry.item.ModItems;
 import net.minecraft.world.item.BlockItem;
@@ -18,14 +19,14 @@ import java.util.function.Supplier;
 
 public class ModBlocks {
     public static final DeferredRegister<Block> BLOCKS =
-            DeferredRegister.create(ForgeRegistries.BLOCKS, CulinaryWizardryMod.MOD_ID);
+            DeferredRegister.create(ForgeRegistries.BLOCKS, CulinaryWizardry.MOD_ID);
 
     public static final RegistryObject<Block> EXAMPLE_BLOCK = registerBlock("example_block",
             () -> new Block(BlockBehaviour.Properties.of(Material.METAL)
                     .strength(9f).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
 
     public static final RegistryObject<Block> FOOD_ALTAR_TIER0 = registerBlock("food_altar_tier0",
-            () -> new Block(BlockBehaviour.Properties.of(Material.WOOD)
+            () -> new FoodAltarTier0Block(BlockBehaviour.Properties.of(Material.WOOD)
                     .strength(2.5F).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
 
 
