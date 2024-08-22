@@ -7,6 +7,8 @@ import com.yupno.culinary_wizardry.block.entity.custom.FoodAltarTier0BlockEntity
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -37,6 +39,12 @@ public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0
         if(menu.getFoodEssence() > 0){
             blit(pPoseStack, x + 152, y + 10 + (50 - menu.getScaledFoodEssence()), 176, 8, 16, menu.getScaledFoodEssence());
         }
+
+
+        if(isMouseAboveArea(pMouseX, pMouseY, x + 151, y + 9, 17, 51)){
+            renderTooltip(pPoseStack, new TranslatableComponent("food_altar_tier0.pure_culinary_essence")
+                    .append(": " + menu.getFoodEssence() + "/" + menu.getMaxFoodEssence()), pMouseX, pMouseY);
+        }
     }
 
     @Override
@@ -44,5 +52,9 @@ public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0
         renderBackground(pPoseStack);
         super.render(pPoseStack, mouseX, mouseY, delta);
         renderTooltip(pPoseStack, mouseX, mouseY);
+    }
+
+    private boolean isMouseAboveArea(int pMouseX, int pMouseY, int x, int y, int width, int height) {
+        return (pMouseX >= x && pMouseX <= x + width) && (pMouseY >= y && pMouseY <= y + height);
     }
 }

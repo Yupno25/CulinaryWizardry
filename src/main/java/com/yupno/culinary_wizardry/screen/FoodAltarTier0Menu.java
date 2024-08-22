@@ -57,6 +57,9 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
     public int getFoodEssence(){
         return data.get(2);
     }
+    public int getMaxFoodEssence(){
+        return data.get(3);
+    }
 
     public int getScaledFoodEssence(){
         int foodEssence = this.data.get(2);

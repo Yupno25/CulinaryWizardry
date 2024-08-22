@@ -29,7 +29,7 @@ public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
 
     @Override
     public boolean matches(SimpleFoodContainer pContainer, Level pLevel) {
-        return recipeItems.get(0).test(pContainer.getItem(0)) && pContainer.getFoodEssence() >= foodEssence; // MISSING CHECK FOR FOODESSENCE
+        return recipeItems.get(0).test(pContainer.getItem(0)) && pContainer.getFoodEssence() >= foodEssence;
     }
 
     @Override
