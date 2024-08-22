@@ -3,6 +3,7 @@ package com.yupno.culinary_wizardry.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.yupno.culinary_wizardry.CulinaryWizardry;
+import com.yupno.culinary_wizardry.block.entity.custom.FoodAltarTier0BlockEntity;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -26,6 +27,16 @@ public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0
         int y = (height - imageHeight) / 2;
 
         this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
+
+        pPoseStack.scale(1, 1, 1);
+
+        if(menu.isCrafting()) {
+            blit(pPoseStack, x + 70, y + 39, 176, 0, menu.getScaledProgress(), 8);
+        }
+
+        if(menu.getFoodEssence() > 0){
+            blit(pPoseStack, x + 152, y + 10 + (50 - menu.getScaledFoodEssence()), 176, 8, 16, menu.getScaledFoodEssence());
+        }
     }
 
     @Override

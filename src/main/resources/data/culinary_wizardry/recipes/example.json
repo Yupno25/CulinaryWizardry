@@ -1,0 +1,12 @@
+{
+  "type": "culinary_wizardry:food_altar_tier0",
+  "ingredients": [
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "output": {
+    "item": "culinary_wizardry:example_item"
+  },
+  "food_essence": 5
+}

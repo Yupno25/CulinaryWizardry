@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.yupno.culinary_wizardry.block.ModBlocks;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
 import com.yupno.culinary_wizardry.item.ModItems;
+import com.yupno.culinary_wizardry.recipe.ModRecipes;
 import com.yupno.culinary_wizardry.screen.FoodAltarTier0Screen;
 import com.yupno.culinary_wizardry.screen.ModMenuTypes;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -32,6 +33,8 @@ public class CulinaryWizardry
 
         ModBlockEntities.register(eventBus);
         ModMenuTypes.register(eventBus);
+
+        ModRecipes.register(eventBus);
 
         eventBus.addListener(this::clientSetup);
         eventBus.addListener(this::setup);

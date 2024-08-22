@@ -7,9 +7,7 @@ import com.yupno.culinary_wizardry.screen.slot.ModResultSlot;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,16 +17,18 @@ import net.minecraftforge.items.SlotItemHandler;
 public class FoodAltarTier0Menu extends AbstractContainerMenu {
     private final FoodAltarTier0BlockEntity blockEntity;
     private final Level level;
+    private final ContainerData data;
 
     public FoodAltarTier0Menu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()));
+        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
     }
 
-    public FoodAltarTier0Menu(int pContainerId, Inventory inv, BlockEntity entity) {
+    public FoodAltarTier0Menu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
         super(ModMenuTypes.FOOD_ALTAR_TIER0_MENU.get(), pContainerId);
         checkContainerSize(inv, 3);
         blockEntity = ((FoodAltarTier0BlockEntity) entity);
         this.level = inv.player.level;
+        this.data = data;
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
@@ -38,6 +38,32 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
             this.addSlot(new ModResultSlot(handler, 1, 102, 35));
             this.addSlot(new ModFoodSlot(handler, 2, 152, 64));
         });
+
+        addDataSlots(data);
+    }
+
+    public boolean isCrafting() {
+        return data.get(0) > 0;
+    }
+
+    public int getScaledProgress() {
+        int progress = this.data.get(0);
+        int maxProgress = this.data.get(1);  // Max Progress
+        int progressArrowSize = 26; // This is the height in pixels of your arrow
+
+        return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
+    }
+
+    public int getFoodEssence(){
+        return data.get(2);
+    }
+
+    public int getScaledFoodEssence(){
+        int foodEssence = this.data.get(2);
+        int maxFoodEssence = this.data.get(3);
+        int progressSize = 50; // This is the height in pixels of your texture
+
+        return maxFoodEssence != 0 && foodEssence != 0 ? foodEssence * progressSize / maxFoodEssence : 0;
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons

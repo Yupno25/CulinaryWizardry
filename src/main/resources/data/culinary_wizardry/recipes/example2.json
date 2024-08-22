@@ -1,0 +1,12 @@
+{
+  "type": "culinary_wizardry:food_altar_tier0",
+  "ingredients": [
+    {
+      "item": "minecraft:lapis_lazuli"
+    }
+  ],
+  "output": {
+    "item": "minecraft:diamond"
+  },
+  "food_essence": 20
+}
