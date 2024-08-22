@@ -36,14 +36,14 @@ public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0
             blit(pPoseStack, x + 70, y + 39, 176, 0, menu.getScaledProgress(), 8);
         }
 
-        if(menu.getFoodEssence() > 0){
-            blit(pPoseStack, x + 152, y + 10 + (50 - menu.getScaledFoodEssence()), 176, 8, 16, menu.getScaledFoodEssence());
+        if(menu.getPureCulinaryEssence() > 0){
+            blit(pPoseStack, x + 152, y + 10 + (50 - menu.getScaledPureCulinaryEssence()), 176, 8, 16, menu.getScaledPureCulinaryEssence());
         }
 
 
         if(isMouseAboveArea(pMouseX, pMouseY, x + 151, y + 9, 17, 51)){
             renderTooltip(pPoseStack, new TranslatableComponent("food_altar_tier0.pure_culinary_essence")
-                    .append(": " + menu.getFoodEssence() + "/" + menu.getMaxFoodEssence()), pMouseX, pMouseY);
+                    .append(": " + menu.getPureCulinaryEssence() + "/" + menu.getMaxPureCulinaryEssence()), pMouseX, pMouseY);
         }
     }
 

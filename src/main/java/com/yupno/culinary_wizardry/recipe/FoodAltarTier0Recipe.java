@@ -17,19 +17,19 @@ import javax.annotation.Nullable;
 public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
     private final ResourceLocation id;
     private final ItemStack output;
-    private final int foodEssence;
+    private final int pureCulinaryEssence;
     private final NonNullList<Ingredient> recipeItems;
 
-    public FoodAltarTier0Recipe(ResourceLocation id, ItemStack output, int foodEssence, NonNullList<Ingredient> recipeItems) {
+    public FoodAltarTier0Recipe(ResourceLocation id, ItemStack output, int pureCulinaryEssence, NonNullList<Ingredient> recipeItems) {
         this.id = id;
         this.output = output;
-        this.foodEssence = foodEssence;
+        this.pureCulinaryEssence = pureCulinaryEssence;
         this.recipeItems = recipeItems;
     }
 
     @Override
     public boolean matches(SimpleFoodContainer pContainer, Level pLevel) {
-        return recipeItems.get(0).test(pContainer.getItem(0)) && pContainer.getFoodEssence() >= foodEssence;
+        return recipeItems.get(0).test(pContainer.getItem(0)) && pContainer.getPureCulinaryEssence() >= pureCulinaryEssence;
     }
 
     @Override
@@ -47,8 +47,8 @@ public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
         return output.copy();
     }
 
-    public int getFoodEssenceCost() {
-        return foodEssence;
+    public int getPureCulinaryEssenceCost() {
+        return pureCulinaryEssence;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
             ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "output"));
 
             JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
-            int foodEssence = GsonHelper.getAsInt(json, "food_essence");
+            int pureCulinaryEssence = GsonHelper.getAsInt(json, "pure_culinary_essence");
 
             NonNullList<Ingredient> inputs = NonNullList.withSize(1, Ingredient.EMPTY);
 
@@ -90,7 +90,7 @@ public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
                 inputs.set(i, Ingredient.fromJson(ingredients.get(i)));
             }
 
-            return new FoodAltarTier0Recipe(id, output, foodEssence, inputs);
+            return new FoodAltarTier0Recipe(id, output, pureCulinaryEssence, inputs);
         }
 
         /* MAKE SURE FROM AND TO NETWORK HAVE THE SAME ORDER OF OPERATIONS */
@@ -106,8 +106,8 @@ public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
             }
 
             ItemStack output = buf.readItem();
-            int foodEssence = buf.readInt();
-            return new FoodAltarTier0Recipe(id, output, foodEssence, inputs);
+            int pureCulinaryEssence = buf.readInt();
+            return new FoodAltarTier0Recipe(id, output, pureCulinaryEssence, inputs);
         }
 
         @Override
@@ -117,7 +117,7 @@ public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
                 ing.toNetwork(buf);
             }
             buf.writeItemStack(recipe.getResultItem(), false);
-            buf.writeInt(recipe.getFoodEssenceCost());
+            buf.writeInt(recipe.getPureCulinaryEssenceCost());
         }
 
         @Override

@@ -3,13 +3,13 @@ package com.yupno.culinary_wizardry.utils;
 import net.minecraft.world.SimpleContainer;
 
 public class SimpleFoodContainer extends SimpleContainer {
-    private final int foodEssence;
-    public SimpleFoodContainer(int slots, int foodEssence) {
+    private final int pureCulinaryEssence;
+    public SimpleFoodContainer(int slots, int pureCulinaryEssence) {
         super(slots);
-        this.foodEssence = foodEssence;
+        this.pureCulinaryEssence = pureCulinaryEssence;
     }
 
-    public int getFoodEssence(){
-        return foodEssence;
+    public int getPureCulinaryEssence(){
+        return pureCulinaryEssence;
     }
 }

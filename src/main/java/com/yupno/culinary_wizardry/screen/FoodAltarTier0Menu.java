@@ -54,19 +54,19 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
         return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
     }
 
-    public int getFoodEssence(){
+    public int getPureCulinaryEssence(){
         return data.get(2);
     }
-    public int getMaxFoodEssence(){
+    public int getMaxPureCulinaryEssence(){
         return data.get(3);
     }
 
-    public int getScaledFoodEssence(){
-        int foodEssence = this.data.get(2);
-        int maxFoodEssence = this.data.get(3);
+    public int getScaledPureCulinaryEssence(){
+        int pureCulinaryEssence = this.data.get(2);
+        int maxPureCulinaryEssence = this.data.get(3);
         int progressSize = 50; // This is the height in pixels of your texture
 
-        return maxFoodEssence != 0 && foodEssence != 0 ? foodEssence * progressSize / maxFoodEssence : 0;
+        return maxPureCulinaryEssence != 0 && pureCulinaryEssence != 0 ? pureCulinaryEssence * progressSize / maxPureCulinaryEssence : 0;
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
