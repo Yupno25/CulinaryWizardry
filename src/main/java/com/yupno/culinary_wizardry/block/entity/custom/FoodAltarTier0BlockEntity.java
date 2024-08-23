@@ -3,6 +3,7 @@ package com.yupno.culinary_wizardry.block.entity.custom;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
 import com.yupno.culinary_wizardry.recipe.FoodAltarTier0Recipe;
 import com.yupno.culinary_wizardry.screen.FoodAltarTier0Menu;
+import com.yupno.culinary_wizardry.utils.CulinaryEssencesCalculation;
 import com.yupno.culinary_wizardry.utils.SimpleFoodContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -43,7 +44,7 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
     private int progress = 0;
     private int maxProgress = 72;
     private int pureCulinaryEssence = 0;
-    private int maxPureCulinaryEssence = 100;
+    private int maxPureCulinaryEssence = 1000;
 
     public FoodAltarTier0BlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.FOOD_ALTAR_TIER0_ENTITY.get(), pPos, pBlockState);
@@ -144,8 +145,9 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
         }
 
     if(pBlockEntity.itemHandler.getStackInSlot(2).isEdible() && pBlockEntity.pureCulinaryEssence < pBlockEntity.maxPureCulinaryEssence){
-        pBlockEntity.pureCulinaryEssence = Math.min(pBlockEntity.pureCulinaryEssence + pBlockEntity.itemHandler.getStackInSlot(2).getFoodProperties(null).getNutrition(),
-                pBlockEntity.maxPureCulinaryEssence);
+        pBlockEntity.pureCulinaryEssence = Math.min(pBlockEntity.pureCulinaryEssence +
+                        CulinaryEssencesCalculation.calculatePureFoodEssence(pBlockEntity.itemHandler.getStackInSlot(2), 0), pBlockEntity.maxPureCulinaryEssence);
+
         pBlockEntity.itemHandler.extractItem(2, 1, false);
         }
     }
