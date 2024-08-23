@@ -41,26 +41,22 @@ public class CulinaryEssencesCalculation {
         Map<IDietGroup, Float> map = DietApi.getInstance().get(null, food).get();
 
         if(!groups.isEmpty()){
-            float differentNutrients = 1;
+            int differentNutrients = 1;
 
             for (IDietGroup group : groups) {
                 totalPercentage += map.get(group) * differentNutrients;
-                differentNutrients += 1f;
+                differentNutrients++;
             }
 
             totalPercentage *= 100;
         }
 
-        /** Final calculations, bonus for bigger numbers */
+        /** Bonus for bigger numbers */
         tempPureFoodEssence = (float) Math.pow((tempPureFoodEssence * totalPercentage), 1.1);
 
-        switch (level){
-            case 0:{tempPureFoodEssence *= 0.5f; break;}
-            case 1:{tempPureFoodEssence *= 0.75f; break;}
-            case 2:{break;}
-            case 3:{tempPureFoodEssence *= 1.25f; break;}
-            case 4:{tempPureFoodEssence *= 1.5f; break;}
-        }
+        /** Final calculations, takes level of food altar into consideration */
+        tempPureFoodEssence *= ((level * 0.25f) + 0.5f);
+
 
         LogUtils.getLogger().debug("Result: " + tempPureFoodEssence);
 
