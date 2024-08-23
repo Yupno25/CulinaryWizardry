@@ -52,13 +52,13 @@ public class CulinaryEssencesCalculation {
         }
 
         /** Bonus for bigger numbers */
-        tempPureFoodEssence = (float) Math.pow((tempPureFoodEssence * totalPercentage), 1.1);
+        tempPureFoodEssence = (float) Math.pow((tempPureFoodEssence * totalPercentage), 1.1) / 2;
 
         /** Final calculations, takes level of food altar into consideration */
         tempPureFoodEssence *= ((level * 0.25f) + 0.5f);
 
 
-        LogUtils.getLogger().debug("Result: " + tempPureFoodEssence);
+        //LogUtils.getLogger().debug("Result: " + tempPureFoodEssence);
 
         return Math.max(Math.round(tempPureFoodEssence), 1);
     }
