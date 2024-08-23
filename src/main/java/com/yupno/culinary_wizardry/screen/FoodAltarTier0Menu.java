@@ -20,7 +20,7 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public FoodAltarTier0Menu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
+        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
     }
 
     public FoodAltarTier0Menu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -55,18 +55,26 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
     }
 
     public int getPureCulinaryEssence(){
-        return data.get(2);
+        return data.get(4);
     }
     public int getMaxPureCulinaryEssence(){
-        return data.get(3);
+        return data.get(5);
     }
 
     public int getScaledPureCulinaryEssence(){
-        int pureCulinaryEssence = this.data.get(2);
-        int maxPureCulinaryEssence = this.data.get(3);
+        int pureCulinaryEssence = this.data.get(4);
+        int maxPureCulinaryEssence = this.data.get(5);
         int progressSize = 50; // This is the height in pixels of your texture
 
         return maxPureCulinaryEssence != 0 && pureCulinaryEssence != 0 ? pureCulinaryEssence * progressSize / maxPureCulinaryEssence : 0;
+    }
+
+    public boolean isProcessing() {
+        return data.get(2) > 0;
+    }
+
+    public int getFoodProgress(){
+        return this.data.get(2);
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons

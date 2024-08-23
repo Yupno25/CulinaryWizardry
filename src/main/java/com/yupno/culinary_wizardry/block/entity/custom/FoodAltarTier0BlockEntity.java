@@ -43,6 +43,9 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
     protected final ContainerData data;
     private int progress = 0;
     private int maxProgress = 72;
+
+    private int foodProgress = 0;
+    private int maxFoodProgress = 28;
     private int pureCulinaryEssence = 0;
     private int maxPureCulinaryEssence = 1000;
 
@@ -53,8 +56,10 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
                 switch (index) {
                     case 0: return FoodAltarTier0BlockEntity.this.progress;
                     case 1: return FoodAltarTier0BlockEntity.this.maxProgress;
-                    case 2: return FoodAltarTier0BlockEntity.this.pureCulinaryEssence;
-                    case 3: return FoodAltarTier0BlockEntity.this.maxPureCulinaryEssence;
+                    case 2: return FoodAltarTier0BlockEntity.this.foodProgress;
+                    case 3: return FoodAltarTier0BlockEntity.this.maxFoodProgress;
+                    case 4: return FoodAltarTier0BlockEntity.this.pureCulinaryEssence;
+                    case 5: return FoodAltarTier0BlockEntity.this.maxPureCulinaryEssence;
                     default: return 0;
                 }
             }
@@ -63,13 +68,15 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
                 switch(index) {
                     case 0: FoodAltarTier0BlockEntity.this.progress = value; break;
                     case 1: FoodAltarTier0BlockEntity.this.maxProgress = value; break;
-                    case 2: FoodAltarTier0BlockEntity.this.pureCulinaryEssence = value; break;
-                    case 3: FoodAltarTier0BlockEntity.this.maxPureCulinaryEssence = value; break;
+                    case 2: FoodAltarTier0BlockEntity.this.foodProgress = value; break;
+                    case 3: FoodAltarTier0BlockEntity.this.maxFoodProgress = value; break;
+                    case 4: FoodAltarTier0BlockEntity.this.pureCulinaryEssence = value; break;
+                    case 5: FoodAltarTier0BlockEntity.this.maxPureCulinaryEssence = value; break;
                 }
             }
 
             public int getCount() {
-                return 4;
+                return 6;
             }
         };
     }
@@ -112,6 +119,7 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
         tag.put("inventory", itemHandler.serializeNBT());
         tag.putInt("pureCulinaryEssence", pureCulinaryEssence);
         tag.putInt("progress", progress);
+        tag.putInt("foodProgress", foodProgress);
         super.saveAdditional(tag);
     }
 
@@ -121,6 +129,7 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
         pureCulinaryEssence = nbt.getInt("pureCulinaryEssence");
         progress = nbt.getInt("progress");
+        foodProgress = nbt.getInt("foodProgress");
     }
 
     public void drops() {
@@ -140,15 +149,24 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
             craftItem(pBlockEntity);
             }
         } else {
-        pBlockEntity.resetProgress();
-        setChanged(pLevel, pPos, pState);
+            pBlockEntity.resetProgress();
+            setChanged(pLevel, pPos, pState);
         }
 
-    if(pBlockEntity.itemHandler.getStackInSlot(2).isEdible() && pBlockEntity.pureCulinaryEssence < pBlockEntity.maxPureCulinaryEssence){
-        pBlockEntity.pureCulinaryEssence = Math.min(pBlockEntity.pureCulinaryEssence +
+        if(pBlockEntity.itemHandler.getStackInSlot(2).isEdible() && pBlockEntity.pureCulinaryEssence < pBlockEntity.maxPureCulinaryEssence){
+            pBlockEntity.foodProgress++;
+            setChanged(pLevel, pPos, pState);
+
+            if(pBlockEntity.foodProgress > pBlockEntity.maxFoodProgress){
+                pBlockEntity.pureCulinaryEssence = Math.min(pBlockEntity.pureCulinaryEssence +
                         CulinaryEssencesCalculation.calculatePureFoodEssence(pBlockEntity.itemHandler.getStackInSlot(2), 0), pBlockEntity.maxPureCulinaryEssence);
 
-        pBlockEntity.itemHandler.extractItem(2, 1, false);
+                pBlockEntity.itemHandler.extractItem(2, 1, false);
+                pBlockEntity.resetFoodProgress();
+            }
+        }else {
+            pBlockEntity.resetFoodProgress();
+            setChanged(pLevel, pPos, pState);
         }
     }
 
@@ -189,6 +207,10 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
 
     private void resetProgress() {
         this.progress = 0;
+    }
+
+    private void resetFoodProgress() {
+        this.foodProgress = 0;
     }
 
     private static boolean canInsertItemIntoOutputSlot(SimpleFoodContainer inventory, ItemStack output) {
