@@ -165,6 +165,7 @@ dependencies {
 
     implementation fg.deobf("curse.maven:diet-443570:4026294")
     implementation fg.deobf("curse.maven:appleskin-248787:3927564")
+    implementation fg.deobf("curse.maven:pams-harvestcraft-2-food-core-372534:3951938")
 
     // Real mod deobf dependency examples - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
