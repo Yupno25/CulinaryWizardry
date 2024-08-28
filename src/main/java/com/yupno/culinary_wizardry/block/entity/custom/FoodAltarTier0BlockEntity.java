@@ -1,5 +1,6 @@
 package com.yupno.culinary_wizardry.block.entity.custom;
 
+import com.yupno.culinary_wizardry.block.custom.FoodAltarTier0Block;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
 import com.yupno.culinary_wizardry.recipe.FoodAltarTier0Recipe;
 import com.yupno.culinary_wizardry.screen.FoodAltarTier0Menu;
@@ -29,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.Map;
 import java.util.Optional;
 
 public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvider {
@@ -37,9 +39,29 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
         protected void onContentsChanged(int slot) {
             setChanged();
         }
+
+        @Override
+        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
+            return switch (slot){
+                //case 0 -> super.isItemValid(slot, stack);
+                case 1 -> false;
+                case 2 -> stack.getItem().isEdible();
+                default -> super.isItemValid(slot, stack);
+            };
+        }
     };
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
+
+    private final Map<Direction, LazyOptional<WrappedHandler>> directionWrappedHandlerMap =
+            Map.of(Direction.DOWN, LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> index == 1, (index, stack) -> false)),
+                    Direction.NORTH, LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(2, stack) && index == 2)),
+                    Direction.SOUTH, LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(2, stack) && index == 2)),
+                    Direction.EAST, LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(2, stack) && index == 2)),
+                    Direction.WEST, LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(2, stack) && index == 2)),
+                    Direction.UP, LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(0, stack) && index == 0)));
+
+
     protected final ContainerData data;
     private int progress = 0;
     private int maxProgress = 72;
@@ -96,7 +118,22 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            return lazyItemHandler.cast();
+            if(side == null) {
+                return lazyItemHandler.cast();
+            }
+
+            //Direction localDir = this.getBlockState().getValue(FoodAltarTier0Block.FACING);
+
+            return directionWrappedHandlerMap.get(side).cast();
+
+            /*
+            return switch (localDir) {
+                default -> directionWrappedHandlerMap.get(side.getOpposite()).cast();
+                case EAST -> directionWrappedHandlerMap.get(side.getClockWise()).cast();
+                case SOUTH -> directionWrappedHandlerMap.get(side).cast();
+                case WEST -> directionWrappedHandlerMap.get(side.getCounterClockWise()).cast();
+            };
+             */
         }
 
         return super.getCapability(cap, side);
