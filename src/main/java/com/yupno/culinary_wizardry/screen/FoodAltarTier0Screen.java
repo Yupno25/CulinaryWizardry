@@ -28,43 +28,50 @@ public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
+        /** THE INVENTORY */
         this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
 
-        if(menu.isCrafting()) {
+        /** CRAFTING ARROW */
+        if (menu.isCrafting()) {
             blit(pPoseStack, x + 70, y + 39, 176, 0, menu.getScaledProgress(), 8);
         }
 
-        if(menu.getPureCulinaryEssence() > 0){
-            blit(pPoseStack, x + 152, y + 10 + (50 - menu.getScaledPureCulinaryEssence()), 176, 8, 16, menu.getScaledPureCulinaryEssence());
+        /** CULINARY ESSENCE BAR */
+        if (menu.getPureCulinaryEssence() > 0) {
+            blit(pPoseStack, x + 152, y + 10 + (menu.getProgressSize() - menu.getScaledPureCulinaryEssence()),
+                    176, 8, 16, menu.getScaledPureCulinaryEssence());
         }
 
-        if(isMouseAboveArea(pMouseX, pMouseY, x + 151, y + 9, 17, 51)){
-            renderTooltip(pPoseStack, new TranslatableComponent("food_altar_tier0.pure_culinary_essence")
-                    .append(": " + menu.getPureCulinaryEssence() + "/" + menu.getMaxPureCulinaryEssence()), pMouseX, pMouseY);
-        }
+        /** FOOD PROCESSING ANIMATION */
+        int foodProgress = menu.getFoodProgress();
 
-        if(menu.isProcessing()) {
-            if(menu.getFoodProgress() > 0){
-                blit(pPoseStack, x + 151, y + 63, 192, 8, 8, 8);
-            }
-            if(menu.getFoodProgress() > 4){
+        if (foodProgress > 0) {
+            blit(pPoseStack, x + 151, y + 63, 192, 8, 8, 8);
+
+            if (foodProgress > 4) {
                 blit(pPoseStack, x + 163, y + 68, 201, 8, 6, 10);
             }
-            if(menu.getFoodProgress() > 8){
+            if (foodProgress > 8) {
                 blit(pPoseStack, x + 151, y + 73, 208, 8, 8, 8);
             }
-            if(menu.getFoodProgress() > 12){
+            if (foodProgress > 12) {
                 blit(pPoseStack, x + 157, y + 73, 217, 8, 13, 8);
             }
-            if(menu.getFoodProgress() > 16){
+            if (foodProgress > 16) {
                 blit(pPoseStack, x + 158, y + 63, 231, 8, 11, 8);
             }
-            if(menu.getFoodProgress() > 20){
+            if (foodProgress > 20) {
                 blit(pPoseStack, x + 151, y + 63, 192, 19, 18, 18);
             }
-            if(menu.getFoodProgress() > 24){
+            if (foodProgress > 24) {
                 blit(pPoseStack, x + 151, y + 63, 211, 19, 18, 18);
             }
+        }
+
+        /** TOOLTIP FOR CULINARY ESSENCE BAR */
+        if (isMouseAboveArea(pMouseX, pMouseY, x + 151, y + 9, 17, 51)) {
+            renderTooltip(pPoseStack, new TranslatableComponent("food_altar_tier0.pure_culinary_essence")
+                    .append(": " + menu.getPureCulinaryEssence() + "/" + menu.getMaxPureCulinaryEssence()), pMouseX, pMouseY);
         }
     }
 

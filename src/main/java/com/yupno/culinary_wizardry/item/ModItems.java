@@ -11,9 +11,18 @@ public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
             DeferredRegister.create(ForgeRegistries.ITEMS, CulinaryWizardry.MOD_ID);
 
+    /**
+     * ITEMS
+     */
+
     public static final RegistryObject<Item> EXAMPLE_ITEM = ITEMS.register("example_item",
             () -> new Item(new Item.Properties().tab(ModCreativeModeTab.CULINARY_WIZARDRY_TAB)));
 
+
+
+    /**
+     * OTHER STUFF
+     */
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

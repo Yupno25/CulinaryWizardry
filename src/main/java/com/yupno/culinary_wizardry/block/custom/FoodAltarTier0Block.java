@@ -9,7 +9,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -25,7 +24,9 @@ public class FoodAltarTier0Block extends BaseEntityBlock {
     }
 
 
-    /* BLOCK ENTITY */
+    /**
+     * BLOCK ENTITY
+     */
 
     @Override
     public RenderShape getRenderShape(BlockState pState) {
@@ -48,8 +49,8 @@ public class FoodAltarTier0Block extends BaseEntityBlock {
                                  Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
-            if(entity instanceof FoodAltarTier0BlockEntity) {
-                NetworkHooks.openGui(((ServerPlayer)pPlayer), (FoodAltarTier0BlockEntity)entity, pPos);
+            if (entity instanceof FoodAltarTier0BlockEntity) {
+                NetworkHooks.openGui(((ServerPlayer) pPlayer), (FoodAltarTier0BlockEntity) entity, pPos);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }

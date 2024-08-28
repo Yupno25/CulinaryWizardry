@@ -1,6 +1,5 @@
 package com.yupno.culinary_wizardry.block.entity.custom;
 
-import com.yupno.culinary_wizardry.block.custom.FoodAltarTier0Block;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
 import com.yupno.culinary_wizardry.recipe.FoodAltarTier0Recipe;
 import com.yupno.culinary_wizardry.screen.FoodAltarTier0Menu;
@@ -43,7 +42,6 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
             return switch (slot){
-                //case 0 -> super.isItemValid(slot, stack);
                 case 1 -> false;
                 case 2 -> stack.getItem().isEdible();
                 default -> super.isItemValid(slot, stack);
@@ -52,20 +50,9 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
     };
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
-
-    private final Map<Direction, LazyOptional<WrappedHandler>> directionWrappedHandlerMap =
-            Map.of(Direction.DOWN, LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> index == 1, (index, stack) -> false)),
-                    Direction.NORTH, LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(2, stack) && index == 2)),
-                    Direction.SOUTH, LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(2, stack) && index == 2)),
-                    Direction.EAST, LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(2, stack) && index == 2)),
-                    Direction.WEST, LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(2, stack) && index == 2)),
-                    Direction.UP, LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(0, stack) && index == 0)));
-
-
     protected final ContainerData data;
     private int progress = 0;
     private int maxProgress = 72;
-
     private int foodProgress = 0;
     private int maxFoodProgress = 28;
     private int pureCulinaryEssence = 0;
@@ -122,18 +109,12 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
                 return lazyItemHandler.cast();
             }
 
-            //Direction localDir = this.getBlockState().getValue(FoodAltarTier0Block.FACING);
-
-            return directionWrappedHandlerMap.get(side).cast();
-
-            /*
-            return switch (localDir) {
-                default -> directionWrappedHandlerMap.get(side.getOpposite()).cast();
-                case EAST -> directionWrappedHandlerMap.get(side.getClockWise()).cast();
-                case SOUTH -> directionWrappedHandlerMap.get(side).cast();
-                case WEST -> directionWrappedHandlerMap.get(side.getCounterClockWise()).cast();
-            };
-             */
+            if (side == Direction.UP)
+                return LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(0, stack) && index == 0)).cast();
+            else if (side == Direction.DOWN)
+                return LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> index == 1, (index, stack) -> false)).cast();
+            else
+                return LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(2, stack) && index == 2)).cast();
         }
 
         return super.getCapability(cap, side);
@@ -177,6 +158,10 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
 
         Containers.dropContents(this.level, this.worldPosition, inventory);
     }
+
+    /**
+     * RECIPE STUFF
+     * */
 
     public static void tick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier0BlockEntity pBlockEntity) {
         if(hasRecipe(pBlockEntity)) {

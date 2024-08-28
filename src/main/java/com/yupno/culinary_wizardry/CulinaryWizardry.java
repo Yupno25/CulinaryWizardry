@@ -19,13 +19,11 @@ import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod(CulinaryWizardry.MOD_ID)
-public class CulinaryWizardry
-{
+public class CulinaryWizardry {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final String MOD_ID = "culinary_wizardry";
 
-    public CulinaryWizardry()
-    {
+    public CulinaryWizardry() {
         IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         ModItems.register(eventBus);
@@ -43,12 +41,11 @@ public class CulinaryWizardry
         MinecraftForge.EVENT_BUS.register(this);
     }
 
-    private void clientSetup(final FMLClientSetupEvent event){
+    private void clientSetup(final FMLClientSetupEvent event) {
         MenuScreens.register(ModMenuTypes.FOOD_ALTAR_TIER0_MENU.get(), FoodAltarTier0Screen::new);
     }
 
-    private void setup(final FMLCommonSetupEvent event)
-    {
+    private void setup(final FMLCommonSetupEvent event) {
         // some preinit code
         LOGGER.info("HELLO FROM PREINIT");
         LOGGER.info("DIRT BLOCK >> {}", Blocks.DIRT.getRegistryName());

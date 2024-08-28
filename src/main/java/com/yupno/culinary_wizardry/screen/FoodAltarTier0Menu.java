@@ -42,6 +42,10 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
         addDataSlots(data);
     }
 
+    /**
+     * NORMAL CRAFTING ARROW
+     */
+
     public boolean isCrafting() {
         return data.get(0) > 0;
     }
@@ -54,26 +58,36 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
         return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
     }
 
-    public int getPureCulinaryEssence(){
+    /**
+     * CULINARY ESSENCE BAR
+     */
+
+    public int getPureCulinaryEssence() {
         return data.get(4);
     }
-    public int getMaxPureCulinaryEssence(){
+
+    public int getMaxPureCulinaryEssence() {
         return data.get(5);
     }
 
-    public int getScaledPureCulinaryEssence(){
+    private final int progressSize = 50; // This is the height in pixels of the texture
+
+    public int getProgressSize(){
+        return progressSize;
+    }
+
+    public int getScaledPureCulinaryEssence() {
         int pureCulinaryEssence = this.data.get(4);
         int maxPureCulinaryEssence = this.data.get(5);
-        int progressSize = 50; // This is the height in pixels of your texture
 
         return maxPureCulinaryEssence != 0 && pureCulinaryEssence != 0 ? pureCulinaryEssence * progressSize / maxPureCulinaryEssence : 0;
     }
 
-    public boolean isProcessing() {
-        return data.get(2) > 0;
-    }
+    /**
+     * FOOD PROCESSING
+     */
 
-    public int getFoodProgress(){
+    public int getFoodProgress() {
         return this.data.get(2);
     }
 

@@ -67,7 +67,9 @@ public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
     }
 
     public static class Type implements RecipeType<FoodAltarTier0Recipe> {
-        private Type() { }
+        private Type() {
+        }
+
         public static final Type INSTANCE = new Type();
         public static final String ID = "food_altar_tier0";
     }
@@ -75,7 +77,7 @@ public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
     public static class Serializer implements RecipeSerializer<FoodAltarTier0Recipe> {
         public static final Serializer INSTANCE = new Serializer();
         public static final ResourceLocation ID =
-                new ResourceLocation(CulinaryWizardry.MOD_ID,"food_altar_tier0");
+                new ResourceLocation(CulinaryWizardry.MOD_ID, "food_altar_tier0");
 
         @Override
         public FoodAltarTier0Recipe fromJson(ResourceLocation id, JsonObject json) {
@@ -138,7 +140,7 @@ public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
 
         @SuppressWarnings("unchecked") // Need this wrapper, because generics
         private static <G> Class<G> castClass(Class<?> cls) {
-            return (Class<G>)cls;
+            return (Class<G>) cls;
         }
     }
 }
