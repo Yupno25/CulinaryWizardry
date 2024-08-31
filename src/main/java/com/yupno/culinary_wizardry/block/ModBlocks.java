@@ -33,6 +33,36 @@ public class ModBlocks {
             () -> new FoodAltarTier0Block(BlockBehaviour.Properties.of(Material.WOOD)
                     .strength(2.5F).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
 
+    public static final RegistryObject<Block> FOOD_ALTAR_TIER1 = registerBlock("food_altar_tier1",
+            () -> new Block(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2.5F).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> LOW_SUB_ALTAR_CULINARY = registerBlock("low_sub_altar_culinary",
+            () -> new Block(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> LOW_SUB_ALTAR_FRUITS = registerBlock("low_sub_altar_fruits",
+            () -> new Block(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> LOW_SUB_ALTAR_GRAINS = registerBlock("low_sub_altar_grains",
+            () -> new Block(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> LOW_SUB_ALTAR_PROTEINS = registerBlock("low_sub_altar_proteins",
+            () -> new Block(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> LOW_SUB_ALTAR_SUGARS = registerBlock("low_sub_altar_sugars",
+            () -> new Block(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> LOW_SUB_ALTAR_VEGETABLES = registerBlock("low_sub_altar_vegetables",
+            () -> new Block(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+
+
 
     /**
      * OTHER STUFF

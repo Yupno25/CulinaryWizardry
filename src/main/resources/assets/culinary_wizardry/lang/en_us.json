@@ -2,7 +2,14 @@
   "item.culinary_wizardry.example_item": "Example Item",
 
   "block.culinary_wizardry.example_block": "Example Block",
-  "block.culinary_wizardry.food_altar_tier0": "Gastromancer's Altar",
+  "block.culinary_wizardry.food_altar_tier0": "Crude Gastromancer's Altar",
+  "block.culinary_wizardry.food_altar_tier1": "Bad Gastromancer's Altar",
+  "block.culinary_wizardry.low_sub_altar_culinary": "Low Culinary Sub Altar",
+  "block.culinary_wizardry.low_sub_altar_fruits": "Low Fruits Sub Altar",
+  "block.culinary_wizardry.low_sub_altar_grains": "Low Grains Sub Altar",
+  "block.culinary_wizardry.low_sub_altar_proteins": "Low Proteins Sub Altar",
+  "block.culinary_wizardry.low_sub_altar_sugars": "Low Sugars Sub Altar",
+  "block.culinary_wizardry.low_sub_altar_vegetables": "Low Vegetables Sub Altar",
 
   "food_altar_tier0.pure_culinary_essence": "Pure Culinary Essence",
 
