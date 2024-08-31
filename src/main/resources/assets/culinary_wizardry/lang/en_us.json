@@ -11,7 +11,12 @@
   "block.culinary_wizardry.low_sub_altar_sugars": "Low Sugars Sub Altar",
   "block.culinary_wizardry.low_sub_altar_vegetables": "Low Vegetables Sub Altar",
 
-  "food_altar_tier0.pure_culinary_essence": "Pure Culinary Essence",
+  "translatable.pure_culinary_essence": "Pure Culinary Essence",
+  "translatable.pure_fruits_essence": "Pure Fruit Essence",
+  "translatable.pure_grains_essence": "Pure Grain Essence",
+  "translatable.pure_proteins_essence": "Pure Protein Essence",
+  "translatable.pure_sugars_essence": "Pure Sugar Essence",
+  "translatable.pure_vegetables_essence": "Pure Vegetable Essence",
 
   "itemGroup.culinary_wizardry_tab": "Culinary Wizardry"
 }

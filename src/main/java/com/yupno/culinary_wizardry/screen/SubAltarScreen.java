@@ -3,20 +3,18 @@ package com.yupno.culinary_wizardry.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.yupno.culinary_wizardry.CulinaryWizardry;
-import com.yupno.culinary_wizardry.block.entity.custom.FoodAltarTier0BlockEntity;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
-public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0Menu> {
-    private static final ResourceLocation TEXTURE =
-            new ResourceLocation(CulinaryWizardry.MOD_ID, "textures/gui/food_altar_tier0_gui.png");
+public class SubAltarScreen extends AbstractContainerScreen<SubAltarMenu> {
+    private final ResourceLocation TEXTURE =
+            new ResourceLocation(CulinaryWizardry.MOD_ID, "textures/gui/sub_altar_" + menu.getFoodType().getName() + "_gui.png");
 
-    public FoodAltarTier0Screen(FoodAltarTier0Menu pMenu, Inventory pPlayerInventory, Component pTitle) {
+    public SubAltarScreen(SubAltarMenu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
     }
 
@@ -31,47 +29,42 @@ public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0
         /** THE INVENTORY */
         this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
 
-        /** CRAFTING ARROW */
-        if (menu.isCrafting()) {
-            blit(pPoseStack, x + 70, y + 39, 176, 0, menu.getScaledProgress(), 8);
-        }
-
         /** CULINARY ESSENCE BAR */
-        if (menu.getPureCulinaryEssence() > 0) {
-            blit(pPoseStack, x + 152, y + 10 + (menu.getProgressSize() - menu.getScaledPureCulinaryEssence()),
-                    176, 8, 16, menu.getScaledPureCulinaryEssence());
+        if (menu.getCulinaryEssence() > 0) {
+            blit(pPoseStack, x + 80, y + 10 + (menu.getProgressSize() - menu.getScaledPureCulinaryEssence()),
+                    176, 0, 16, menu.getScaledPureCulinaryEssence());
         }
 
         /** FOOD PROCESSING ANIMATION */
         int foodProgress = menu.getFoodProgress();
 
         if (foodProgress > 0) {
-            blit(pPoseStack, x + 151, y + 63, 192, 8, 8, 8);
+            blit(pPoseStack, x + 79, y + 63, 192, 0, 8, 8);
 
             if (foodProgress > 4) {
-                blit(pPoseStack, x + 163, y + 68, 201, 8, 6, 10);
+                blit(pPoseStack, x + 91, y + 68, 201, 0, 6, 10);
             }
             if (foodProgress > 8) {
-                blit(pPoseStack, x + 151, y + 73, 208, 8, 8, 8);
+                blit(pPoseStack, x + 79, y + 73, 208, 0, 8, 8);
             }
             if (foodProgress > 12) {
-                blit(pPoseStack, x + 157, y + 73, 217, 8, 13, 8);
+                blit(pPoseStack, x + 85, y + 73, 217, 0, 13, 8);
             }
             if (foodProgress > 16) {
-                blit(pPoseStack, x + 158, y + 63, 231, 8, 11, 8);
+                blit(pPoseStack, x + 86, y + 63, 231, 0, 11, 8);
             }
             if (foodProgress > 20) {
-                blit(pPoseStack, x + 151, y + 63, 192, 19, 18, 18);
+                blit(pPoseStack, x + 79, y + 63, 192, 11, 18, 18);
             }
             if (foodProgress > 24) {
-                blit(pPoseStack, x + 151, y + 63, 211, 19, 18, 18);
+                blit(pPoseStack, x + 79, y + 63, 211, 11, 18, 18);
             }
         }
 
         /** TOOLTIP FOR CULINARY ESSENCE BAR */
-        if (isMouseAboveArea(pMouseX, pMouseY, x + 151, y + 9, 17, 51)) {
-            renderTooltip(pPoseStack, new TranslatableComponent("translatable.pure_culinary_essence")
-                    .append(": " + menu.getPureCulinaryEssence() + "/" + menu.getMaxPureCulinaryEssence()), pMouseX, pMouseY);
+        if (isMouseAboveArea(pMouseX, pMouseY, x + 79, y + 9, 17, 51)) {
+            renderTooltip(pPoseStack, new TranslatableComponent("translatable.pure_" + menu.getFoodType().getName() + "_essence")
+                    .append(": " + menu.getCulinaryEssence() + "/" + menu.getMaxCulinaryEssence()), pMouseX, pMouseY);
         }
     }
 
