@@ -5,11 +5,16 @@ import com.yupno.culinary_wizardry.recipe.FoodAltarTier0Recipe;
 import com.yupno.culinary_wizardry.screen.FoodAltarTier0Menu;
 import com.yupno.culinary_wizardry.utils.CulinaryEssencesCalculation;
 import com.yupno.culinary_wizardry.utils.SimpleFoodContainer;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -163,7 +168,7 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
      * RECIPE STUFF
      * */
 
-    public static void tick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier0BlockEntity pBlockEntity) {
+    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier0BlockEntity pBlockEntity) {
         if(hasRecipe(pBlockEntity)) {
             pBlockEntity.progress++;
             setChanged(pLevel, pPos, pState);
@@ -243,4 +248,18 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
         return inventory.getItem(1).getMaxStackSize() > inventory.getItem(1).getCount();
     }
 
+    /**
+     * Servertick stuff
+     * */
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return saveWithoutMetadata();
+    }
 }

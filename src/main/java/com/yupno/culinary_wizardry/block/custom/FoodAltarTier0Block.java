@@ -68,7 +68,8 @@ public class FoodAltarTier0Block extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
+        if (pLevel.isClientSide) return null;
         return createTickerHelper(pBlockEntityType, ModBlockEntities.FOOD_ALTAR_TIER0_ENTITY.get(),
-                FoodAltarTier0BlockEntity::tick);
+                FoodAltarTier0BlockEntity::serverTick);
     }
 }
