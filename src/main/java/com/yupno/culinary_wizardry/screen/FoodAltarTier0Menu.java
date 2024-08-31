@@ -90,6 +90,9 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
     public int getFoodProgress() {
         return this.data.get(2);
     }
+    public int getMaxFoodProgress() {
+        return this.data.get(3);
+    }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons
     // must assign a slot number to each of the slots used by the GUI.

@@ -44,26 +44,27 @@ public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0
 
         /** FOOD PROCESSING ANIMATION */
         int foodProgress = menu.getFoodProgress();
+        int seventhMaxFoodProgress = (int)(menu.getMaxFoodProgress() / 7);
 
         if (foodProgress > 0) {
             blit(pPoseStack, x + 151, y + 63, 192, 8, 8, 8);
 
-            if (foodProgress > 4) {
+            if (foodProgress > seventhMaxFoodProgress) {
                 blit(pPoseStack, x + 163, y + 68, 201, 8, 6, 10);
             }
-            if (foodProgress > 8) {
+            if (foodProgress > seventhMaxFoodProgress * 2) {
                 blit(pPoseStack, x + 151, y + 73, 208, 8, 8, 8);
             }
-            if (foodProgress > 12) {
+            if (foodProgress > seventhMaxFoodProgress * 3) {
                 blit(pPoseStack, x + 157, y + 73, 217, 8, 13, 8);
             }
-            if (foodProgress > 16) {
+            if (foodProgress > seventhMaxFoodProgress * 4) {
                 blit(pPoseStack, x + 158, y + 63, 231, 8, 11, 8);
             }
-            if (foodProgress > 20) {
+            if (foodProgress > seventhMaxFoodProgress * 5) {
                 blit(pPoseStack, x + 151, y + 63, 192, 19, 18, 18);
             }
-            if (foodProgress > 24) {
+            if (foodProgress > seventhMaxFoodProgress * 6) {
                 blit(pPoseStack, x + 151, y + 63, 211, 19, 18, 18);
             }
         }
