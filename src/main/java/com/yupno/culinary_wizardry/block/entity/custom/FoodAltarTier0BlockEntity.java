@@ -3,13 +3,11 @@ package com.yupno.culinary_wizardry.block.entity.custom;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
 import com.yupno.culinary_wizardry.recipe.FoodAltarTier0Recipe;
 import com.yupno.culinary_wizardry.screen.FoodAltarTier0Menu;
-import com.yupno.culinary_wizardry.utils.CulinaryEssencesCalculation;
+import com.yupno.culinary_wizardry.utils.EssenceCalculation;
 import com.yupno.culinary_wizardry.utils.SimpleFoodContainer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
@@ -34,7 +32,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
 import java.util.Optional;
 
 public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvider {
@@ -168,31 +165,31 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
      * RECIPE STUFF
      * */
 
-    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier0BlockEntity pBlockEntity) {
-        if(hasRecipe(pBlockEntity)) {
-            pBlockEntity.progress++;
+    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier0BlockEntity entity) {
+        if(hasRecipe(entity)) {
+            entity.progress++;
             setChanged(pLevel, pPos, pState);
-            if(pBlockEntity.progress > pBlockEntity.maxProgress) {
-            craftItem(pBlockEntity);
+            if(entity.progress > entity.maxProgress) {
+            craftItem(entity);
             }
         } else {
-            pBlockEntity.resetProgress();
+            entity.resetProgress();
             setChanged(pLevel, pPos, pState);
         }
 
-        if(pBlockEntity.itemHandler.getStackInSlot(2).isEdible() && pBlockEntity.pureCulinaryEssence < pBlockEntity.maxPureCulinaryEssence){
-            pBlockEntity.foodProgress++;
+        if(entity.itemHandler.getStackInSlot(2).isEdible() && entity.pureCulinaryEssence < entity.maxPureCulinaryEssence){
+            entity.foodProgress++;
             setChanged(pLevel, pPos, pState);
 
-            if(pBlockEntity.foodProgress > pBlockEntity.maxFoodProgress){
-                pBlockEntity.pureCulinaryEssence = Math.min(pBlockEntity.pureCulinaryEssence +
-                        CulinaryEssencesCalculation.calculatePureFoodEssence(pBlockEntity.itemHandler.getStackInSlot(2), 0), pBlockEntity.maxPureCulinaryEssence);
+            if(entity.foodProgress > entity.maxFoodProgress){
+                entity.pureCulinaryEssence = Math.min(entity.pureCulinaryEssence +
+                        EssenceCalculation.calculatePureFoodEssence(entity.itemHandler.getStackInSlot(2), 0), entity.maxPureCulinaryEssence);
 
-                pBlockEntity.itemHandler.extractItem(2, 1, false);
-                pBlockEntity.resetFoodProgress();
+                entity.itemHandler.extractItem(2, 1, false);
+                entity.resetFoodProgress();
             }
         }else {
-            pBlockEntity.resetFoodProgress();
+            entity.resetFoodProgress();
             setChanged(pLevel, pPos, pState);
         }
     }

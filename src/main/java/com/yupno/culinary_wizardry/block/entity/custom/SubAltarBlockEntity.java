@@ -2,9 +2,8 @@ package com.yupno.culinary_wizardry.block.entity.custom;
 
 import com.yupno.culinary_wizardry.block.custom.SubAltarBlock;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
-import com.yupno.culinary_wizardry.screen.FoodAltarTier0Menu;
 import com.yupno.culinary_wizardry.screen.SubAltarMenu;
-import com.yupno.culinary_wizardry.utils.CulinaryEssencesCalculation;
+import com.yupno.culinary_wizardry.utils.EssenceCalculation;
 import com.yupno.culinary_wizardry.utils.FoodType;
 import com.yupno.culinary_wizardry.utils.SimpleFoodContainer;
 import net.minecraft.core.BlockPos;
@@ -168,20 +167,26 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
      * RECIPE STUFF
      * */
 
-    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, SubAltarBlockEntity pBlockEntity) {
-        if(pBlockEntity.itemHandler.getStackInSlot(0).isEdible() && pBlockEntity.culinaryEssence < pBlockEntity.maxCulinaryEssence){
-            pBlockEntity.foodProgress++;
+    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, SubAltarBlockEntity entity) {
+        if(entity.itemHandler.getStackInSlot(0).isEdible() && entity.culinaryEssence < entity.maxCulinaryEssence){
+            entity.foodProgress++;
             setChanged(pLevel, pPos, pState);
 
-            if(pBlockEntity.foodProgress > pBlockEntity.maxFoodProgress){
-                pBlockEntity.culinaryEssence = Math.min(pBlockEntity.culinaryEssence +
-                        CulinaryEssencesCalculation.calculatePureFoodEssence(pBlockEntity.itemHandler.getStackInSlot(0), 0), pBlockEntity.maxCulinaryEssence);
+            if(entity.foodProgress > entity.maxFoodProgress){
+                if(entity.type == FoodType.CULINARY){
+                    entity.culinaryEssence = Math.min(entity.culinaryEssence +
+                            EssenceCalculation.calculatePureFoodEssence(entity.itemHandler.getStackInSlot(0), entity.tier), entity.maxCulinaryEssence);
+                }else {
+                    entity.culinaryEssence = Math.min(entity.culinaryEssence +
+                            EssenceCalculation.calculateOtherFoodEssence(entity.itemHandler.getStackInSlot(0), entity.tier, entity.type), entity.maxCulinaryEssence);
+                }
 
-                pBlockEntity.itemHandler.extractItem(0, 1, false);
-                pBlockEntity.resetFoodProgress();
+
+                entity.itemHandler.extractItem(0, 1, false);
+                entity.resetFoodProgress();
             }
         }else {
-            pBlockEntity.resetFoodProgress();
+            entity.resetFoodProgress();
             setChanged(pLevel, pPos, pState);
         }
     }
