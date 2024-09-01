@@ -55,13 +55,19 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
     protected final ContainerData data;
     private final FoodType type;
+    private final int tier;
     private int foodProgress = 0;
     private int maxFoodProgress = 28;
     private int culinaryEssence = 0;
-    private int maxCulinaryEssence = 10000;
+    private int maxCulinaryEssence;
 
     public SubAltarBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.SUB_ALTAR_BLOCK_ENTITY.get(), pPos, pBlockState);
+
+        this.type = ((SubAltarBlock)pBlockState.getBlock()).getType();
+        this.tier = ((SubAltarBlock)pBlockState.getBlock()).getTier();
+        maxCulinaryEssence = (int)(1000 * Math.pow(10, tier));
+
         this.data = new ContainerData() {
             public int get(int index) {
                 switch (index) {
@@ -86,13 +92,19 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
                 return 4;
             }
         };
-
-        this.type = ((SubAltarBlock)pBlockState.getBlock()).getType();
     }
 
     @Override
     public Component getDisplayName() {
-        return new TranslatableComponent("block.culinary_wizardry.low_sub_altar_" + type.getName());
+        String name = "";
+        switch (tier) {
+            case 1: name = "low"; break;
+            case 2: name = "mid"; break;
+            case 3: name = "high"; break;
+            case 4: name = "transcendent"; break;
+        }
+
+        return new TranslatableComponent("block.culinary_wizardry." + name + "_sub_altar_" + type.getName());
     }
 
     @Nullable

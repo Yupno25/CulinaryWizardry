@@ -23,8 +23,9 @@ public class ModBlockEntities {
     public static final RegistryObject<BlockEntityType<SubAltarBlockEntity>> SUB_ALTAR_BLOCK_ENTITY =
             BLOCK_ENTITIES.register("sub_altar_block_entity", () ->
                     BlockEntityType.Builder.of(SubAltarBlockEntity::new,
-                            ModBlocks.LOW_SUB_ALTAR_CULINARY.get(), ModBlocks.LOW_SUB_ALTAR_FRUITS.get(), ModBlocks.LOW_SUB_ALTAR_GRAINS.get(),
-                            ModBlocks.LOW_SUB_ALTAR_PROTEINS.get(), ModBlocks.LOW_SUB_ALTAR_SUGARS.get(), ModBlocks.LOW_SUB_ALTAR_VEGETABLES.get()).build(null));
+                            ModBlocks.LOW_SUB_ALTAR_CULINARY.get(), ModBlocks.MID_SUB_ALTAR_CULINARY.get(), ModBlocks.MID_SUB_ALTAR_FRUITS.get(),
+                            ModBlocks.MID_SUB_ALTAR_GRAINS.get(), ModBlocks.MID_SUB_ALTAR_PROTEINS.get(), ModBlocks.MID_SUB_ALTAR_SUGARS.get(),
+                            ModBlocks.MID_SUB_ALTAR_VEGETABLES.get()).build(null));
 
     public static void register(IEventBus eventBus){
         BLOCK_ENTITIES.register(eventBus);

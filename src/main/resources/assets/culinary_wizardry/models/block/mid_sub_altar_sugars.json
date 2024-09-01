@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "culinary_wizardry:block/mid_sub_altar_sugars"
+  }
+}

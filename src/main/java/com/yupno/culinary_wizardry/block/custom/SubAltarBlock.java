@@ -21,11 +21,13 @@ import org.jetbrains.annotations.Nullable;
 
 public class SubAltarBlock extends BaseEntityBlock {
     private final FoodType type;
+    private final int tier;
 
-    public SubAltarBlock(Properties pProperties, FoodType type) {
+    public SubAltarBlock(Properties pProperties, FoodType type, int tier) {
         super(pProperties);
 
         this.type = type;
+        this.tier = tier;
     }
 
     /**
@@ -34,6 +36,10 @@ public class SubAltarBlock extends BaseEntityBlock {
 
     public FoodType getType(){
         return type;
+    }
+
+    public int getTier(){
+        return tier;
     }
 
     @Override
