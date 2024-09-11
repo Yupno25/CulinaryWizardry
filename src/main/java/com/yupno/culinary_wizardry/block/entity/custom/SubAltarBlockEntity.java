@@ -55,8 +55,8 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
     protected final ContainerData data;
     private final FoodType type;
     private final int tier;
-    private int foodProgress = 0;
-    private int maxFoodProgress = 28;
+    private int eatingProgress = 0;
+    private int maxEatingProgress = 28;
     private int culinaryEssence = 0;
     private int maxCulinaryEssence;
 
@@ -70,8 +70,8 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
         this.data = new ContainerData() {
             public int get(int index) {
                 switch (index) {
-                    case 0: return SubAltarBlockEntity.this.foodProgress;
-                    case 1: return SubAltarBlockEntity.this.maxFoodProgress;
+                    case 0: return SubAltarBlockEntity.this.eatingProgress;
+                    case 1: return SubAltarBlockEntity.this.maxEatingProgress;
                     case 2: return SubAltarBlockEntity.this.culinaryEssence;
                     case 3: return SubAltarBlockEntity.this.maxCulinaryEssence;
                     default: return 0;
@@ -80,8 +80,8 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
 
             public void set(int index, int value) {
                 switch(index) {
-                    case 0: SubAltarBlockEntity.this.foodProgress = value; break;
-                    case 1: SubAltarBlockEntity.this.maxFoodProgress = value; break;
+                    case 0: SubAltarBlockEntity.this.eatingProgress = value; break;
+                    case 1: SubAltarBlockEntity.this.maxEatingProgress = value; break;
                     case 2: SubAltarBlockEntity.this.culinaryEssence = value; break;
                     case 3: SubAltarBlockEntity.this.maxCulinaryEssence = value; break;
                 }
@@ -97,7 +97,7 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
     protected void saveAdditional(@NotNull CompoundTag tag) {
         tag.put("inventory", itemHandler.serializeNBT());
         tag.putInt("pureCulinaryEssence", culinaryEssence);
-        tag.putInt("foodProgress", foodProgress);
+        tag.putInt("foodProgress", eatingProgress);
         super.saveAdditional(tag);
     }
 
@@ -106,7 +106,7 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
         super.load(nbt);
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
         culinaryEssence = nbt.getInt("pureCulinaryEssence");
-        foodProgress = nbt.getInt("foodProgress");
+        eatingProgress = nbt.getInt("foodProgress");
     }
 
     public int getCulinaryEssence(){
@@ -123,10 +123,10 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
 
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, SubAltarBlockEntity entity) {
         if(entity.itemHandler.getStackInSlot(0).isEdible() && entity.culinaryEssence < entity.maxCulinaryEssence){
-            entity.foodProgress++;
+            entity.eatingProgress++;
             setChanged(pLevel, pPos, pState);
 
-            if(entity.foodProgress > entity.maxFoodProgress){
+            if(entity.eatingProgress > entity.maxEatingProgress){
                 if(entity.type == FoodType.CULINARY){
                     entity.culinaryEssence = Math.min(entity.culinaryEssence +
                             EssenceCalculation.calculatePureFoodEssence(entity.itemHandler.getStackInSlot(0), entity.tier), entity.maxCulinaryEssence);
@@ -146,7 +146,7 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     private void resetFoodProgress() {
-        this.foodProgress = 0;
+        this.eatingProgress = 0;
     }
 
     /**

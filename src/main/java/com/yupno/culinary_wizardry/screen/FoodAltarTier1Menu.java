@@ -47,23 +47,14 @@ public class FoodAltarTier1Menu extends AbstractContainerMenu {
     }
 
     /**
-     * EATING ANIMATION
+     * FOOD PROCESSING
      */
 
-    public boolean isCrafting() {
-        return data.get(0) > 0;
+    public int getEatingProgress() {
+        return this.data.get(0);
     }
-
-    public int getProgressSize(){
-        return 20; // This is the height in pixels of the texture
-    }
-
-    public int getScaledProgress() {
-        int progress = data.get(0);
-        int maxProgress = data.get(1);  // Max Progress
-        int progressArrowSize = 20; // This is the height in pixels of your arrow
-
-        return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
+    public int getMaxEatingProgress() {
+        return this.data.get(1);
     }
 
     /**

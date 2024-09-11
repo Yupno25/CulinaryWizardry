@@ -36,8 +36,8 @@ public class SubAltarScreen extends AbstractContainerScreen<SubAltarMenu> {
         }
 
         /** FOOD PROCESSING ANIMATION */
-        int foodProgress = menu.getFoodProgress();
-        int seventhMaxFoodProgress = (int)(menu.getMaxFoodProgress() / 7);
+        int foodProgress = menu.getEatingProgress();
+        int seventhMaxFoodProgress = (int)(menu.getMaxEatingProgress() / 7);
 
         if (foodProgress > 0) {
             blit(pPoseStack, x + 79, y + 63, 192, 0, 8, 8);

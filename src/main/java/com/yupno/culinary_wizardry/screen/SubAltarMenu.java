@@ -1,6 +1,5 @@
 package com.yupno.culinary_wizardry.screen;
 
-import com.yupno.culinary_wizardry.block.ModBlocks;
 import com.yupno.culinary_wizardry.block.custom.SubAltarBlock;
 import com.yupno.culinary_wizardry.block.entity.custom.SubAltarBlockEntity;
 import com.yupno.culinary_wizardry.screen.slot.ModFoodSlot;
@@ -74,10 +73,10 @@ public class SubAltarMenu extends AbstractContainerMenu {
      * FOOD PROCESSING
      */
 
-    public int getFoodProgress() {
+    public int getEatingProgress() {
         return this.data.get(0);
     }
-    public int getMaxFoodProgress() {
+    public int getMaxEatingProgress() {
         return this.data.get(1);
     }
 

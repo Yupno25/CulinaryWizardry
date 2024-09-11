@@ -63,8 +63,8 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
     protected final ContainerData data;
-    private int progress = 0;
-    private int maxProgress = 24;
+    private int eatingProgress = 0;
+    private int maxEatingProgress = 28;
     private final int tier = 1;
 
     /**
@@ -96,8 +96,8 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
         this.data = new ContainerData() {
             public int get(int index) {
                 switch (index) {
-                    case 0: return FoodAltarTier1BlockEntity.this.progress;
-                    case 1: return FoodAltarTier1BlockEntity.this.maxProgress;
+                    case 0: return FoodAltarTier1BlockEntity.this.eatingProgress;
+                    case 1: return FoodAltarTier1BlockEntity.this.maxEatingProgress;
                     case 2: return FoodAltarTier1BlockEntity.this.getSaveCulinaryEssence();
                     default: return 0;
                 }
@@ -105,8 +105,8 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
 
             public void set(int index, int value) {
                 switch(index) {
-                    case 0: FoodAltarTier1BlockEntity.this.progress = value; break;
-                    case 1: FoodAltarTier1BlockEntity.this.maxProgress = value; break;
+                    case 0: FoodAltarTier1BlockEntity.this.eatingProgress = value; break;
+                    case 1: FoodAltarTier1BlockEntity.this.maxEatingProgress = value; break;
                     case 2: break;
                 }
             }
@@ -140,7 +140,7 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag) {
         tag.put("inventory", itemHandler.serializeNBT());
-        tag.putInt("progress", progress);
+        tag.putInt("progress", eatingProgress);
         tag.putInt("internalTicks", internalTicks);
         tag.putBoolean("isComplete", isFullAltarShape);
         super.saveAdditional(tag);
@@ -150,7 +150,7 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
     public void load(CompoundTag nbt) {
         super.load(nbt);
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
-        progress = nbt.getInt("progress");
+        eatingProgress = nbt.getInt("progress");
         internalTicks = nbt.getInt("internalTicks");
         isFullAltarShape = nbt.getBoolean("isComplete");
     }
@@ -212,9 +212,9 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
 
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier1BlockEntity entity) {
         if(hasRecipe(entity)) {
-            entity.progress++;
+            entity.eatingProgress++;
             setChanged(pLevel, pPos, pState);
-            if(entity.progress > entity.maxProgress) {
+            if(entity.eatingProgress > entity.maxEatingProgress) {
                 craftItem(entity);
             }
         } else {
@@ -280,7 +280,7 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
     }
 
     private void resetProgress() {
-        this.progress = 0;
+        this.eatingProgress = 0;
     }
 
     private static boolean canInsertItemIntoOutputSlot(SimpleFoodContainer inventory, ItemStack output) {
