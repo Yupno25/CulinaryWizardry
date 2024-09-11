@@ -5,7 +5,6 @@ import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
 import com.yupno.culinary_wizardry.screen.SubAltarMenu;
 import com.yupno.culinary_wizardry.utils.EssenceCalculation;
 import com.yupno.culinary_wizardry.utils.FoodType;
-import com.yupno.culinary_wizardry.utils.SimpleFoodContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -16,6 +15,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -94,51 +94,6 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     @Override
-    public Component getDisplayName() {
-        String name = "";
-        switch (tier) {
-            case 1: name = "low"; break;
-            case 2: name = "mid"; break;
-            case 3: name = "high"; break;
-            case 4: name = "transcendent"; break;
-        }
-
-        return new TranslatableComponent("block.culinary_wizardry." + name + "_sub_altar_" + type.getName());
-    }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new SubAltarMenu(pContainerId, pPlayerInventory, this, this.data);
-    }
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if(side == null) {
-                return lazyItemHandler.cast();
-            }
-
-            return LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(0, stack) && index == 0)).cast();
-        }
-
-        return super.getCapability(cap, side);
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        lazyItemHandler = LazyOptional.of(() -> itemHandler);
-    }
-
-    @Override
-    public void invalidateCaps()  {
-        super.invalidateCaps();
-        lazyItemHandler.invalidate();
-    }
-
-    @Override
     protected void saveAdditional(@NotNull CompoundTag tag) {
         tag.put("inventory", itemHandler.serializeNBT());
         tag.putInt("pureCulinaryEssence", culinaryEssence);
@@ -152,15 +107,6 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
         culinaryEssence = nbt.getInt("pureCulinaryEssence");
         foodProgress = nbt.getInt("foodProgress");
-    }
-
-    public void drops() {
-        SimpleFoodContainer inventory = new SimpleFoodContainer(itemHandler.getSlots(), culinaryEssence);
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            inventory.setItem(i, itemHandler.getStackInSlot(i));
-        }
-
-        Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 
     public int getCulinaryEssence(){
@@ -216,5 +162,63 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
     @Override
     public CompoundTag getUpdateTag() {
         return saveWithoutMetadata();
+    }
+
+    /**
+     * Basic stuff
+     * */
+
+    @Nonnull
+    @Override
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
+        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            if(side == null) {
+                return lazyItemHandler.cast();
+            }
+
+            return LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(0, stack) && index == 0)).cast();
+        }
+
+        return super.getCapability(cap, side);
+    }
+
+    @Override
+    public Component getDisplayName() {
+        String name = "";
+        switch (tier) {
+            case 1: name = "low"; break;
+            case 2: name = "mid"; break;
+            case 3: name = "high"; break;
+            case 4: name = "transcendent"; break;
+        }
+
+        return new TranslatableComponent("block.culinary_wizardry." + name + "_sub_altar_" + type.getName());
+    }
+
+    @Nullable
+    @Override
+    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
+        return new SubAltarMenu(pContainerId, pPlayerInventory, this, this.data);
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        lazyItemHandler = LazyOptional.of(() -> itemHandler);
+    }
+
+    @Override
+    public void invalidateCaps()  {
+        super.invalidateCaps();
+        lazyItemHandler.invalidate();
+    }
+
+    public void drops() {
+        SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots());
+        for (int i = 0; i < itemHandler.getSlots(); i++) {
+            inventory.setItem(i, itemHandler.getStackInSlot(i));
+        }
+
+        Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 }

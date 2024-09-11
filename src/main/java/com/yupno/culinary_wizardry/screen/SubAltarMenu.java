@@ -59,17 +59,15 @@ public class SubAltarMenu extends AbstractContainerMenu {
         return data.get(3);
     }
 
-    private final int progressSize = 50; // This is the height in pixels of the texture
-
     public int getProgressSize(){
-        return progressSize;
+        return 50; // This is the height in pixels of the texture
     }
 
     public int getScaledPureCulinaryEssence() {
         int pureCulinaryEssence = this.data.get(2);
         int maxPureCulinaryEssence = this.data.get(3);
 
-        return maxPureCulinaryEssence != 0 && pureCulinaryEssence != 0 ? pureCulinaryEssence * progressSize / maxPureCulinaryEssence : 0;
+        return maxPureCulinaryEssence != 0 && pureCulinaryEssence != 0 ? pureCulinaryEssence * getProgressSize() / maxPureCulinaryEssence : 0;
     }
 
     /**

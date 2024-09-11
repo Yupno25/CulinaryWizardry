@@ -47,7 +47,7 @@ public class FoodAltarTier1Menu extends AbstractContainerMenu {
     }
 
     /**
-     * Processing Bar
+     * EATING ANIMATION
      */
 
     public boolean isCrafting() {
@@ -67,7 +67,7 @@ public class FoodAltarTier1Menu extends AbstractContainerMenu {
     }
 
     /**
-     * Culinary Essence Bar
+     * CULINARY ESSENCE BAR
      */
 
     public boolean isPresent() {
