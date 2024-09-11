@@ -14,13 +14,13 @@ import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
-public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
+public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
     private final ResourceLocation id;
     private final ItemStack output;
     private final int pureCulinaryEssence;
     private final NonNullList<Ingredient> recipeItems;
 
-    public FoodAltarTier0Recipe(ResourceLocation id, ItemStack output, int pureCulinaryEssence, NonNullList<Ingredient> recipeItems) {
+    public FoodAltarRecipe(ResourceLocation id, ItemStack output, int pureCulinaryEssence, NonNullList<Ingredient> recipeItems) {
         this.id = id;
         this.output = output;
         this.pureCulinaryEssence = pureCulinaryEssence;
@@ -66,7 +66,7 @@ public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
         return Type.INSTANCE;
     }
 
-    public static class Type implements RecipeType<FoodAltarTier0Recipe> {
+    public static class Type implements RecipeType<FoodAltarRecipe> {
         private Type() {
         }
 
@@ -74,13 +74,13 @@ public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
         public static final String ID = "food_altar_tier0";
     }
 
-    public static class Serializer implements RecipeSerializer<FoodAltarTier0Recipe> {
+    public static class Serializer implements RecipeSerializer<FoodAltarRecipe> {
         public static final Serializer INSTANCE = new Serializer();
         public static final ResourceLocation ID =
                 new ResourceLocation(CulinaryWizardry.MOD_ID, "food_altar_tier0");
 
         @Override
-        public FoodAltarTier0Recipe fromJson(ResourceLocation id, JsonObject json) {
+        public FoodAltarRecipe fromJson(ResourceLocation id, JsonObject json) {
             ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "output"));
 
             JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
@@ -92,7 +92,7 @@ public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
                 inputs.set(i, Ingredient.fromJson(ingredients.get(i)));
             }
 
-            return new FoodAltarTier0Recipe(id, output, pureCulinaryEssence, inputs);
+            return new FoodAltarRecipe(id, output, pureCulinaryEssence, inputs);
         }
 
         /* MAKE SURE FROM AND TO NETWORK HAVE THE SAME ORDER OF OPERATIONS */
@@ -100,7 +100,7 @@ public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
         /* MAKE SURE FROM AND TO NETWORK HAVE THE SAME ORDER OF OPERATIONS */
 
         @Override
-        public FoodAltarTier0Recipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
+        public FoodAltarRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
             NonNullList<Ingredient> inputs = NonNullList.withSize(buf.readInt(), Ingredient.EMPTY);
 
             for (int i = 0; i < inputs.size(); i++) {
@@ -109,11 +109,11 @@ public class FoodAltarTier0Recipe implements Recipe<SimpleFoodContainer> {
 
             ItemStack output = buf.readItem();
             int pureCulinaryEssence = buf.readInt();
-            return new FoodAltarTier0Recipe(id, output, pureCulinaryEssence, inputs);
+            return new FoodAltarRecipe(id, output, pureCulinaryEssence, inputs);
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buf, FoodAltarTier0Recipe recipe) {
+        public void toNetwork(FriendlyByteBuf buf, FoodAltarRecipe recipe) {
             buf.writeInt(recipe.getIngredients().size());
             for (Ingredient ing : recipe.getIngredients()) {
                 ing.toNetwork(buf);

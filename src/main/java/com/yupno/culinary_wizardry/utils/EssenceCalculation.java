@@ -107,4 +107,8 @@ public class EssenceCalculation {
 
         return foodEssence;
     }
+
+    public static int calculateMaxCulinaryEssence(int tier){
+        return (int)(1000 * Math.pow(10, tier));
+    }
 }

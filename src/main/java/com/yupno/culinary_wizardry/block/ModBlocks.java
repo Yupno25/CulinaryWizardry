@@ -2,6 +2,7 @@ package com.yupno.culinary_wizardry.block;
 
 import com.yupno.culinary_wizardry.CulinaryWizardry;
 import com.yupno.culinary_wizardry.block.custom.FoodAltarTier0Block;
+import com.yupno.culinary_wizardry.block.custom.FoodAltarTier1Block;
 import com.yupno.culinary_wizardry.block.custom.SubAltarBlock;
 import com.yupno.culinary_wizardry.item.ModCreativeModeTab;
 import com.yupno.culinary_wizardry.item.ModItems;
@@ -36,7 +37,7 @@ public class ModBlocks {
                     .strength(2.5F).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
 
     public static final RegistryObject<Block> FOOD_ALTAR_TIER1 = registerBlock("food_altar_tier1",
-            () -> new Block(BlockBehaviour.Properties.of(Material.WOOD)
+            () -> new FoodAltarTier1Block(BlockBehaviour.Properties.of(Material.WOOD)
                     .strength(2.5F).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
 
     public static final RegistryObject<Block> LOW_SUB_ALTAR_CULINARY = registerBlock("low_sub_altar_culinary",

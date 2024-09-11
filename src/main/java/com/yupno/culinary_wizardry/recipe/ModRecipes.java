@@ -11,8 +11,8 @@ public class ModRecipes {
     public static final DeferredRegister<RecipeSerializer<?>> SERIALIZERS =
             DeferredRegister.create(ForgeRegistries.RECIPE_SERIALIZERS, CulinaryWizardry.MOD_ID);
 
-    public static final RegistryObject<RecipeSerializer<FoodAltarTier0Recipe>> FOOD_ALTAR_TIER0_RECIPE =
-            SERIALIZERS.register("food_altar_tier0", () -> FoodAltarTier0Recipe.Serializer.INSTANCE);
+    public static final RegistryObject<RecipeSerializer<FoodAltarRecipe>> FOOD_ALTAR_TIER0_RECIPE =
+            SERIALIZERS.register("food_altar_tier0", () -> FoodAltarRecipe.Serializer.INSTANCE);
 
     public static void register(IEventBus eventBus){
         SERIALIZERS.register(eventBus);

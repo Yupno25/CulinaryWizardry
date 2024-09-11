@@ -1,7 +1,7 @@
 package com.yupno.culinary_wizardry.block.entity.custom;
 
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
-import com.yupno.culinary_wizardry.recipe.FoodAltarTier0Recipe;
+import com.yupno.culinary_wizardry.recipe.FoodAltarRecipe;
 import com.yupno.culinary_wizardry.screen.FoodAltarTier0Menu;
 import com.yupno.culinary_wizardry.utils.EssenceCalculation;
 import com.yupno.culinary_wizardry.utils.SimpleFoodContainer;
@@ -201,8 +201,8 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
 
-        Optional<FoodAltarTier0Recipe> match = level.getRecipeManager()
-                .getRecipeFor(FoodAltarTier0Recipe.Type.INSTANCE, inventory, level);
+        Optional<FoodAltarRecipe> match = level.getRecipeManager()
+                .getRecipeFor(FoodAltarRecipe.Type.INSTANCE, inventory, level);
 
         return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
                 && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem());
@@ -215,8 +215,8 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
 
-        Optional<FoodAltarTier0Recipe> match = level.getRecipeManager()
-                .getRecipeFor(FoodAltarTier0Recipe.Type.INSTANCE, inventory, level);
+        Optional<FoodAltarRecipe> match = level.getRecipeManager()
+                .getRecipeFor(FoodAltarRecipe.Type.INSTANCE, inventory, level);
 
         if(match.isPresent()) {
             entity.itemHandler.extractItem(0,1, false);

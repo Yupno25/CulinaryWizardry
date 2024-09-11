@@ -65,7 +65,7 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
 
         this.type = ((SubAltarBlock)pBlockState.getBlock()).getType();
         this.tier = ((SubAltarBlock)pBlockState.getBlock()).getTier();
-        maxCulinaryEssence = (int)(1000 * Math.pow(10, tier));
+        maxCulinaryEssence = EssenceCalculation.calculateMaxCulinaryEssence(tier);
 
         this.data = new ContainerData() {
             public int get(int index) {
@@ -161,6 +161,14 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
         }
 
         Containers.dropContents(this.level, this.worldPosition, inventory);
+    }
+
+    public int getCulinaryEssence(){
+        return culinaryEssence;
+    }
+
+    public void setCulinaryEssence(int newCulinaryEssence){
+        culinaryEssence = newCulinaryEssence;
     }
 
     /**
