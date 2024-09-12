@@ -85,10 +85,10 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
      * FOOD PROCESSING
      */
 
-    public int getFoodProgress() {
+    public int getEatingProgress() {
         return this.data.get(2);
     }
-    public int getMaxFoodProgress() {
+    public int getMaxEatingProgress() {
         return this.data.get(3);
     }
 

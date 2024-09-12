@@ -54,10 +54,13 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
     protected final ContainerData data;
+    private int currentCulinaryEssenceCost = 0;
+    private int remainingCulinaryEssenceCost = 0;
+    private float currentCulinaryEssenceOverflow = 0;
     private int progress = 0;
     private int maxProgress = 72;
-    private int foodProgress = 0;
-    private int maxFoodProgress = 28;
+    private int eatingProgress = 0;
+    private int maxEatingProgress = 28;
     private int pureCulinaryEssence = 0;
     private int maxPureCulinaryEssence = 1000;
 
@@ -68,8 +71,8 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
                 switch (index) {
                     case 0: return FoodAltarTier0BlockEntity.this.progress;
                     case 1: return FoodAltarTier0BlockEntity.this.maxProgress;
-                    case 2: return FoodAltarTier0BlockEntity.this.foodProgress;
-                    case 3: return FoodAltarTier0BlockEntity.this.maxFoodProgress;
+                    case 2: return FoodAltarTier0BlockEntity.this.eatingProgress;
+                    case 3: return FoodAltarTier0BlockEntity.this.maxEatingProgress;
                     case 4: return FoodAltarTier0BlockEntity.this.pureCulinaryEssence;
                     case 5: return FoodAltarTier0BlockEntity.this.maxPureCulinaryEssence;
                     default: return 0;
@@ -80,8 +83,8 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
                 switch(index) {
                     case 0: FoodAltarTier0BlockEntity.this.progress = value; break;
                     case 1: FoodAltarTier0BlockEntity.this.maxProgress = value; break;
-                    case 2: FoodAltarTier0BlockEntity.this.foodProgress = value; break;
-                    case 3: FoodAltarTier0BlockEntity.this.maxFoodProgress = value; break;
+                    case 2: FoodAltarTier0BlockEntity.this.eatingProgress = value; break;
+                    case 3: FoodAltarTier0BlockEntity.this.maxEatingProgress = value; break;
                     case 4: FoodAltarTier0BlockEntity.this.pureCulinaryEssence = value; break;
                     case 5: FoodAltarTier0BlockEntity.this.maxPureCulinaryEssence = value; break;
                 }
@@ -98,7 +101,10 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
         tag.put("inventory", itemHandler.serializeNBT());
         tag.putInt("pureCulinaryEssence", pureCulinaryEssence);
         tag.putInt("progress", progress);
-        tag.putInt("foodProgress", foodProgress);
+        tag.putInt("eatingProgress", eatingProgress);
+        tag.putInt("currentCulinary", currentCulinaryEssenceCost);
+        tag.putInt("remainingCulinary", remainingCulinaryEssenceCost);
+        tag.putFloat("currentOverflow", currentCulinaryEssenceOverflow);
         super.saveAdditional(tag);
     }
 
@@ -108,7 +114,10 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
         pureCulinaryEssence = nbt.getInt("pureCulinaryEssence");
         progress = nbt.getInt("progress");
-        foodProgress = nbt.getInt("foodProgress");
+        eatingProgress = nbt.getInt("eatingProgress");
+        currentCulinaryEssenceCost = nbt.getInt("currentCulinary");
+        remainingCulinaryEssenceCost = nbt.getInt("remainingCulinary");
+        currentCulinaryEssenceOverflow = nbt.getFloat("currentOverflow");
     }
 
     /**
@@ -116,22 +125,11 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
      * */
 
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier0BlockEntity entity) {
-        if(hasRecipe(entity)) {
-            entity.progress++;
-            setChanged(pLevel, pPos, pState);
-            if(entity.progress > entity.maxProgress) {
-            craftItem(entity);
-            }
-        } else {
-            entity.resetProgress();
-            setChanged(pLevel, pPos, pState);
-        }
-
         if(entity.itemHandler.getStackInSlot(2).isEdible() && entity.pureCulinaryEssence < entity.maxPureCulinaryEssence){
-            entity.foodProgress++;
+            entity.eatingProgress++;
             setChanged(pLevel, pPos, pState);
 
-            if(entity.foodProgress > entity.maxFoodProgress){
+            if(entity.eatingProgress > entity.maxEatingProgress){
                 entity.pureCulinaryEssence = Math.min(entity.pureCulinaryEssence +
                         EssenceCalculation.calculatePureFoodEssence(entity.itemHandler.getStackInSlot(2), 0), entity.maxPureCulinaryEssence);
 
@@ -142,11 +140,50 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
             entity.resetFoodProgress();
             setChanged(pLevel, pPos, pState);
         }
+
+        if(hasRecipe(entity)) {
+            entity.progress++;
+
+
+            setChanged(pLevel, pPos, pState);
+            if(entity.progress > entity.maxProgress) {
+                craftItem(entity);
+                return;
+            }
+
+            // Gets 1/maxProgress of the essence so that the essence drains slowly and not all at once
+            // Needs to round since the division is almost certainly not an int
+            // The overflow from that is saved to ensure that the full cost will be paid
+            float temp = (float) entity.currentCulinaryEssenceCost / entity.maxProgress;
+            int temp2 = Math.round(temp + entity.currentCulinaryEssenceOverflow);
+            if(temp2 == Math.round(temp)){
+                entity.currentCulinaryEssenceOverflow += temp - temp2;
+            }else {
+                entity.currentCulinaryEssenceOverflow -= temp2 - temp;
+            }
+
+            entity.pureCulinaryEssence -= temp2;
+            entity.remainingCulinaryEssenceCost -= temp2;
+        } else {
+            entity.resetProgress();
+            setChanged(pLevel, pPos, pState);
+        }
     }
 
     private static boolean hasRecipe(FoodAltarTier0BlockEntity entity) {
         Level level = entity.level;
-        SimpleFoodContainer inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), entity.pureCulinaryEssence);
+        SimpleFoodContainer inventory;
+
+        if(entity.currentCulinaryEssenceCost != 0 && (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost) == 0){
+            inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), entity.pureCulinaryEssence
+                    + entity.currentCulinaryEssenceCost);
+        }else {
+            inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), entity.pureCulinaryEssence
+                    + (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost));
+        }
+
+
+
         for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
@@ -154,13 +191,29 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
         Optional<FoodAltarRecipe> match = level.getRecipeManager()
                 .getRecipeFor(FoodAltarRecipe.Type.INSTANCE, inventory, level);
 
-        return match.isPresent() && canInsertAmountIntoOutputSlot(inventory)
-                && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem());
+        if(match.isPresent() && canInsertAmountIntoOutputSlot(inventory) && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem())){
+            entity.currentCulinaryEssenceCost = match.get().getPureCulinaryEssenceCost();
+            if(entity.remainingCulinaryEssenceCost == 0){
+                entity.remainingCulinaryEssenceCost = entity.currentCulinaryEssenceCost;
+            }
+            return true;
+        }
+        return false;
     }
 
     private static void craftItem(FoodAltarTier0BlockEntity entity) {
         Level level = entity.level;
-        SimpleFoodContainer inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), entity.pureCulinaryEssence);
+        SimpleFoodContainer inventory;
+
+        if(entity.currentCulinaryEssenceCost != 0 && (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost) == 0){
+            inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), entity.pureCulinaryEssence
+                    + entity.currentCulinaryEssenceCost);
+        }else {
+            inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), entity.pureCulinaryEssence
+                    + (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost));
+        }
+
+
         for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
@@ -170,7 +223,6 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
 
         if(match.isPresent()) {
             entity.itemHandler.extractItem(0,1, false);
-            entity.pureCulinaryEssence -= match.get().getPureCulinaryEssenceCost();
 
             entity.itemHandler.setStackInSlot(1, new ItemStack(match.get().getResultItem().getItem(),
                     entity.itemHandler.getStackInSlot(1).getCount() + 1));
@@ -181,10 +233,13 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
 
     private void resetProgress() {
         this.progress = 0;
+        this.currentCulinaryEssenceCost = 0;
+        this.currentCulinaryEssenceOverflow = 0;
+        this.remainingCulinaryEssenceCost = 0;
     }
 
     private void resetFoodProgress() {
-        this.foodProgress = 0;
+        this.eatingProgress = 0;
     }
 
     private static boolean canInsertItemIntoOutputSlot(SimpleFoodContainer inventory, ItemStack output) {

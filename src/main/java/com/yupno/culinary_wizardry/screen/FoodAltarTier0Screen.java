@@ -3,11 +3,9 @@ package com.yupno.culinary_wizardry.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.yupno.culinary_wizardry.CulinaryWizardry;
-import com.yupno.culinary_wizardry.block.entity.custom.FoodAltarTier0BlockEntity;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -43,8 +41,8 @@ public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0
         }
 
         /** FOOD PROCESSING ANIMATION */
-        int foodProgress = menu.getFoodProgress();
-        int seventhMaxFoodProgress = (int)(menu.getMaxFoodProgress() / 7);
+        int foodProgress = menu.getEatingProgress();
+        int seventhMaxFoodProgress = (int)(menu.getMaxEatingProgress() / 7);
 
         if (foodProgress > 0) {
             blit(pPoseStack, x + 151, y + 63, 192, 8, 8, 8);
