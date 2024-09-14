@@ -31,13 +31,19 @@ public class SubAltarScreen extends AbstractContainerScreen<SubAltarMenu> {
 
         /** CULINARY ESSENCE BAR */
         if (menu.getCulinaryEssence() > 0) {
-            blit(pPoseStack, x + 80, y + 10 + (menu.getProgressSize() - menu.getScaledPureCulinaryEssence()),
+            blit(pPoseStack, x + 80, y + 7 + (menu.getProgressSize() - menu.getScaledPureCulinaryEssence()),
                     176, 0, 16, menu.getScaledPureCulinaryEssence());
+        }
+
+        /** CULINARY ESSENCE BUFFER */
+        if (menu.isPresent()) {
+            blit(pPoseStack, x + 78, y + 62 + (menu.getFillSize() - menu.getFillProgress()),
+                    193, 30 + (menu.getFillSize() - menu.getFillProgress()), 20, menu.getFillProgress());
         }
 
         /** FOOD PROCESSING ANIMATION */
         int foodProgress = menu.getEatingProgress();
-        int seventhMaxFoodProgress = (int)(menu.getMaxEatingProgress() / 7);
+        int seventhMaxFoodProgress = menu.getMaxEatingProgress() / 7;
 
         if (foodProgress > 0) {
             blit(pPoseStack, x + 79, y + 63, 192, 0, 8, 8);
@@ -49,10 +55,10 @@ public class SubAltarScreen extends AbstractContainerScreen<SubAltarMenu> {
                 blit(pPoseStack, x + 79, y + 73, 208, 0, 8, 8);
             }
             if (foodProgress > seventhMaxFoodProgress * 3) {
-                blit(pPoseStack, x + 85, y + 73, 217, 0, 13, 8);
+                blit(pPoseStack, x + 85, y + 73, 217, 0, 12, 8);
             }
             if (foodProgress > seventhMaxFoodProgress * 4) {
-                blit(pPoseStack, x + 86, y + 63, 231, 0, 11, 8);
+                blit(pPoseStack, x + 86, y + 63, 230, 0, 11, 8);
             }
             if (foodProgress > seventhMaxFoodProgress * 5) {
                 blit(pPoseStack, x + 79, y + 63, 192, 11, 18, 18);

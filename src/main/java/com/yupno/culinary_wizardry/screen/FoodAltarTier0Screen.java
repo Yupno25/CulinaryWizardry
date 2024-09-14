@@ -54,10 +54,10 @@ public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0
                 blit(pPoseStack, x + 151, y + 73, 208, 8, 8, 8);
             }
             if (foodProgress > seventhMaxFoodProgress * 3) {
-                blit(pPoseStack, x + 157, y + 73, 217, 8, 13, 8);
+                blit(pPoseStack, x + 157, y + 73, 217, 8, 12, 8);
             }
             if (foodProgress > seventhMaxFoodProgress * 4) {
-                blit(pPoseStack, x + 158, y + 63, 231, 8, 11, 8);
+                blit(pPoseStack, x + 158, y + 63, 230, 8, 11, 8);
             }
             if (foodProgress > seventhMaxFoodProgress * 5) {
                 blit(pPoseStack, x + 151, y + 63, 192, 19, 18, 18);

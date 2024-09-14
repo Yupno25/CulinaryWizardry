@@ -3,6 +3,7 @@ package com.yupno.culinary_wizardry.screen;
 import com.yupno.culinary_wizardry.block.custom.SubAltarBlock;
 import com.yupno.culinary_wizardry.block.entity.custom.SubAltarBlockEntity;
 import com.yupno.culinary_wizardry.screen.slot.ModFoodSlot;
+import com.yupno.culinary_wizardry.utils.EssenceCalculation;
 import com.yupno.culinary_wizardry.utils.FoodType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -21,7 +22,7 @@ public class SubAltarMenu extends AbstractContainerMenu {
     private final FoodType type;
 
     public SubAltarMenu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(4));
+        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(6));
     }
 
     public SubAltarMenu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -78,6 +79,26 @@ public class SubAltarMenu extends AbstractContainerMenu {
     }
     public int getMaxEatingProgress() {
         return this.data.get(1);
+    }
+
+    /**
+     * CULINARY ESSENCE BUFFER
+     */
+
+    public boolean isPresent() {
+        return data.get(4) > 0;
+    }
+
+    public int getFillSize(){
+        return 20; // This is the height in pixels of the texture
+    }
+
+    public int getFillProgress() {
+        int progress = data.get(4);
+        int maxProgress = data.get(5);  // Max Progress
+        int progressArrowSize = 20; // This is the height in pixels of your arrow
+
+        return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
     }
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons

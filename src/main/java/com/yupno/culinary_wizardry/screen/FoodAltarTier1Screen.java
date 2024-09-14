@@ -49,10 +49,10 @@ public class FoodAltarTier1Screen extends AbstractContainerScreen<FoodAltarTier1
                 superBlit(pPoseStack, x, y + 10, 192, 0, 8, 8);
             }
             if (foodProgress > seventhMaxFoodProgress * 3) {
-                superBlit(pPoseStack, x + 6, y + 10, 201, 0, 13, 8);
+                superBlit(pPoseStack, x + 6, y + 10, 201, 0, 12, 8);
             }
             if (foodProgress > seventhMaxFoodProgress * 4) {
-                superBlit(pPoseStack, x + 7, y, 215, 0, 11, 8);
+                superBlit(pPoseStack, x + 7, y, 214, 0, 11, 8);
             }
             if (foodProgress > seventhMaxFoodProgress * 5) {
                 superBlit(pPoseStack, x, y, 176, 11, 18, 18);
