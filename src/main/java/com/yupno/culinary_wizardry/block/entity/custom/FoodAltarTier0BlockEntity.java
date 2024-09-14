@@ -33,6 +33,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvider {
@@ -63,6 +65,7 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
     private int maxEatingProgress = 28;
     private int pureCulinaryEssence = 0;
     private int maxPureCulinaryEssence = 1000;
+    private final int tier = 0;
 
     public FoodAltarTier0BlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.FOOD_ALTAR_TIER0_ENTITY.get(), pPos, pBlockState);
@@ -176,10 +179,11 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
 
         if(entity.currentCulinaryEssenceCost != 0 && (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost) == 0){
             inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), entity.pureCulinaryEssence
-                    + entity.currentCulinaryEssenceCost);
+                    + entity.currentCulinaryEssenceCost, 0, 0, 0, 0, 0, entity.tier);
         }else {
             inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), entity.pureCulinaryEssence
-                    + (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost));
+                    + (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost), 0,
+                    0, 0, 0, 0, entity.tier);
         }
 
 
@@ -188,8 +192,9 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
 
-        Optional<FoodAltarRecipe> match = level.getRecipeManager()
-                .getRecipeFor(FoodAltarRecipe.Type.INSTANCE, inventory, level);
+        List<FoodAltarRecipe> recipes = level.getRecipeManager().getAllRecipesFor(FoodAltarRecipe.Type.INSTANCE);
+        Optional<FoodAltarRecipe> match = recipes.stream().sorted(Comparator.comparingInt(recipe -> ((FoodAltarRecipe) recipe).getRecipeList().size()).reversed())
+                .filter(recipe -> recipe.matches(inventory, level)).findFirst();
 
         if(match.isPresent() && canInsertAmountIntoOutputSlot(inventory) && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem())){
             entity.currentCulinaryEssenceCost = match.get().getPureCulinaryEssenceCost();
@@ -207,19 +212,20 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
 
         if(entity.currentCulinaryEssenceCost != 0 && (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost) == 0){
             inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), entity.pureCulinaryEssence
-                    + entity.currentCulinaryEssenceCost);
+                    + entity.currentCulinaryEssenceCost, 0, 0, 0, 0, 0, entity.tier);
         }else {
             inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), entity.pureCulinaryEssence
-                    + (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost));
+                    + (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost), 0,
+                    0, 0, 0, 0, entity.tier);
         }
-
 
         for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
 
-        Optional<FoodAltarRecipe> match = level.getRecipeManager()
-                .getRecipeFor(FoodAltarRecipe.Type.INSTANCE, inventory, level);
+        List<FoodAltarRecipe> recipes = level.getRecipeManager().getAllRecipesFor(FoodAltarRecipe.Type.INSTANCE);
+        Optional<FoodAltarRecipe> match = recipes.stream().sorted(Comparator.comparingInt(recipe -> ((FoodAltarRecipe) recipe).getRecipeList().size()).reversed())
+                .filter(recipe -> recipe.matches(inventory, level)).findFirst();
 
         if(match.isPresent()) {
             entity.itemHandler.extractItem(0,1, false);

@@ -2,22 +2,16 @@
   "type": "culinary_wizardry:food_altar",
   "ingredients": [
     {
-      "item": "minecraft:diamond"
+      "item": "minecraft:cookie"
     },
     {
-      "item": "minecraft:diamond"
-    },
-    {
-      "item": "minecraft:diamond"
-    },
-    {
-      "item": "minecraft:diamond"
+      "item": "minecraft:snowball"
     }
   ],
   "output": {
-    "item": "culinary_wizardry:example_item"
+    "item": "minecraft:coal"
   },
-  "pure_culinary_essence": 50,
+  "pure_culinary_essence": 40,
   "pure_fruits_essence": 0,
   "pure_grains_essence": 0,
   "pure_proteins_essence": 0,

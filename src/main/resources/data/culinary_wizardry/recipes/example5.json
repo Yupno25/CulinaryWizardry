@@ -1,0 +1,18 @@
+{
+  "type": "culinary_wizardry:food_altar",
+  "ingredients": [
+    {
+      "item": "minecraft:cookie"
+    }
+  ],
+  "output": {
+    "item": "minecraft:snowball"
+  },
+  "pure_culinary_essence": 20,
+  "pure_fruits_essence": 0,
+  "pure_grains_essence": 0,
+  "pure_proteins_essence": 0,
+  "pure_sugars_essence": 0,
+  "pure_vegetables_essence": 0,
+  "tier": 0
+}

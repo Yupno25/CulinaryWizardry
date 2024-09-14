@@ -37,7 +37,7 @@ public class FoodAltarTier1Screen extends AbstractContainerScreen<FoodAltarTier1
 
         /** FOOD PROCESSING ANIMATION */
         int foodProgress = menu.getEatingProgress();
-        int seventhMaxFoodProgress = (int)(menu.getMaxEatingProgress() / 7);
+        int seventhMaxFoodProgress = menu.getMaxEatingProgress() / 7;
 
         if (foodProgress > 0) {
             superBlit(pPoseStack, x, y, 176, 0, 8, 8);
@@ -63,11 +63,13 @@ public class FoodAltarTier1Screen extends AbstractContainerScreen<FoodAltarTier1
         }
     }
 
-    private final int[][] xyItemSlot = new int[][]{{60, 11}, {52, 41}, {79, 61}, {106, 41}, {98, 11}};
-
+    private final int[][] xyItemSlot = new int[][]{{60, 11}, {52, 41}, {79, 60}, {106, 41}, {98, 11}};
     private void superBlit(PoseStack pPoseStack, int pX, int pY, int pUOffset, int pVOffset, int pUWidth, int pVHeight){
-        for (int i = 0; i < 5; i++) {
-            blit(pPoseStack, pX + xyItemSlot[i][0], pY + xyItemSlot[i][1], pUOffset, pVOffset, pUWidth, pVHeight);
+        int[] usedItemslots = menu.getUsedItemSlots();
+
+        for (int i = 0; i < xyItemSlot.length; i++) {
+            if(usedItemslots[i] == i)
+                blit(pPoseStack, pX + xyItemSlot[i][0], pY + xyItemSlot[i][1], pUOffset, pVOffset, pUWidth, pVHeight);
         }
     }
 

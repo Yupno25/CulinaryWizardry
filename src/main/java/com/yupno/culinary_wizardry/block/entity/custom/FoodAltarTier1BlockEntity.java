@@ -1,6 +1,7 @@
 package com.yupno.culinary_wizardry.block.entity.custom;
 
 import com.google.common.base.Predicates;
+import com.mojang.logging.LogUtils;
 import com.yupno.culinary_wizardry.block.ModBlocks;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
 import com.yupno.culinary_wizardry.recipe.FoodAltarRecipe;
@@ -15,6 +16,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -23,6 +25,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -43,6 +46,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvider {
@@ -92,7 +97,7 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
     private int currentCulinaryEssenceCost = 0;
     private int remainingCulinaryEssenceCost = 0;
     private float currentCulinaryEssenceOverflow = 0;
-    private final EnumProperty<SlabType> TYPE = BlockStateProperties.SLAB_TYPE;
+    private int[] usedItemSlots = {0, 1, 2, 3, 4};
 
     public FoodAltarTier1BlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.FOOD_ALTAR_TIER1_ENTITY.get(), pPos, pBlockState);
@@ -102,6 +107,11 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
                     case 0: return FoodAltarTier1BlockEntity.this.eatingProgress;
                     case 1: return FoodAltarTier1BlockEntity.this.maxEatingProgress;
                     case 2: return FoodAltarTier1BlockEntity.this.getSaveCulinaryEssence();
+                    case 3: return FoodAltarTier1BlockEntity.this.usedItemSlots[0];
+                    case 4: return FoodAltarTier1BlockEntity.this.usedItemSlots[1];
+                    case 5: return FoodAltarTier1BlockEntity.this.usedItemSlots[2];
+                    case 6: return FoodAltarTier1BlockEntity.this.usedItemSlots[3];
+                    case 7: return FoodAltarTier1BlockEntity.this.usedItemSlots[4];
                     default: return 0;
                 }
             }
@@ -111,13 +121,20 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
                     case 0: FoodAltarTier1BlockEntity.this.eatingProgress = value; break;
                     case 1: FoodAltarTier1BlockEntity.this.maxEatingProgress = value; break;
                     case 2: break;
+                    case 3: FoodAltarTier1BlockEntity.this.usedItemSlots[0] = value; break;
+                    case 4: FoodAltarTier1BlockEntity.this.usedItemSlots[1] = value; break;
+                    case 5: FoodAltarTier1BlockEntity.this.usedItemSlots[2] = value; break;
+                    case 6: FoodAltarTier1BlockEntity.this.usedItemSlots[3] = value; break;
+                    case 7: FoodAltarTier1BlockEntity.this.usedItemSlots[4] = value; break;
                 }
             }
 
             public int getCount() {
-                return 3;
+                return 8;
             }
         };
+
+        EnumProperty<SlabType> TYPE = BlockStateProperties.SLAB_TYPE;
 
         for (int i = 0; i < height; i++) {
             altarShapes[i] = BlockPatternBuilder.start()
@@ -271,20 +288,34 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
 
         if(entity.currentCulinaryEssenceCost != 0 && (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost) == 0){
             inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getCulinaryEssence()
-                    + entity.currentCulinaryEssenceCost);
+                    + entity.currentCulinaryEssenceCost, 0, 0, 0, 0, 0, entity.tier);
         }else {
             inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getCulinaryEssence()
-                    + (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost));
+                    + (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost), 0,
+                    0, 0, 0, 0, entity.tier);
         }
 
         for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
 
-        Optional<FoodAltarRecipe> match = level.getRecipeManager()
-                .getRecipeFor(FoodAltarRecipe.Type.INSTANCE, inventory, level);
+        List<FoodAltarRecipe> recipes = level.getRecipeManager().getAllRecipesFor(FoodAltarRecipe.Type.INSTANCE);
+        Optional<FoodAltarRecipe> match = recipes.stream().sorted(Comparator.comparingInt(recipe -> ((FoodAltarRecipe) recipe).getRecipeList().size()).reversed())
+                .filter(recipe -> recipe.matches(inventory, level)).findFirst();
+
 
         if(match.isPresent() && canInsertAmountIntoOutputSlot(inventory) && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem())){
+            List<String> recipeList = match.get().getRecipeList();
+            for (int i = 0; i < 5; i++) {
+                String string = entity.itemHandler.getStackInSlot(i).getItem().toString();
+                if(recipeList.contains(string)){
+                    entity.usedItemSlots[i] = i;
+                    recipeList.remove(string);
+                }else {
+                    entity.usedItemSlots[i] = -1;
+                }
+            }
+
             entity.currentCulinaryEssenceCost = match.get().getPureCulinaryEssenceCost();
             if(entity.remainingCulinaryEssenceCost == 0){
                 entity.remainingCulinaryEssenceCost = entity.currentCulinaryEssenceCost;
@@ -305,10 +336,11 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
 
         if(entity.currentCulinaryEssenceCost != 0 && (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost) == 0){
             inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getCulinaryEssence()
-                    + entity.currentCulinaryEssenceCost);
+                    + entity.currentCulinaryEssenceCost, 0, 0, 0, 0, 0, entity.tier);
         }else {
             inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getCulinaryEssence()
-                    + (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost));
+                    + (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost), 0,
+                    0, 0, 0, 0, entity.tier);
         }
 
 
@@ -316,14 +348,22 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
 
-        Optional<FoodAltarRecipe> match = level.getRecipeManager()
-                .getRecipeFor(FoodAltarRecipe.Type.INSTANCE, inventory, level);
+        List<FoodAltarRecipe> recipes = level.getRecipeManager().getAllRecipesFor(FoodAltarRecipe.Type.INSTANCE);
+        Optional<FoodAltarRecipe> match = recipes.stream().sorted(Comparator.comparingInt(recipe -> ((FoodAltarRecipe) recipe).getRecipeList().size()).reversed())
+                .filter(recipe -> recipe.matches(inventory, level)).findFirst();
 
         if(match.isPresent()) {
-            entity.itemHandler.extractItem(0,1, false);
+            List<String> recipeList = match.get().getRecipeList();
+            for (int i = 0; i < 5; i++) {
+                String string = entity.itemHandler.getStackInSlot(i).getItem().toString();
+                if(recipeList.contains(string)){
+                    entity.itemHandler.extractItem(i,1, false);
+                    recipeList.remove(string);
+                }
+            }
 
-            entity.itemHandler.setStackInSlot(1, new ItemStack(match.get().getResultItem().getItem(),
-                    entity.itemHandler.getStackInSlot(1).getCount() + 1));
+            entity.itemHandler.setStackInSlot(5, new ItemStack(match.get().getResultItem().getItem(),
+                    entity.itemHandler.getStackInSlot(5).getCount() + 1));
 
             entity.resetProgress();
         }
@@ -337,11 +377,11 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
     }
 
     private static boolean canInsertItemIntoOutputSlot(SimpleFoodContainer inventory, ItemStack output) {
-        return inventory.getItem(1).getItem() == output.getItem() || inventory.getItem(1).isEmpty();
+        return inventory.getItem(5).getItem() == output.getItem() || inventory.getItem(5).isEmpty();
     }
 
     private static boolean canInsertAmountIntoOutputSlot(SimpleFoodContainer inventory) {
-        return inventory.getItem(1).getMaxStackSize() > inventory.getItem(1).getCount();
+        return inventory.getItem(5).getMaxStackSize() > inventory.getItem(5).getCount();
     }
 
     /**

@@ -2,26 +2,29 @@
   "type": "culinary_wizardry:food_altar",
   "ingredients": [
     {
-      "item": "minecraft:diamond"
+      "item": "minecraft:deepslate"
     },
     {
-      "item": "minecraft:diamond"
+      "item": "minecraft:coal"
     },
     {
-      "item": "minecraft:diamond"
+      "item": "minecraft:dried_kelp"
     },
     {
-      "item": "minecraft:diamond"
+      "item": "minecraft:coal"
+    },
+    {
+      "item": "minecraft:deepslate"
     }
   ],
   "output": {
-    "item": "culinary_wizardry:example_item"
+    "item": "minecraft:deepslate_coal_ore"
   },
-  "pure_culinary_essence": 50,
+  "pure_culinary_essence": 200,
   "pure_fruits_essence": 0,
   "pure_grains_essence": 0,
   "pure_proteins_essence": 0,
   "pure_sugars_essence": 0,
   "pure_vegetables_essence": 0,
-  "tier": 1
+  "tier": 0
 }

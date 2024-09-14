@@ -21,7 +21,7 @@ public class FoodAltarTier1Menu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public FoodAltarTier1Menu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(3));
+        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(8));
     }
 
     public FoodAltarTier1Menu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -44,6 +44,10 @@ public class FoodAltarTier1Menu extends AbstractContainerMenu {
         });
 
         addDataSlots(data);
+    }
+
+    public int[] getUsedItemSlots(){
+        return new int[]{data.get(3), data.get(4), data.get(5), data.get(6), data.get(7)};
     }
 
     /**
