@@ -40,6 +40,10 @@ public class ModBlocks {
             () -> new FoodAltarTier1Block(BlockBehaviour.Properties.of(Material.WOOD)
                     .strength(2.5F).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
 
+    public static final RegistryObject<Block> FOOD_ALTAR_TIER2 = registerBlock("food_altar_tier2",
+            () -> new Block(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2.5F).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
     public static final RegistryObject<Block> LOW_SUB_ALTAR_CULINARY = registerBlock("low_sub_altar_culinary",
             () -> new SubAltarBlock(BlockBehaviour.Properties.of(Material.WOOD)
                     .strength(2f).requiresCorrectToolForDrops(), FoodType.CULINARY, 1), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
