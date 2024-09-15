@@ -63,7 +63,7 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
             recipeList.add(recipeItems.get(i).getItems()[0].getItem().toString());
         }
 
-        if(recipeList.size() > 1 && tier == 0)
+        if(recipeList.size() > 1 && pContainer.getTier() == 0)
             return false;
 
         // -1 cause of result slot
