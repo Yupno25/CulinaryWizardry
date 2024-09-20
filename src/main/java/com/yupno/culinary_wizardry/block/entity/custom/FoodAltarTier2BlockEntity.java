@@ -4,7 +4,7 @@ import com.google.common.base.Predicates;
 import com.yupno.culinary_wizardry.block.ModBlocks;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
 import com.yupno.culinary_wizardry.recipe.FoodAltarRecipe;
-import com.yupno.culinary_wizardry.screen.FoodAltarTier1Menu;
+import com.yupno.culinary_wizardry.screen.FoodAltarTier2Menu;
 import com.yupno.culinary_wizardry.utils.SimpleFoodContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -47,7 +47,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvider {
+public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvider {
     private final ItemStackHandler itemHandler = new ItemStackHandler(6){
         @Override
         protected void onContentsChanged(int slot) {
@@ -67,7 +67,7 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
     protected final ContainerData data;
     private int eatingProgress = 0;
     private int maxEatingProgress = 28;
-    private final int tier = 1;
+    private final int tier = 2;
 
     /**
      *  SUBALTARSHIFT, HEIGHT, ALTARSHAPE, THISALTARHEIGHT AND ALTARLEVELS ARE CLOSELY CONNECTED
@@ -80,12 +80,12 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
     private final int thisAltarHeight = 1; // Height of this altar relative to the structure as a whole
     private final int blocksToCenter = 1; // How many blocks it takes to get to the center of the layer
     private final String[][] altarLevels = new String[][]{
-                                            {"bBb", "B?B", "bBb"},
-                                            {"w?w", "?f?", "w?w"},
-                                            {"tAt", "A?A", "tAt"},
-                                            {"AwA", "wuw", "AwA"},
-                                            {"A?A", "?C?", "A?A"},
-                                            {"AwA", "wdw", "AwA"}};
+            {"bBb", "BPB", "bBb"},
+            {"F?G", "?f?", "S?V"},
+            {"tAt", "AXA", "tAt"},
+            {"AwA", "wuw", "AwA"},
+            {"A?A", "?C?", "A?A"},
+            {"AwA", "wdw", "AwA"}};
     private BlockPattern[] altarShapes = new BlockPattern[height];
     private final Vec3i subaltarShift = new Vec3i(0, 3, 0);
     private boolean isFullAltarShape = false;
@@ -96,33 +96,33 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
     private float currentCulinaryEssenceOverflow = 0;
     private int[] usedItemSlots = {0, 1, 2, 3, 4};
 
-    public FoodAltarTier1BlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(ModBlockEntities.FOOD_ALTAR_TIER1_ENTITY.get(), pPos, pBlockState);
+    public FoodAltarTier2BlockEntity(BlockPos pPos, BlockState pBlockState) {
+        super(ModBlockEntities.FOOD_ALTAR_TIER2_ENTITY.get(), pPos, pBlockState);
         this.data = new ContainerData() {
             public int get(int index) {
                 switch (index) {
-                    case 0: return FoodAltarTier1BlockEntity.this.eatingProgress;
-                    case 1: return FoodAltarTier1BlockEntity.this.maxEatingProgress;
-                    case 2: return FoodAltarTier1BlockEntity.this.getSafeCulinaryEssence();
-                    case 3: return FoodAltarTier1BlockEntity.this.usedItemSlots[0];
-                    case 4: return FoodAltarTier1BlockEntity.this.usedItemSlots[1];
-                    case 5: return FoodAltarTier1BlockEntity.this.usedItemSlots[2];
-                    case 6: return FoodAltarTier1BlockEntity.this.usedItemSlots[3];
-                    case 7: return FoodAltarTier1BlockEntity.this.usedItemSlots[4];
+                    case 0: return FoodAltarTier2BlockEntity.this.eatingProgress;
+                    case 1: return FoodAltarTier2BlockEntity.this.maxEatingProgress;
+                    //case 2: return FoodAltarTier2BlockEntity.this.getSaveCulinaryEssence();
+                    case 3: return FoodAltarTier2BlockEntity.this.usedItemSlots[0];
+                    case 4: return FoodAltarTier2BlockEntity.this.usedItemSlots[1];
+                    case 5: return FoodAltarTier2BlockEntity.this.usedItemSlots[2];
+                    case 6: return FoodAltarTier2BlockEntity.this.usedItemSlots[3];
+                    case 7: return FoodAltarTier2BlockEntity.this.usedItemSlots[4];
                     default: return 0;
                 }
             }
 
             public void set(int index, int value) {
                 switch(index) {
-                    case 0: FoodAltarTier1BlockEntity.this.eatingProgress = value; break;
-                    case 1: FoodAltarTier1BlockEntity.this.maxEatingProgress = value; break;
-                    case 2: break;
-                    case 3: FoodAltarTier1BlockEntity.this.usedItemSlots[0] = value; break;
-                    case 4: FoodAltarTier1BlockEntity.this.usedItemSlots[1] = value; break;
-                    case 5: FoodAltarTier1BlockEntity.this.usedItemSlots[2] = value; break;
-                    case 6: FoodAltarTier1BlockEntity.this.usedItemSlots[3] = value; break;
-                    case 7: FoodAltarTier1BlockEntity.this.usedItemSlots[4] = value; break;
+                    case 0: FoodAltarTier2BlockEntity.this.eatingProgress = value; break;
+                    case 1: FoodAltarTier2BlockEntity.this.maxEatingProgress = value; break;
+                    //case 2: break;
+                    case 3: FoodAltarTier2BlockEntity.this.usedItemSlots[0] = value; break;
+                    case 4: FoodAltarTier2BlockEntity.this.usedItemSlots[1] = value; break;
+                    case 5: FoodAltarTier2BlockEntity.this.usedItemSlots[2] = value; break;
+                    case 6: FoodAltarTier2BlockEntity.this.usedItemSlots[3] = value; break;
+                    case 7: FoodAltarTier2BlockEntity.this.usedItemSlots[4] = value; break;
                 }
             }
 
@@ -144,8 +144,14 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
                     .where('u', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.STONE_BRICK_SLAB).where(TYPE, Predicates.equalTo(SlabType.TOP))))
                     .where('d', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.STONE_BRICK_SLAB).where(TYPE, Predicates.equalTo(SlabType.BOTTOM))))
                     .where('w', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.STONE_BRICK_WALL)))
-                    .where('f', BlockInWorld.hasState(BlockStatePredicate.forBlock(ModBlocks.FOOD_ALTAR_TIER1.get())))
-                    .where('C', BlockInWorld.hasState(BlockStatePredicate.forBlock(ModBlocks.LOW_SUB_ALTAR_CULINARY.get()))).build();
+                    .where('f', BlockInWorld.hasState(BlockStatePredicate.forBlock(ModBlocks.FOOD_ALTAR_TIER2.get())))
+                    .where('X', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.BARRIER)))
+                    .where('C', BlockInWorld.hasState(BlockStatePredicate.forBlock(ModBlocks.MID_SUB_ALTAR_CULINARY.get())))
+                    .where('F', BlockInWorld.hasState(BlockStatePredicate.forBlock(ModBlocks.MID_SUB_ALTAR_FRUITS.get())))
+                    .where('G', BlockInWorld.hasState(BlockStatePredicate.forBlock(ModBlocks.MID_SUB_ALTAR_GRAINS.get())))
+                    .where('P', BlockInWorld.hasState(BlockStatePredicate.forBlock(ModBlocks.MID_SUB_ALTAR_PROTEINS.get())))
+                    .where('S', BlockInWorld.hasState(BlockStatePredicate.forBlock(ModBlocks.MID_SUB_ALTAR_SUGARS.get())))
+                    .where('V', BlockInWorld.hasState(BlockStatePredicate.forBlock(ModBlocks.MID_SUB_ALTAR_VEGETABLES.get()))).build();
             //public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
             //.where('^', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.STONE_BRICK_STAIRS).where(FACING, Predicates.equalTo(Direction.NORTH))))
             //.where('v', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.STONE_BRICK_STAIRS).where(FACING, Predicates.equalTo(Direction.SOUTH))))
@@ -232,7 +238,7 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
     /**
      * RECIPE STUFF
      * */
-    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier1BlockEntity entity) {
+    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier2BlockEntity entity) {
         entity.internalTicks++;
         if(entity.internalTicks % 20 == 0){
             entity.internalTicks = 0;
@@ -274,7 +280,7 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
         }
     }
 
-    private static boolean hasRecipe(FoodAltarTier1BlockEntity entity) {
+    private static boolean hasRecipe(FoodAltarTier2BlockEntity entity) {
         SubAltarBlockEntity subAltarBlockEntity = entity.getSubAltar();
 
         if(subAltarBlockEntity == null)
@@ -322,7 +328,7 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
         return false;
     }
 
-    private static void craftItem(FoodAltarTier1BlockEntity entity) {
+    private static void craftItem(FoodAltarTier2BlockEntity entity) {
         SubAltarBlockEntity subAltarBlockEntity = entity.getSubAltar();
 
         if(subAltarBlockEntity == null)
@@ -421,13 +427,13 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
 
     @Override
     public Component getDisplayName() {
-        return new TranslatableComponent("block.culinary_wizardry.food_altar_tier1");
+        return new TranslatableComponent("block.culinary_wizardry.food_altar_tier2");
     }
 
     @Nullable
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory playerInventory, Player pPlayer) {
-        return new FoodAltarTier1Menu(pContainerId, playerInventory, this, this.data);
+        return new FoodAltarTier2Menu(pContainerId, playerInventory, this, this.data);
     }
 
     @Override

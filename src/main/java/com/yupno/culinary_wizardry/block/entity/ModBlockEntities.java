@@ -4,6 +4,7 @@ import com.yupno.culinary_wizardry.CulinaryWizardry;
 import com.yupno.culinary_wizardry.block.ModBlocks;
 import com.yupno.culinary_wizardry.block.entity.custom.FoodAltarTier0BlockEntity;
 import com.yupno.culinary_wizardry.block.entity.custom.FoodAltarTier1BlockEntity;
+import com.yupno.culinary_wizardry.block.entity.custom.FoodAltarTier2BlockEntity;
 import com.yupno.culinary_wizardry.block.entity.custom.SubAltarBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -25,6 +26,11 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("food_altar_tier1_block_entity", () ->
                     BlockEntityType.Builder.of(FoodAltarTier1BlockEntity::new,
                             ModBlocks.FOOD_ALTAR_TIER1.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<FoodAltarTier2BlockEntity>> FOOD_ALTAR_TIER2_ENTITY =
+            BLOCK_ENTITIES.register("food_altar_tier2_block_entity", () ->
+                    BlockEntityType.Builder.of(FoodAltarTier2BlockEntity::new,
+                            ModBlocks.FOOD_ALTAR_TIER2.get()).build(null));
 
     public static final RegistryObject<BlockEntityType<SubAltarBlockEntity>> SUB_ALTAR_BLOCK_ENTITY =
             BLOCK_ENTITIES.register("sub_altar_block_entity", () ->

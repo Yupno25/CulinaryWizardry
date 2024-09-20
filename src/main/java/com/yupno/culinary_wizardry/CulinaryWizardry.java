@@ -5,10 +5,7 @@ import com.yupno.culinary_wizardry.block.ModBlocks;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
 import com.yupno.culinary_wizardry.item.ModItems;
 import com.yupno.culinary_wizardry.recipe.ModRecipes;
-import com.yupno.culinary_wizardry.screen.FoodAltarTier0Screen;
-import com.yupno.culinary_wizardry.screen.FoodAltarTier1Screen;
-import com.yupno.culinary_wizardry.screen.ModMenuTypes;
-import com.yupno.culinary_wizardry.screen.SubAltarScreen;
+import com.yupno.culinary_wizardry.screen.*;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
@@ -46,6 +43,7 @@ public class CulinaryWizardry {
     private void clientSetup(final FMLClientSetupEvent event) {
         MenuScreens.register(ModMenuTypes.FOOD_ALTAR_TIER0_MENU.get(), FoodAltarTier0Screen::new);
         MenuScreens.register(ModMenuTypes.FOOD_ALTAR_TIER1_MENU.get(), FoodAltarTier1Screen::new);
+        MenuScreens.register(ModMenuTypes.FOOD_ALTAR_TIER2_MENU.get(), FoodAltarTier2Screen::new);
         MenuScreens.register(ModMenuTypes.SUB_ALTAR_MENU.get(), SubAltarScreen::new);
     }
 
