@@ -3,47 +3,47 @@ package com.yupno.culinary_wizardry.utils;
 import net.minecraft.world.SimpleContainer;
 
 public class SimpleFoodContainer extends SimpleContainer {
-    private final int pureCulinaryEssence;
-    private final int pureFruitsEssence;
-    private final int pureGrainsEssence;
-    private final int pureProteinsEssence;
-    private final int pureSugarsEssence;
-    private final int pureVegetablesEssence;
+    private final int culinaryEssence;
+    private final int fruitsEssence;
+    private final int grainsEssence;
+    private final int proteinsEssence;
+    private final int sugarsEssence;
+    private final int vegetablesEssence;
     private final int tier;
 
-    public SimpleFoodContainer(int slots, int pureCulinaryEssence, int pureFruitsEssence, int pureGrainsEssence, int pureProteinsEssence, int pureSugarsEssence, int pureVegetablesEssence, int tier) {
+    public SimpleFoodContainer(int slots, int culinaryEssence, int fruitsEssence, int grainsEssence, int proteinsEssence, int sugarsEssence, int vegetablesEssence, int tier) {
         super(slots);
-        this.pureCulinaryEssence = pureCulinaryEssence;
-        this.pureFruitsEssence = pureFruitsEssence;
-        this.pureGrainsEssence = pureGrainsEssence;
-        this.pureProteinsEssence = pureProteinsEssence;
-        this.pureSugarsEssence = pureSugarsEssence;
-        this.pureVegetablesEssence = pureVegetablesEssence;
+        this.culinaryEssence = culinaryEssence;
+        this.fruitsEssence = fruitsEssence;
+        this.grainsEssence = grainsEssence;
+        this.proteinsEssence = proteinsEssence;
+        this.sugarsEssence = sugarsEssence;
+        this.vegetablesEssence = vegetablesEssence;
         this.tier = tier;
     }
 
-    public int getPureCulinaryEssence(){
-        return pureCulinaryEssence;
+    public int getCulinaryEssence(){
+        return culinaryEssence;
     }
 
-    public int getPureFruitsEssence() {
-        return pureFruitsEssence;
+    public int getFruitsEssence() {
+        return fruitsEssence;
     }
 
-    public int getPureGrainsEssence() {
-        return pureGrainsEssence;
+    public int getGrainsEssence() {
+        return grainsEssence;
     }
 
-    public int getPureProteinsEssence() {
-        return pureProteinsEssence;
+    public int getProteinsEssence() {
+        return proteinsEssence;
     }
 
-    public int getPureSugarsEssence() {
-        return pureSugarsEssence;
+    public int getSugarsEssence() {
+        return sugarsEssence;
     }
 
-    public int getPureVegetablesEssence() {
-        return pureVegetablesEssence;
+    public int getVegetablesEssence() {
+        return vegetablesEssence;
     }
 
     public int getTier() {

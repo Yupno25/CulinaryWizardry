@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class EssenceCalculation {
-    public static int calculatePureFoodEssence(ItemStack food, int tier) {
+    public static int calculateCulinaryFoodEssence(ItemStack food, int tier) {
         FoodProperties properties = food.getFoodProperties(null);
 
         float tempPureFoodEssence = (properties.getNutrition() + properties.getNutrition() * properties.getSaturationModifier() * 1.6f) / 2;
@@ -108,7 +108,7 @@ public class EssenceCalculation {
         return foodEssence;
     }
 
-    public static int calculateMaxCulinaryEssence(int tier){
+    public static int calculateMaxEssence(int tier){
         return (int)(1000 * Math.pow(10, tier));
     }
 }

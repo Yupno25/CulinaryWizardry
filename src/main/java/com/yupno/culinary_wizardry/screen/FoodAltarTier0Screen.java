@@ -35,9 +35,9 @@ public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0
         }
 
         /** CULINARY ESSENCE BAR */
-        if (menu.getPureCulinaryEssence() > 0) {
-            blit(pPoseStack, x + 152, y + 10 + (menu.getProgressSize() - menu.getScaledPureCulinaryEssence()),
-                    176, 8, 16, menu.getScaledPureCulinaryEssence());
+        if (menu.getCulinaryEssence() > 0) {
+            blit(pPoseStack, x + 152, y + 10 + (menu.getProgressSize() - menu.getScaledCulinaryEssence()),
+                    176, 8, 16, menu.getScaledCulinaryEssence());
         }
 
         /** FOOD PROCESSING ANIMATION */
@@ -69,8 +69,8 @@ public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0
 
         /** TOOLTIP FOR CULINARY ESSENCE BAR */
         if (isMouseAboveArea(pMouseX, pMouseY, x + 151, y + 9, 17, 51)) {
-            renderTooltip(pPoseStack, new TranslatableComponent("translatable.pure_culinary_essence")
-                    .append(": " + menu.getPureCulinaryEssence() + "/" + menu.getMaxPureCulinaryEssence()), pMouseX, pMouseY);
+            renderTooltip(pPoseStack, new TranslatableComponent("translatable.culinary_essence")
+                    .append(": " + menu.getCulinaryEssence() + "/" + menu.getMaxCulinaryEssence()), pMouseX, pMouseY);
         }
     }
 

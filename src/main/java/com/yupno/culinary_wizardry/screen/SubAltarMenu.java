@@ -3,7 +3,6 @@ package com.yupno.culinary_wizardry.screen;
 import com.yupno.culinary_wizardry.block.custom.SubAltarBlock;
 import com.yupno.culinary_wizardry.block.entity.custom.SubAltarBlockEntity;
 import com.yupno.culinary_wizardry.screen.slot.ModFoodSlot;
-import com.yupno.culinary_wizardry.utils.EssenceCalculation;
 import com.yupno.culinary_wizardry.utils.FoodType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -48,14 +47,14 @@ public class SubAltarMenu extends AbstractContainerMenu {
     }
 
     /**
-     * CULINARY ESSENCE BAR
+     * ESSENCE BAR
      */
 
-    public int getCulinaryEssence() {
+    public int getEssence() {
         return data.get(2);
     }
 
-    public int getMaxCulinaryEssence() {
+    public int getMaxEssence() {
         return data.get(3);
     }
 
@@ -63,11 +62,11 @@ public class SubAltarMenu extends AbstractContainerMenu {
         return 50; // This is the height in pixels of the texture
     }
 
-    public int getScaledPureCulinaryEssence() {
-        int pureCulinaryEssence = this.data.get(2);
-        int maxPureCulinaryEssence = this.data.get(3);
+    public int getScaledEssence() {
+        int essence = this.data.get(2);
+        int maxEssence = this.data.get(3);
 
-        return maxPureCulinaryEssence != 0 && pureCulinaryEssence != 0 ? pureCulinaryEssence * getProgressSize() / maxPureCulinaryEssence : 0;
+        return maxEssence != 0 && essence != 0 ? essence * getProgressSize() / maxEssence : 0;
     }
 
     /**
@@ -82,7 +81,7 @@ public class SubAltarMenu extends AbstractContainerMenu {
     }
 
     /**
-     * CULINARY ESSENCE BUFFER
+     * ESSENCE BUFFER
      */
 
     public boolean isPresent() {

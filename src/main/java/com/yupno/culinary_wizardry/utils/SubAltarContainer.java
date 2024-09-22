@@ -49,6 +49,6 @@ public class SubAltarContainer {
         if(subAltarBlockEntity == null)
             return 0;
 
-        return subAltarBlockEntity.getCulinaryEssence();
+        return subAltarBlockEntity.getEssence();
     }
 }

@@ -226,7 +226,7 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
         if(subAltarBlockEntity == null)
             return 0;
 
-        return subAltarBlockEntity.getCulinaryEssence();
+        return subAltarBlockEntity.getEssence();
     }
 
     /**
@@ -240,7 +240,7 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
         }
 
 
-        if(hasRecipe(entity)) {
+        if(entity.isFullAltarShape() && hasRecipe(entity)) {
             entity.eatingProgress++;
 
             SubAltarBlockEntity subAltarBlockEntity = entity.getSubAltar();
@@ -266,7 +266,7 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
             }
 
 
-            subAltarBlockEntity.setCulinaryEssence(subAltarBlockEntity.getCulinaryEssence() - temp2);
+            subAltarBlockEntity.setEssence(subAltarBlockEntity.getEssence() - temp2);
             entity.remainingCulinaryEssenceCost -= temp2;
         } else {
             entity.resetProgress();
@@ -284,10 +284,10 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
         SimpleFoodContainer inventory;
 
         if(entity.currentCulinaryEssenceCost != 0 && (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost) == 0){
-            inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getCulinaryEssence()
+            inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getEssence()
                     + entity.currentCulinaryEssenceCost, 0, 0, 0, 0, 0, entity.tier);
         }else {
-            inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getCulinaryEssence()
+            inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getEssence()
                     + (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost), 0,
                     0, 0, 0, 0, entity.tier);
         }
@@ -313,7 +313,7 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
                 }
             }
 
-            entity.currentCulinaryEssenceCost = match.get().getPureCulinaryEssenceCost();
+            entity.currentCulinaryEssenceCost = match.get().getCulinaryEssenceCost();
             if(entity.remainingCulinaryEssenceCost == 0){
                 entity.remainingCulinaryEssenceCost = entity.currentCulinaryEssenceCost;
             }
@@ -332,10 +332,10 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
         SimpleFoodContainer inventory;
 
         if(entity.currentCulinaryEssenceCost != 0 && (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost) == 0){
-            inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getCulinaryEssence()
+            inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getEssence()
                     + entity.currentCulinaryEssenceCost, 0, 0, 0, 0, 0, entity.tier);
         }else {
-            inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getCulinaryEssence()
+            inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getEssence()
                     + (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost), 0,
                     0, 0, 0, 0, entity.tier);
         }
@@ -409,10 +409,7 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
             }
 
             if(isFullAltarShape()){
-                if (side == Direction.DOWN)
-                    return LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> index == 5, (index, stack) -> false)).cast();
-                else
-                    return LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(0, stack))).cast();
+                return LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> index == 5, (index, stack) -> itemHandler.isItemValid(0, stack))).cast();
             }
         }
 

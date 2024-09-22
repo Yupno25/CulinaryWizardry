@@ -2,7 +2,6 @@ package com.yupno.culinary_wizardry.screen;
 
 import com.yupno.culinary_wizardry.block.ModBlocks;
 import com.yupno.culinary_wizardry.block.entity.custom.FoodAltarTier1BlockEntity;
-import com.yupno.culinary_wizardry.block.entity.custom.SubAltarBlockEntity;
 import com.yupno.culinary_wizardry.screen.slot.ModResultSlot;
 import com.yupno.culinary_wizardry.utils.EssenceCalculation;
 import net.minecraft.network.FriendlyByteBuf;
@@ -75,7 +74,7 @@ public class FoodAltarTier1Menu extends AbstractContainerMenu {
 
     public int getFillProgress() {
         int progress = data.get(2);
-        int maxProgress = EssenceCalculation.calculateMaxCulinaryEssence(blockEntity.getTier());  // Max Progress
+        int maxProgress = EssenceCalculation.calculateMaxEssence(blockEntity.getTier());  // Max Progress
         int progressArrowSize = 20; // This is the height in pixels of your arrow
 
         return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;

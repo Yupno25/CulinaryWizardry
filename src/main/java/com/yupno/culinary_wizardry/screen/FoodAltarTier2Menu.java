@@ -74,7 +74,7 @@ public class FoodAltarTier2Menu extends AbstractContainerMenu {
 
     public int getFillProgress() {
         int progress = data.get(2);
-        int maxProgress = EssenceCalculation.calculateMaxCulinaryEssence(blockEntity.getTier());  // Max Progress
+        int maxProgress = EssenceCalculation.calculateMaxEssence(blockEntity.getTier());  // Max Progress
         int progressArrowSize = 20; // This is the height in pixels of your arrow
 
         return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
@@ -94,7 +94,7 @@ public class FoodAltarTier2Menu extends AbstractContainerMenu {
 
     public int getSmallFillProgress(int num) {
         int progress = data.get(2 + num);
-        int maxProgress = EssenceCalculation.calculateMaxCulinaryEssence(blockEntity.getTier());  // Max Progress
+        int maxProgress = EssenceCalculation.calculateMaxEssence(blockEntity.getTier());  // Max Progress
         int progressArrowSize = 16; // This is the width in pixels of your arrow
 
         return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;

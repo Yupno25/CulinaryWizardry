@@ -62,11 +62,11 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
      * CULINARY ESSENCE BAR
      */
 
-    public int getPureCulinaryEssence() {
+    public int getCulinaryEssence() {
         return data.get(4);
     }
 
-    public int getMaxPureCulinaryEssence() {
+    public int getMaxCulinaryEssence() {
         return data.get(5);
     }
 
@@ -74,11 +74,11 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
         return 50; // This is the height in pixels of the texture
     }
 
-    public int getScaledPureCulinaryEssence() {
-        int pureCulinaryEssence = this.data.get(4);
-        int maxPureCulinaryEssence = this.data.get(5);
+    public int getScaledCulinaryEssence() {
+        int culinaryEssence = this.data.get(4);
+        int maxCulinaryEssence = this.data.get(5);
 
-        return maxPureCulinaryEssence != 0 && pureCulinaryEssence != 0 ? pureCulinaryEssence * getProgressSize() / maxPureCulinaryEssence : 0;
+        return maxCulinaryEssence != 0 && culinaryEssence != 0 ? culinaryEssence * getProgressSize() / maxCulinaryEssence : 0;
     }
 
     /**

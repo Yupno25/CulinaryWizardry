@@ -20,25 +20,25 @@ import java.util.List;
 public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
     private final ResourceLocation id;
     private final ItemStack output;
-    private final int pureCulinaryEssence;
-    private final int pureFruitsEssence;
-    private final int pureGrainsEssence;
-    private final int pureProteinsEssence;
-    private final int pureSugarsEssence;
-    private final int pureVegetablesEssence;
+    private final int culinaryEssence;
+    private final int fruitsEssence;
+    private final int grainsEssence;
+    private final int proteinsEssence;
+    private final int sugarsEssence;
+    private final int vegetablesEssence;
     private final int tier;
     private final NonNullList<Ingredient> recipeItems;
 
-    public FoodAltarRecipe(ResourceLocation id, ItemStack output, int pureCulinaryEssence, int pureFruitsEssence, int pureGrainsEssence,
-                           int pureProteinsEssence, int pureSugarsEssence, int pureVegetablesEssence, int tier, NonNullList<Ingredient> recipeItems) {
+    public FoodAltarRecipe(ResourceLocation id, ItemStack output, int culinaryEssence, int fruitsEssence, int grainsEssence,
+                           int proteinsEssence, int sugarsEssence, int vegetablesEssence, int tier, NonNullList<Ingredient> recipeItems) {
         this.id = id;
         this.output = output;
-        this.pureCulinaryEssence = pureCulinaryEssence;
-        this.pureFruitsEssence = pureFruitsEssence;
-        this.pureGrainsEssence = pureGrainsEssence;
-        this.pureProteinsEssence = pureProteinsEssence;
-        this.pureSugarsEssence = pureSugarsEssence;
-        this.pureVegetablesEssence = pureVegetablesEssence;
+        this.culinaryEssence = culinaryEssence;
+        this.fruitsEssence = fruitsEssence;
+        this.grainsEssence = grainsEssence;
+        this.proteinsEssence = proteinsEssence;
+        this.sugarsEssence = sugarsEssence;
+        this.vegetablesEssence = vegetablesEssence;
         this.tier = tier;
         this.recipeItems = recipeItems;
     }
@@ -50,9 +50,9 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
 
     @Override
     public boolean matches(SimpleFoodContainer pContainer, Level pLevel) {
-        if(pContainer.getPureCulinaryEssence() < pureCulinaryEssence || pContainer.getPureFruitsEssence() < pureFruitsEssence ||
-           pContainer.getPureGrainsEssence() < pureGrainsEssence || pContainer.getPureProteinsEssence() < pureProteinsEssence ||
-           pContainer.getPureSugarsEssence() < pureSugarsEssence || pContainer.getPureVegetablesEssence() < pureVegetablesEssence)
+        if(pContainer.getCulinaryEssence() < culinaryEssence || pContainer.getFruitsEssence() < fruitsEssence ||
+           pContainer.getGrainsEssence() < grainsEssence || pContainer.getProteinsEssence() < proteinsEssence ||
+           pContainer.getSugarsEssence() < sugarsEssence || pContainer.getVegetablesEssence() < vegetablesEssence)
             return false;
 
         if(pContainer.getTier() < tier)
@@ -105,37 +105,37 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
         return recipeList;
     }
 
-    public int getPureCulinaryEssenceCost() {
-        return pureCulinaryEssence;
+    public int getCulinaryEssenceCost() {
+        return culinaryEssence;
     }
-    public int getPureFruitsEssenceCost() {
-        return pureFruitsEssence;
-    }
-
-    public int getPureGrainsEssenceCost() {
-        return pureGrainsEssence;
+    public int getFruitsEssenceCost() {
+        return fruitsEssence;
     }
 
-    public int getPureProteinsEssenceCost() {
-        return pureProteinsEssence;
+    public int getGrainsEssenceCost() {
+        return grainsEssence;
     }
 
-    public int getPureSugarsEssenceCost() {
-        return pureSugarsEssence;
+    public int getProteinsEssenceCost() {
+        return proteinsEssence;
     }
 
-    public int getPureVegetablesEssenceCost() {
-        return pureVegetablesEssence;
+    public int getSugarsEssenceCost() {
+        return sugarsEssence;
+    }
+
+    public int getVegetablesEssenceCost() {
+        return vegetablesEssence;
     }
 
     public int getEssenceCostByType(FoodType foodType){
         switch (foodType){
-            case CULINARY: return pureCulinaryEssence;
-            case FRUITS: return pureFruitsEssence;
-            case GRAINS: return pureGrainsEssence;
-            case PROTEINS: return pureProteinsEssence;
-            case SUGARS: return pureSugarsEssence;
-            case VEGETABLES: return pureVegetablesEssence;
+            case CULINARY: return culinaryEssence;
+            case FRUITS: return fruitsEssence;
+            case GRAINS: return grainsEssence;
+            case PROTEINS: return proteinsEssence;
+            case SUGARS: return sugarsEssence;
+            case VEGETABLES: return vegetablesEssence;
             default: return 0;
         }
     }
@@ -177,12 +177,12 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
             ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "output"));
 
             JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
-            int pureCulinaryEssence = GsonHelper.getAsInt(json, "pure_culinary_essence");
-            int pureFruitsEssence = GsonHelper.getAsInt(json, "pure_fruits_essence");
-            int pureGrainsEssence = GsonHelper.getAsInt(json, "pure_grains_essence");
-            int pureProteinsEssence = GsonHelper.getAsInt(json, "pure_proteins_essence");
-            int pureSugarsEssence = GsonHelper.getAsInt(json, "pure_sugars_essence");
-            int pureVegetablesEssence = GsonHelper.getAsInt(json, "pure_vegetables_essence");
+            int culinaryEssence = GsonHelper.getAsInt(json, "culinary_essence");
+            int fruitsEssence = GsonHelper.getAsInt(json, "fruits_essence");
+            int grainsEssence = GsonHelper.getAsInt(json, "grains_essence");
+            int proteinsEssence = GsonHelper.getAsInt(json, "proteins_essence");
+            int sugarsEssence = GsonHelper.getAsInt(json, "sugars_essence");
+            int vegetablesEssence = GsonHelper.getAsInt(json, "vegetables_essence");
             int tier = GsonHelper.getAsInt(json, "tier");
 
             NonNullList<Ingredient> inputs = NonNullList.withSize(ingredients.size(), Ingredient.EMPTY);
@@ -191,8 +191,8 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
                 inputs.set(i, Ingredient.fromJson(ingredients.get(i)));
             }
 
-            return new FoodAltarRecipe(id, output, pureCulinaryEssence, pureFruitsEssence, pureGrainsEssence,
-                    pureProteinsEssence, pureSugarsEssence, pureVegetablesEssence, tier, inputs);
+            return new FoodAltarRecipe(id, output, culinaryEssence, fruitsEssence, grainsEssence,
+                    proteinsEssence, sugarsEssence, vegetablesEssence, tier, inputs);
         }
 
         /* MAKE SURE FROM AND TO NETWORK HAVE THE SAME ORDER OF OPERATIONS */
@@ -208,15 +208,15 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
             }
 
             ItemStack output = buf.readItem();
-            int pureCulinaryEssence = buf.readInt();
-            int pureFruitsEssence = buf.readInt();
-            int pureGrainsEssence = buf.readInt();
-            int pureProteinsEssence = buf.readInt();
-            int pureSugarsEssence = buf.readInt();
-            int pureVegetablesEssence = buf.readInt();
+            int culinaryEssence = buf.readInt();
+            int fruitsEssence = buf.readInt();
+            int grainsEssence = buf.readInt();
+            int proteinsEssence = buf.readInt();
+            int sugarsEssence = buf.readInt();
+            int vegetablesEssence = buf.readInt();
             int tier = buf.readInt();
-            return new FoodAltarRecipe(id, output, pureCulinaryEssence, pureFruitsEssence, pureGrainsEssence,
-                    pureProteinsEssence, pureSugarsEssence, pureVegetablesEssence, tier, inputs);
+            return new FoodAltarRecipe(id, output, culinaryEssence, fruitsEssence, grainsEssence,
+                    proteinsEssence, sugarsEssence, vegetablesEssence, tier, inputs);
         }
 
         @Override
@@ -226,12 +226,12 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
                 ing.toNetwork(buf);
             }
             buf.writeItemStack(recipe.getResultItem(), false);
-            buf.writeInt(recipe.getPureCulinaryEssenceCost());
-            buf.writeInt(recipe.getPureFruitsEssenceCost());
-            buf.writeInt(recipe.getPureGrainsEssenceCost());
-            buf.writeInt(recipe.getPureProteinsEssenceCost());
-            buf.writeInt(recipe.getPureSugarsEssenceCost());
-            buf.writeInt(recipe.getPureVegetablesEssenceCost());
+            buf.writeInt(recipe.getCulinaryEssenceCost());
+            buf.writeInt(recipe.getFruitsEssenceCost());
+            buf.writeInt(recipe.getGrainsEssenceCost());
+            buf.writeInt(recipe.getProteinsEssenceCost());
+            buf.writeInt(recipe.getSugarsEssenceCost());
+            buf.writeInt(recipe.getVegetablesEssenceCost());
             buf.writeInt(recipe.getTier());
         }
 

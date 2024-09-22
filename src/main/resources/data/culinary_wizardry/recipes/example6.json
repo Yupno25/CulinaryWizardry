@@ -11,11 +11,11 @@
   "output": {
     "item": "minecraft:coal"
   },
-  "pure_culinary_essence": 40,
-  "pure_fruits_essence": 0,
-  "pure_grains_essence": 0,
-  "pure_proteins_essence": 0,
-  "pure_sugars_essence": 0,
-  "pure_vegetables_essence": 0,
+  "culinary_essence": 40,
+  "fruits_essence": 0,
+  "grains_essence": 0,
+  "proteins_essence": 0,
+  "sugars_essence": 0,
+  "vegetables_essence": 0,
   "tier": 0
 }

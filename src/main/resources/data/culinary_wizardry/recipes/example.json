@@ -17,11 +17,11 @@
   "output": {
     "item": "culinary_wizardry:example_item"
   },
-  "pure_culinary_essence": 50,
-  "pure_fruits_essence": 0,
-  "pure_grains_essence": 0,
-  "pure_proteins_essence": 0,
-  "pure_sugars_essence": 25,
-  "pure_vegetables_essence": 0,
+  "culinary_essence": 50,
+  "fruits_essence": 0,
+  "grains_essence": 0,
+  "proteins_essence": 0,
+  "sugars_essence": 25,
+  "vegetables_essence": 0,
   "tier": 1
 }

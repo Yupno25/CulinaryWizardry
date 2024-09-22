@@ -29,13 +29,13 @@ public class SubAltarScreen extends AbstractContainerScreen<SubAltarMenu> {
         /** THE INVENTORY */
         this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
 
-        /** CULINARY ESSENCE BAR */
-        if (menu.getCulinaryEssence() > 0) {
-            blit(pPoseStack, x + 80, y + 7 + (menu.getProgressSize() - menu.getScaledPureCulinaryEssence()),
-                    176, 0, 16, menu.getScaledPureCulinaryEssence());
+        /** ESSENCE BAR */
+        if (menu.getEssence() > 0) {
+            blit(pPoseStack, x + 80, y + 7 + (menu.getProgressSize() - menu.getScaledEssence()),
+                    176, 0, 16, menu.getScaledEssence());
         }
 
-        /** CULINARY ESSENCE BUFFER */
+        /** ESSENCE BUFFER */
         if (menu.isPresent()) {
             blit(pPoseStack, x + 78, y + 62 + (menu.getFillSize() - menu.getFillProgress()),
                     193, 30 + (menu.getFillSize() - menu.getFillProgress()), 20, menu.getFillProgress());
@@ -68,10 +68,10 @@ public class SubAltarScreen extends AbstractContainerScreen<SubAltarMenu> {
             }
         }
 
-        /** TOOLTIP FOR CULINARY ESSENCE BAR */
+        /** TOOLTIP FOR ESSENCE BAR */
         if (isMouseAboveArea(pMouseX, pMouseY, x + 79, y + 9, 17, 51)) {
-            renderTooltip(pPoseStack, new TranslatableComponent("translatable.pure_" + menu.getFoodType().getName() + "_essence")
-                    .append(": " + menu.getCulinaryEssence() + "/" + menu.getMaxCulinaryEssence()), pMouseX, pMouseY);
+            renderTooltip(pPoseStack, new TranslatableComponent("translatable." + menu.getFoodType().getName() + "_essence")
+                    .append(": " + menu.getEssence() + "/" + menu.getMaxEssence()), pMouseX, pMouseY);
         }
     }
 

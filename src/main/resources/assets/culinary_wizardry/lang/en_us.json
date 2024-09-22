@@ -13,12 +13,12 @@
   "block.culinary_wizardry.mid_sub_altar_sugars": "Mid Sugars Sub Altar",
   "block.culinary_wizardry.mid_sub_altar_vegetables": "Mid Vegetables Sub Altar",
 
-  "translatable.pure_culinary_essence": "Pure Culinary Essence",
-  "translatable.pure_fruits_essence": "Pure Fruit Essence",
-  "translatable.pure_grains_essence": "Pure Grain Essence",
-  "translatable.pure_proteins_essence": "Pure Protein Essence",
-  "translatable.pure_sugars_essence": "Pure Sugar Essence",
-  "translatable.pure_vegetables_essence": "Pure Vegetable Essence",
+  "translatable.culinary_essence": "Pure Culinary Essence",
+  "translatable.fruits_essence": "Pure Fruit Essence",
+  "translatable.grains_essence": "Pure Grain Essence",
+  "translatable.proteins_essence": "Pure Protein Essence",
+  "translatable.sugars_essence": "Pure Sugar Essence",
+  "translatable.vegetables_essence": "Pure Vegetable Essence",
 
   "itemGroup.culinary_wizardry_tab": "Culinary Wizardry"
 }

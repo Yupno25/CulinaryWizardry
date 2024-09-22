@@ -1,7 +1,6 @@
 package com.yupno.culinary_wizardry.block.entity.custom;
 
 import com.google.common.base.Predicates;
-import com.mojang.logging.LogUtils;
 import com.yupno.culinary_wizardry.block.ModBlocks;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
 import com.yupno.culinary_wizardry.recipe.FoodAltarRecipe;
@@ -297,7 +296,7 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
                     subAltar.setCurrentEssenceOverflow(subAltar.getCurrentEssenceOverflow() - (temp2 - temp));
                 }
 
-                subAltarBlock.setCulinaryEssence(subAltarBlock.getCulinaryEssence() - temp2);
+                subAltarBlock.setEssence(subAltarBlock.getEssence() - temp2);
                 subAltar.setRemainingEssenceCost(subAltar.getRemainingEssenceCost() - temp2);
             }
         } else {
@@ -309,9 +308,9 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
     private static int calculateEssence(FoodAltarTier2BlockEntity entity, FoodType foodType){
         SubAltarContainer subAltar = entity.subAltars.get(foodType);
         if(subAltar.getCurrentEssenceCost() != 0 && (subAltar.getCurrentEssenceCost() - subAltar.getRemainingEssenceCost()) == 0){
-            return entity.subAltars.get(foodType).getSubAltarBlockEntity().getCulinaryEssence() + entity.subAltars.get(foodType).getCurrentEssenceCost();
+            return entity.subAltars.get(foodType).getSubAltarBlockEntity().getEssence() + entity.subAltars.get(foodType).getCurrentEssenceCost();
         }else {
-            return entity.subAltars.get(foodType).getSubAltarBlockEntity().getCulinaryEssence() +
+            return entity.subAltars.get(foodType).getSubAltarBlockEntity().getEssence() +
                     (entity.subAltars.get(foodType).getCurrentEssenceCost() - entity.subAltars.get(foodType).getRemainingEssenceCost());
         }
     }
@@ -456,10 +455,7 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
             }
 
             if(isFullAltarShape()){
-                if (side == Direction.DOWN)
-                    return LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> index == 5, (index, stack) -> false)).cast();
-                else
-                    return LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> false, (index, stack) -> itemHandler.isItemValid(0, stack))).cast();
+                return LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> index == 5, (index, stack) -> itemHandler.isItemValid(0, stack))).cast();
             }
         }
 
