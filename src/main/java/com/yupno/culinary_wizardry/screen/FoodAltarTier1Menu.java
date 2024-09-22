@@ -45,31 +45,32 @@ public class FoodAltarTier1Menu extends AbstractContainerMenu {
         addDataSlots(data);
     }
 
-    public int[] getUsedItemSlots(){
+    public int[] getUsedItemSlots() {
         return new int[]{data.get(3), data.get(4), data.get(5), data.get(6), data.get(7)};
     }
 
     /**
-     * FOOD PROCESSING
+     * CRAFTING ANIMATION
      */
 
     public int getEatingProgress() {
         return this.data.get(0);
     }
+
     public int getMaxEatingProgress() {
         return this.data.get(1);
     }
 
     /**
-     * CULINARY ESSENCE BAR
+     * ITEM SLOT CULINARY ESSENCE
      */
 
     public boolean isPresent() {
         return data.get(2) > 0;
     }
 
-    public int getFillSize(){
-        return 20; // This is the height in pixels of the texture
+    public int getFillSize() {
+        return 20; // This is the width in pixels of the texture
     }
 
     public int getFillProgress() {
@@ -79,7 +80,6 @@ public class FoodAltarTier1Menu extends AbstractContainerMenu {
 
         return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
     }
-
 
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons

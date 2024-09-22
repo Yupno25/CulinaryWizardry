@@ -38,7 +38,7 @@ public class SubAltarScreen extends AbstractContainerScreen<SubAltarMenu> {
         /** ESSENCE BUFFER */
         if (menu.isPresent()) {
             blit(pPoseStack, x + 78, y + 62 + (menu.getFillSize() - menu.getFillProgress()),
-                    193, 30 + (menu.getFillSize() - menu.getFillProgress()), 20, menu.getFillProgress());
+                    193, 30 + (menu.getFillSize() - menu.getFillProgress()), menu.getFillSize(), menu.getFillProgress());
         }
 
         /** FOOD PROCESSING ANIMATION */

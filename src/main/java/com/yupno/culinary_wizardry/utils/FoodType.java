@@ -9,11 +9,12 @@ public enum FoodType {
     VEGETABLES("vegetables");
 
     private String name;
-    FoodType(String name){
+
+    FoodType(String name) {
         this.name = name;
     }
 
-    public String getName(){
+    public String getName() {
         return name;
     }
 

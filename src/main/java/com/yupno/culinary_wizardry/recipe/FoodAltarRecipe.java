@@ -50,12 +50,12 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
 
     @Override
     public boolean matches(SimpleFoodContainer pContainer, Level pLevel) {
-        if(pContainer.getCulinaryEssence() < culinaryEssence || pContainer.getFruitsEssence() < fruitsEssence ||
-           pContainer.getGrainsEssence() < grainsEssence || pContainer.getProteinsEssence() < proteinsEssence ||
-           pContainer.getSugarsEssence() < sugarsEssence || pContainer.getVegetablesEssence() < vegetablesEssence)
+        if (pContainer.getCulinaryEssence() < culinaryEssence || pContainer.getFruitsEssence() < fruitsEssence ||
+                pContainer.getGrainsEssence() < grainsEssence || pContainer.getProteinsEssence() < proteinsEssence ||
+                pContainer.getSugarsEssence() < sugarsEssence || pContainer.getVegetablesEssence() < vegetablesEssence)
             return false;
 
-        if(pContainer.getTier() < tier)
+        if (pContainer.getTier() < tier)
             return false;
 
         // Converts the recipeItems into an ItemStack List
@@ -64,14 +64,14 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
             recipeList.add(recipeItems.get(i).getItems()[0].getItem().toString());
         }
 
-        if(recipeList.size() > 1 && pContainer.getTier() == 0)
+        if (recipeList.size() > 1 && pContainer.getTier() == 0)
             return false;
 
         // -1 cause of result slot
         // Converts simpleContainer into an ItemStack List
         List<String> containerList = new ArrayList<>();
         for (int i = 0; i < pContainer.getContainerSize() - 1; i++) {
-            if(pContainer.getItem(i) != ItemStack.EMPTY)
+            if (pContainer.getItem(i) != ItemStack.EMPTY)
                 containerList.add(pContainer.getItem(i).getItem().toString());
         }
 
@@ -97,7 +97,7 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
         return output.copy();
     }
 
-    public List<String> getRecipeList(){
+    public List<String> getRecipeList() {
         List<String> recipeList = new ArrayList<>();
         for (int i = 0; i < recipeItems.size(); i++) {
             recipeList.add(recipeItems.get(i).getItems()[0].getItem().toString());
@@ -108,6 +108,7 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
     public int getCulinaryEssenceCost() {
         return culinaryEssence;
     }
+
     public int getFruitsEssenceCost() {
         return fruitsEssence;
     }
@@ -128,15 +129,22 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
         return vegetablesEssence;
     }
 
-    public int getEssenceCostByType(FoodType foodType){
-        switch (foodType){
-            case CULINARY: return culinaryEssence;
-            case FRUITS: return fruitsEssence;
-            case GRAINS: return grainsEssence;
-            case PROTEINS: return proteinsEssence;
-            case SUGARS: return sugarsEssence;
-            case VEGETABLES: return vegetablesEssence;
-            default: return 0;
+    public int getEssenceCostByType(FoodType foodType) {
+        switch (foodType) {
+            case CULINARY:
+                return culinaryEssence;
+            case FRUITS:
+                return fruitsEssence;
+            case GRAINS:
+                return grainsEssence;
+            case PROTEINS:
+                return proteinsEssence;
+            case SUGARS:
+                return sugarsEssence;
+            case VEGETABLES:
+                return vegetablesEssence;
+            default:
+                return 0;
         }
     }
 

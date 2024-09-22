@@ -34,11 +34,11 @@ public class SubAltarBlock extends BaseEntityBlock {
      * BLOCK ENTITY
      */
 
-    public FoodType getType(){
+    public FoodType getType() {
         return type;
     }
 
-    public int getTier(){
+    public int getTier() {
         return tier;
     }
 

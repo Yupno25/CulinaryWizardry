@@ -48,7 +48,7 @@ import javax.annotation.Nonnull;
 import java.util.*;
 
 public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvider {
-    private final ItemStackHandler itemHandler = new ItemStackHandler(6){
+    private final ItemStackHandler itemHandler = new ItemStackHandler(6) {
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
@@ -56,7 +56,7 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return switch (slot){
+            return switch (slot) {
                 case 5 -> false;
                 default -> super.isItemValid(slot, stack);
             };
@@ -70,12 +70,12 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
     private final int tier = 2;
 
     /**
-     *  SUBALTARSHIFT, HEIGHT, ALTARSHAPE, THISALTARHEIGHT AND ALTARLEVELS ARE CLOSELY CONNECTED
-     *  Height matches the number of Arrays in altarLevels
-     *
-     *  A layer of only Air/Any Blocks doesn't work
-     *  A layer with only a center block and other than that Any Block doesn't work
-     * */
+     * SUBALTARSHIFT, HEIGHT, ALTARSHAPE, THISALTARHEIGHT AND ALTARLEVELS ARE CLOSELY CONNECTED
+     * Height matches the number of Arrays in altarLevels
+     * <p>
+     * A layer of only Air/Any Blocks doesn't work
+     * A layer with only a center block and other than that Any Block doesn't work
+     */
     private final int height = 6; // Height of the whole structure
     private final int thisAltarHeight = 1; // Height of this altar relative to the structure as a whole
     private final int blocksToCenter = 1; // How many blocks it takes to get to the center of the layer
@@ -91,12 +91,12 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
     private boolean isFullAltarShape = false;
     private int internalTicks = 0;
     private final Vec3i[] subAltarShifts = new Vec3i[]{
-            new Vec3i(0, 3 ,0),
-            new Vec3i(0, -1 ,0),
-            new Vec3i(1, 0 ,1),
-            new Vec3i(-1, 0 ,1),
-            new Vec3i(1, 0 ,-1),
-            new Vec3i(-1, 0 ,-1),
+            new Vec3i(0, 3, 0),
+            new Vec3i(0, -1, 0),
+            new Vec3i(1, 0, 1),
+            new Vec3i(-1, 0, 1),
+            new Vec3i(1, 0, -1),
+            new Vec3i(-1, 0, -1),
     };
     private final Map<FoodType, SubAltarContainer> subAltars = Map.of(
             FoodType.CULINARY, new SubAltarContainer(FoodType.CULINARY),
@@ -113,33 +113,62 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
         this.data = new ContainerData() {
             public int get(int index) {
                 switch (index) {
-                    case 0: return FoodAltarTier2BlockEntity.this.eatingProgress;
-                    case 1: return FoodAltarTier2BlockEntity.this.maxEatingProgress;
-                    case 2: return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.CULINARY).getSafeEssence();
-                    case 3: return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.FRUITS).getSafeEssence();
-                    case 4: return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.GRAINS).getSafeEssence();
-                    case 5: return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.PROTEINS).getSafeEssence();
-                    case 6: return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.SUGARS).getSafeEssence();
-                    case 7: return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.VEGETABLES).getSafeEssence();
-                    case 8: return FoodAltarTier2BlockEntity.this.usedItemSlots[0];
-                    case 9: return FoodAltarTier2BlockEntity.this.usedItemSlots[1];
-                    case 10: return FoodAltarTier2BlockEntity.this.usedItemSlots[2];
-                    case 11: return FoodAltarTier2BlockEntity.this.usedItemSlots[3];
-                    case 12: return FoodAltarTier2BlockEntity.this.usedItemSlots[4];
-                    default: return 0;
+                    case 0:
+                        return FoodAltarTier2BlockEntity.this.eatingProgress;
+                    case 1:
+                        return FoodAltarTier2BlockEntity.this.maxEatingProgress;
+                    case 2:
+                        return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.CULINARY).getSafeEssence();
+                    case 3:
+                        return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.FRUITS).getSafeEssence();
+                    case 4:
+                        return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.GRAINS).getSafeEssence();
+                    case 5:
+                        return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.PROTEINS).getSafeEssence();
+                    case 6:
+                        return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.SUGARS).getSafeEssence();
+                    case 7:
+                        return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.VEGETABLES).getSafeEssence();
+                    case 8:
+                        return FoodAltarTier2BlockEntity.this.usedItemSlots[0];
+                    case 9:
+                        return FoodAltarTier2BlockEntity.this.usedItemSlots[1];
+                    case 10:
+                        return FoodAltarTier2BlockEntity.this.usedItemSlots[2];
+                    case 11:
+                        return FoodAltarTier2BlockEntity.this.usedItemSlots[3];
+                    case 12:
+                        return FoodAltarTier2BlockEntity.this.usedItemSlots[4];
+                    default:
+                        return 0;
                 }
             }
 
             public void set(int index, int value) {
-                switch(index) {
-                    case 0: FoodAltarTier2BlockEntity.this.eatingProgress = value; break;
-                    case 1: FoodAltarTier2BlockEntity.this.maxEatingProgress = value; break;
-                    case 2, 3, 4, 5, 6, 7: break;
-                    case 8: FoodAltarTier2BlockEntity.this.usedItemSlots[0] = value; break;
-                    case 9: FoodAltarTier2BlockEntity.this.usedItemSlots[1] = value; break;
-                    case 10: FoodAltarTier2BlockEntity.this.usedItemSlots[2] = value; break;
-                    case 11: FoodAltarTier2BlockEntity.this.usedItemSlots[3] = value; break;
-                    case 12: FoodAltarTier2BlockEntity.this.usedItemSlots[4] = value; break;
+                switch (index) {
+                    case 0:
+                        FoodAltarTier2BlockEntity.this.eatingProgress = value;
+                        break;
+                    case 1:
+                        FoodAltarTier2BlockEntity.this.maxEatingProgress = value;
+                        break;
+                    case 2, 3, 4, 5, 6, 7:
+                        break;
+                    case 8:
+                        FoodAltarTier2BlockEntity.this.usedItemSlots[0] = value;
+                        break;
+                    case 9:
+                        FoodAltarTier2BlockEntity.this.usedItemSlots[1] = value;
+                        break;
+                    case 10:
+                        FoodAltarTier2BlockEntity.this.usedItemSlots[2] = value;
+                        break;
+                    case 11:
+                        FoodAltarTier2BlockEntity.this.usedItemSlots[3] = value;
+                        break;
+                    case 12:
+                        FoodAltarTier2BlockEntity.this.usedItemSlots[4] = value;
+                        break;
                 }
             }
 
@@ -163,11 +192,6 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
                     .where('w', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.STONE_BRICK_WALL)))
                     .where('f', BlockInWorld.hasState(BlockStatePredicate.forBlock(ModBlocks.FOOD_ALTAR_TIER2.get())))
                     .where('S', (block) -> block.getEntity() instanceof SubAltarBlockEntity).build();
-            //public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
-            //.where('^', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.STONE_BRICK_STAIRS).where(FACING, Predicates.equalTo(Direction.NORTH))))
-            //.where('v', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.STONE_BRICK_STAIRS).where(FACING, Predicates.equalTo(Direction.SOUTH))))
-            //.where('<', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.STONE_BRICK_STAIRS).where(FACING, Predicates.equalTo(Direction.WEST))))
-            //.where('>', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.STONE_BRICK_STAIRS).where(FACING, Predicates.equalTo(Direction.EAST))))
         }
     }
 
@@ -202,22 +226,22 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
         }
     }
 
-    private void update(){
+    private void update() {
         // Check for complete Altar Shape
         for (int i = 0; i < altarShapes.length; i++) {
-            if(level == null){
+            if (level == null) {
                 failedUpdate();
                 return;
             }
 
-            BlockPattern.BlockPatternMatch layerIsCorrect = altarShapes[i].find(level, worldPosition.offset(0, i - thisAltarHeight,0));
-            if(layerIsCorrect == null){
+            BlockPattern.BlockPatternMatch layerIsCorrect = altarShapes[i].find(level, worldPosition.offset(0, i - thisAltarHeight, 0));
+            if (layerIsCorrect == null) {
                 failedUpdate();
                 return;
             }
 
             // Checks if this Block is actually the center Block of this layer
-            if(!layerIsCorrect.getFrontTopLeft().offset(-blocksToCenter, 0, -blocksToCenter).equals(worldPosition.offset(0, i - thisAltarHeight,0))){
+            if (!layerIsCorrect.getFrontTopLeft().offset(-blocksToCenter, 0, -blocksToCenter).equals(worldPosition.offset(0, i - thisAltarHeight, 0))) {
                 failedUpdate();
                 return;
             }
@@ -227,61 +251,61 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
         // Caches SubAltarBlockEntities
         List<FoodType> foodTypes = new LinkedList<>(Arrays.asList(FoodType.values()));
         for (FoodType foodType : FoodType.values()) {
-            for (Vec3i offset : subAltarShifts){
-                SubAltarBlockEntity subAltarBlock = ((SubAltarBlockEntity)level.getBlockEntity(new BlockPos(worldPosition.offset(offset))));
-                if(foodTypes.contains(subAltarBlock.type) && subAltarBlock.tier == tier){
-                    foodTypes.remove(subAltarBlock.type);
-                    subAltars.get(subAltarBlock.type).setSubAltarBlockEntity(subAltarBlock);
+            for (Vec3i offset : subAltarShifts) {
+                SubAltarBlockEntity subAltarBlock = ((SubAltarBlockEntity) level.getBlockEntity(new BlockPos(worldPosition.offset(offset))));
+                if (foodTypes.contains(subAltarBlock.getFoodType()) && subAltarBlock.getTier() == getTier()) {
+                    foodTypes.remove(subAltarBlock.getFoodType());
+                    subAltars.get(subAltarBlock.getFoodType()).setSubAltarBlockEntity(subAltarBlock);
                     break;
                 }
             }
         }
 
-        if(foodTypes.isEmpty()){
+        if (foodTypes.isEmpty()) {
             isFullAltarShape = true;
-        }else {
+        } else {
             failedUpdate();
         }
     }
 
-    private void failedUpdate(){
+    private void failedUpdate() {
         isFullAltarShape = false;
         for (FoodType foodType : FoodType.values()) {
             subAltars.get(foodType).setSubAltarBlockEntity(null);
         }
     }
 
-    public boolean isFullAltarShape(){
+    public boolean isFullAltarShape() {
         return isFullAltarShape;
     }
 
-    public int getTier(){
+    public int getTier() {
         return tier;
     }
 
     /**
      * RECIPE STUFF
-     * */
+     */
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier2BlockEntity entity) {
         entity.internalTicks++;
-        if(entity.internalTicks % 20 == 0){
+        if (entity.internalTicks % 20 == 0) {
             entity.internalTicks = 0;
             entity.update();
         }
 
-        if(entity.isFullAltarShape() && hasRecipe(entity)) {
+        if (entity.isFullAltarShape() && checkOrCraftItem(entity, false)) {
             entity.eatingProgress++;
 
-            for (FoodType foodType : FoodType.values()){
+            for (FoodType foodType : FoodType.values()) {
                 SubAltarContainer subAltar = entity.subAltars.get(foodType);
                 SubAltarBlockEntity subAltarBlock = subAltar.getSubAltarBlockEntity();
 
-                if(subAltarBlock == null)
+                if (subAltarBlock == null)
                     return;
 
                 setChanged(pLevel, pPos, pState);
-                if(entity.eatingProgress > entity.maxEatingProgress) {
-                    craftItem(entity);
+                if (entity.eatingProgress > entity.maxEatingProgress) {
+                    checkOrCraftItem(entity, true);
                     return;
                 }
 
@@ -290,9 +314,9 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
                 // The overflow from that is saved to ensure that the full cost will be paid
                 float temp = (float) subAltar.getCurrentEssenceCost() / entity.maxEatingProgress;
                 int temp2 = Math.round(temp + subAltar.getCurrentEssenceOverflow());
-                if(temp2 == Math.round(temp)){
+                if (temp2 == Math.round(temp)) {
                     subAltar.setCurrentEssenceOverflow(subAltar.getCurrentEssenceOverflow() + temp - temp2);
-                }else {
+                } else {
                     subAltar.setCurrentEssenceOverflow(subAltar.getCurrentEssenceOverflow() - (temp2 - temp));
                 }
 
@@ -305,19 +329,19 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
         }
     }
 
-    private static int calculateEssence(FoodAltarTier2BlockEntity entity, FoodType foodType){
+    private static int calculateEssence(FoodAltarTier2BlockEntity entity, FoodType foodType) {
         SubAltarContainer subAltar = entity.subAltars.get(foodType);
-        if(subAltar.getCurrentEssenceCost() != 0 && (subAltar.getCurrentEssenceCost() - subAltar.getRemainingEssenceCost()) == 0){
+        if (subAltar.getCurrentEssenceCost() != 0 && (subAltar.getCurrentEssenceCost() - subAltar.getRemainingEssenceCost()) == 0) {
             return entity.subAltars.get(foodType).getSubAltarBlockEntity().getEssence() + entity.subAltars.get(foodType).getCurrentEssenceCost();
-        }else {
+        } else {
             return entity.subAltars.get(foodType).getSubAltarBlockEntity().getEssence() +
                     (entity.subAltars.get(foodType).getCurrentEssenceCost() - entity.subAltars.get(foodType).getRemainingEssenceCost());
         }
     }
 
-    private static boolean hasRecipe(FoodAltarTier2BlockEntity entity) {
+    private static boolean checkOrCraftItem(FoodAltarTier2BlockEntity entity, boolean craft) {
         for (FoodType foodType : FoodType.values()) {
-            if(entity.subAltars.get(foodType).getSubAltarBlockEntity() == null)
+            if (entity.subAltars.get(foodType).getSubAltarBlockEntity() == null)
                 return false;
         }
 
@@ -331,7 +355,8 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
                 calculateEssence(entity, FoodType.PROTEINS),
                 calculateEssence(entity, FoodType.SUGARS),
                 calculateEssence(entity, FoodType.VEGETABLES),
-                entity.tier);
+                entity.getTier());
+
 
         for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
@@ -342,72 +367,39 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
                 .filter(recipe -> recipe.matches(inventory, level)).findFirst();
 
 
-        if(match.isPresent() && canInsertAmountIntoOutputSlot(inventory) && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem())){
+        if (match.isPresent() && canInsertAmountIntoOutputSlot(inventory) && canInsertItemIntoOutputSlot(inventory, match.get().getResultItem())) {
             List<String> recipeList = match.get().getRecipeList();
             for (int i = 0; i < 5; i++) {
                 String string = entity.itemHandler.getStackInSlot(i).getItem().toString();
-                if(recipeList.contains(string)){
+                if (recipeList.contains(string)) {
                     entity.usedItemSlots[i] = i;
+                    if (craft) entity.itemHandler.extractItem(i, 1, false);
                     recipeList.remove(string);
-                }else {
+                } else {
                     entity.usedItemSlots[i] = -1;
                 }
             }
 
-            for (FoodType foodType : FoodType.values()) {
-                SubAltarContainer subAltar = entity.subAltars.get(foodType);
-                subAltar.setCurrentEssenceCost(match.get().getEssenceCostByType(foodType));
-                if(subAltar.getRemainingEssenceCost() == 0){
-                    subAltar.setRemainingEssenceCost(subAltar.getCurrentEssenceCost());
+            if (craft) {
+                if (match.isPresent()) {
+                    entity.itemHandler.setStackInSlot(5, new ItemStack(match.get().getResultItem().getItem(),
+                            entity.itemHandler.getStackInSlot(5).getCount() + 1));
+
+                    entity.resetProgress();
                 }
+            } else {
+                for (FoodType foodType : FoodType.values()) {
+                    SubAltarContainer subAltar = entity.subAltars.get(foodType);
+                    subAltar.setCurrentEssenceCost(match.get().getEssenceCostByType(foodType));
+                    if (subAltar.getRemainingEssenceCost() == 0) {
+                        subAltar.setRemainingEssenceCost(subAltar.getCurrentEssenceCost());
+                    }
+                }
+                return true;
             }
-            return true;
         }
+
         return false;
-    }
-
-    private static void craftItem(FoodAltarTier2BlockEntity entity) {
-        for (FoodType foodType : FoodType.values()) {
-            if(entity.subAltars.get(foodType).getSubAltarBlockEntity() == null)
-                return;
-        }
-
-        Level level = entity.level;
-        SimpleFoodContainer inventory;
-
-        inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(),
-                calculateEssence(entity, FoodType.CULINARY),
-                calculateEssence(entity, FoodType.FRUITS),
-                calculateEssence(entity, FoodType.GRAINS),
-                calculateEssence(entity, FoodType.PROTEINS),
-                calculateEssence(entity, FoodType.SUGARS),
-                calculateEssence(entity, FoodType.VEGETABLES),
-                entity.tier);
-
-
-        for (int i = 0; i < entity.itemHandler.getSlots(); i++) {
-            inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
-        }
-
-        List<FoodAltarRecipe> recipes = level.getRecipeManager().getAllRecipesFor(FoodAltarRecipe.Type.INSTANCE);
-        Optional<FoodAltarRecipe> match = recipes.stream().sorted(Comparator.comparingInt(recipe -> ((FoodAltarRecipe) recipe).getRecipeList().size()).reversed())
-                .filter(recipe -> recipe.matches(inventory, level)).findFirst();
-
-        if(match.isPresent()) {
-            List<String> recipeList = match.get().getRecipeList();
-            for (int i = 0; i < 5; i++) {
-                String string = entity.itemHandler.getStackInSlot(i).getItem().toString();
-                if(recipeList.contains(string)){
-                    entity.itemHandler.extractItem(i,1, false);
-                    recipeList.remove(string);
-                }
-            }
-
-            entity.itemHandler.setStackInSlot(5, new ItemStack(match.get().getResultItem().getItem(),
-                    entity.itemHandler.getStackInSlot(5).getCount() + 1));
-
-            entity.resetProgress();
-        }
     }
 
     private void resetProgress() {
@@ -429,7 +421,7 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
 
     /**
      * Servertick stuff
-     * */
+     */
 
     @Nullable
     @Override
@@ -444,17 +436,17 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
 
     /**
      * Basic stuff
-     * */
+     */
 
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if(side == null) {
+            if (side == null) {
                 return lazyItemHandler.cast();
             }
 
-            if(isFullAltarShape()){
+            if (isFullAltarShape()) {
                 return LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> index == 5, (index, stack) -> itemHandler.isItemValid(0, stack))).cast();
             }
         }
@@ -480,7 +472,7 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
     }
 
     @Override
-    public void invalidateCaps()  {
+    public void invalidateCaps() {
         super.invalidateCaps();
         lazyItemHandler.invalidate();
     }

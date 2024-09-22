@@ -22,7 +22,7 @@ public class SimpleFoodContainer extends SimpleContainer {
         this.tier = tier;
     }
 
-    public int getCulinaryEssence(){
+    public int getCulinaryEssence() {
         return culinaryEssence;
     }
 

@@ -53,7 +53,7 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
     public int getScaledProgress() {
         int progress = this.data.get(0);
         int maxProgress = this.data.get(1);  // Max Progress
-        int progressArrowSize = 26; // This is the height in pixels of your arrow
+        int progressArrowSize = 26; // This is the width in pixels of your arrow
 
         return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
     }
@@ -70,7 +70,7 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
         return data.get(5);
     }
 
-    public int getProgressSize(){
+    public int getProgressSize() {
         return 50; // This is the height in pixels of the texture
     }
 
@@ -88,6 +88,7 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
     public int getEatingProgress() {
         return this.data.get(2);
     }
+
     public int getMaxEatingProgress() {
         return this.data.get(3);
     }

@@ -53,8 +53,8 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
     protected final ContainerData data;
-    public final FoodType type;
-    public final int tier;
+    private final FoodType foodType;
+    private final int tier;
     private int eatingProgress = 0;
     private int maxEatingProgress = 28;
     private int essence = 0;
@@ -65,7 +65,7 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
     public SubAltarBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.SUB_ALTAR_BLOCK_ENTITY.get(), pPos, pBlockState);
 
-        this.type = ((SubAltarBlock)pBlockState.getBlock()).getType();
+        this.foodType = ((SubAltarBlock)pBlockState.getBlock()).getType();
         this.tier = ((SubAltarBlock)pBlockState.getBlock()).getTier();
         maxEssence = EssenceCalculation.calculateMaxEssence(tier);
         bufferMaxEssence = maxEssence / 20;
@@ -126,6 +126,14 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
         essence = newEssence;
     }
 
+    public int getTier(){
+        return tier;
+    }
+
+    public FoodType getFoodType(){
+        return foodType;
+    }
+
     /**
      * RECIPE STUFF
      * */
@@ -142,12 +150,7 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
             setChanged(pLevel, pPos, pState);
 
             if(entity.eatingProgress > entity.maxEatingProgress){
-                int temp;
-                if(entity.type == FoodType.CULINARY){
-                    temp = entity.essence + EssenceCalculation.calculateCulinaryFoodEssence(entity.itemHandler.getStackInSlot(0), entity.tier);
-                }else {
-                    temp = entity.essence + EssenceCalculation.calculateOtherFoodEssence(entity.itemHandler.getStackInSlot(0), entity.tier, entity.type);
-                }
+                int temp = entity.essence + EssenceCalculation.calculateFoodEssence(entity.itemHandler.getStackInSlot(0), entity.tier, entity.getFoodType());
 
                 if(temp > entity.maxEssence)
                     entity.bufferEssence = Math.min(temp - entity.maxEssence, entity.bufferMaxEssence);
@@ -211,7 +214,7 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
             case 4: name = "transcendent"; break;
         }
 
-        return new TranslatableComponent("block.culinary_wizardry." + name + "_sub_altar_" + type.getName());
+        return new TranslatableComponent("block.culinary_wizardry." + name + "_sub_altar_" + getFoodType().getName());
     }
 
     @Nullable

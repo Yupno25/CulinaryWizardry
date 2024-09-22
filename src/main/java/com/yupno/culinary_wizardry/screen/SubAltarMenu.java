@@ -30,7 +30,7 @@ public class SubAltarMenu extends AbstractContainerMenu {
         blockEntity = ((SubAltarBlockEntity) entity);
         this.level = inv.player.level;
         this.data = data;
-        this.type = ((SubAltarBlock)blockEntity.getBlockState().getBlock()).getType();
+        this.type = ((SubAltarBlock) blockEntity.getBlockState().getBlock()).getType();
 
         addPlayerInventory(inv);
         addPlayerHotbar(inv);
@@ -42,7 +42,7 @@ public class SubAltarMenu extends AbstractContainerMenu {
         addDataSlots(data);
     }
 
-    public FoodType getFoodType(){
+    public FoodType getFoodType() {
         return type;
     }
 
@@ -58,7 +58,7 @@ public class SubAltarMenu extends AbstractContainerMenu {
         return data.get(3);
     }
 
-    public int getProgressSize(){
+    public int getProgressSize() {
         return 50; // This is the height in pixels of the texture
     }
 
@@ -76,6 +76,7 @@ public class SubAltarMenu extends AbstractContainerMenu {
     public int getEatingProgress() {
         return this.data.get(0);
     }
+
     public int getMaxEatingProgress() {
         return this.data.get(1);
     }
@@ -88,8 +89,8 @@ public class SubAltarMenu extends AbstractContainerMenu {
         return data.get(4) > 0;
     }
 
-    public int getFillSize(){
-        return 20; // This is the height in pixels of the texture
+    public int getFillSize() {
+        return 20; // This is the width in pixels of the texture
     }
 
     public int getFillProgress() {

@@ -9,7 +9,7 @@ public class SubAltarContainer {
     private int remainingEssenceCost = 0;
     private float currentEssenceOverflow = 0;
 
-    public SubAltarContainer(FoodType foodType){
+    public SubAltarContainer(FoodType foodType) {
         this.foodType = foodType;
     }
 
@@ -45,8 +45,8 @@ public class SubAltarContainer {
         this.currentEssenceOverflow = currentEssenceOverflow;
     }
 
-    public int getSafeEssence(){
-        if(subAltarBlockEntity == null)
+    public int getSafeEssence() {
+        if (subAltarBlockEntity == null)
             return 0;
 
         return subAltarBlockEntity.getEssence();

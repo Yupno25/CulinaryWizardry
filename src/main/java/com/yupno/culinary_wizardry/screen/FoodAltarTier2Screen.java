@@ -28,10 +28,10 @@ public class FoodAltarTier2Screen extends AbstractContainerScreen<FoodAltarTier2
         /** THE INVENTORY */
         this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
 
-        /** CULINARY ESSENCE BAR*/
+        /** ITEM SLOT CULINARY ESSENCE */
         if (menu.isPresent()) {
             blit(pPoseStack, x + 78, y + 34 + (menu.getFillSize() - menu.getFillProgress()),
-                    194, 30 + (menu.getFillSize() - menu.getFillProgress()), 20, menu.getFillProgress());
+                    194, 30 + (menu.getFillSize() - menu.getFillProgress()), menu.getFillSize(), menu.getFillProgress());
         }
 
         /** SMALL FRUITS ESSENCE BAR*/
@@ -64,7 +64,7 @@ public class FoodAltarTier2Screen extends AbstractContainerScreen<FoodAltarTier2
                     185, 30 + (menu.getSmallFillSize() - menu.getSmallFillProgress(5)), 1, menu.getSmallFillProgress(5));
         }
 
-        /** FOOD PROCESSING ANIMATION */
+        /** CRAFTING ANIMATION */
         int foodProgress = menu.getEatingProgress();
         int seventhMaxFoodProgress = menu.getMaxEatingProgress() / 7;
 
@@ -93,11 +93,12 @@ public class FoodAltarTier2Screen extends AbstractContainerScreen<FoodAltarTier2
     }
 
     private final int[][] xyItemSlot = new int[][]{{60, 11}, {52, 41}, {79, 60}, {106, 41}, {98, 11}};
-    private void superBlit(PoseStack pPoseStack, int pX, int pY, int pUOffset, int pVOffset, int pUWidth, int pVHeight){
+
+    private void superBlit(PoseStack pPoseStack, int pX, int pY, int pUOffset, int pVOffset, int pUWidth, int pVHeight) {
         int[] usedItemslots = menu.getUsedItemSlots();
 
         for (int i = 0; i < xyItemSlot.length; i++) {
-            if(usedItemslots[i] == i)
+            if (usedItemslots[i] == i)
                 blit(pPoseStack, pX + xyItemSlot[i][0], pY + xyItemSlot[i][1], pUOffset, pVOffset, pUWidth, pVHeight);
         }
     }
