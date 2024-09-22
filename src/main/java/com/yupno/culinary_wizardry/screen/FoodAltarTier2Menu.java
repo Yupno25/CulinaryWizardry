@@ -20,7 +20,7 @@ public class FoodAltarTier2Menu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public FoodAltarTier2Menu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(8));
+        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(13));
     }
 
     public FoodAltarTier2Menu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -46,7 +46,7 @@ public class FoodAltarTier2Menu extends AbstractContainerMenu {
     }
 
     public int[] getUsedItemSlots(){
-        return new int[]{data.get(3), data.get(4), data.get(5), data.get(6), data.get(7)};
+        return new int[]{data.get(8), data.get(9), data.get(10), data.get(11), data.get(12)};
     }
 
     /**
@@ -65,7 +65,7 @@ public class FoodAltarTier2Menu extends AbstractContainerMenu {
      */
 
     public boolean isPresent() {
-        return false;//data.get(2) > 0;
+        return data.get(2) > 0;
     }
 
     public int getFillSize(){
@@ -73,13 +73,32 @@ public class FoodAltarTier2Menu extends AbstractContainerMenu {
     }
 
     public int getFillProgress() {
-        int progress = 0;//data.get(2);
+        int progress = data.get(2);
         int maxProgress = EssenceCalculation.calculateMaxCulinaryEssence(blockEntity.getTier());  // Max Progress
         int progressArrowSize = 20; // This is the height in pixels of your arrow
 
         return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
     }
 
+    /**
+     * SMALL ESSENCE BAR
+     */
+
+    public boolean isSmallPresent(int num) {
+        return (data.get(2 + num)) > 0;
+    }
+
+    public int getSmallFillSize(){
+        return 16; // This is the height in pixels of the texture
+    }
+
+    public int getSmallFillProgress(int num) {
+        int progress = data.get(2 + num);
+        int maxProgress = EssenceCalculation.calculateMaxCulinaryEssence(blockEntity.getTier());  // Max Progress
+        int progressArrowSize = 16; // This is the width in pixels of your arrow
+
+        return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
+    }
 
 
     // CREDIT GOES TO: diesieben07 | https://github.com/diesieben07/SevenCommons

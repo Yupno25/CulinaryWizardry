@@ -3,6 +3,7 @@ package com.yupno.culinary_wizardry.recipe;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.yupno.culinary_wizardry.CulinaryWizardry;
+import com.yupno.culinary_wizardry.utils.FoodType;
 import com.yupno.culinary_wizardry.utils.SimpleFoodContainer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
@@ -107,24 +108,36 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
     public int getPureCulinaryEssenceCost() {
         return pureCulinaryEssence;
     }
-    public int getPureFruitsEssence() {
+    public int getPureFruitsEssenceCost() {
         return pureFruitsEssence;
     }
 
-    public int getPureGrainsEssence() {
+    public int getPureGrainsEssenceCost() {
         return pureGrainsEssence;
     }
 
-    public int getPureProteinsEssence() {
+    public int getPureProteinsEssenceCost() {
         return pureProteinsEssence;
     }
 
-    public int getPureSugarsEssence() {
+    public int getPureSugarsEssenceCost() {
         return pureSugarsEssence;
     }
 
-    public int getPureVegetablesEssence() {
+    public int getPureVegetablesEssenceCost() {
         return pureVegetablesEssence;
+    }
+
+    public int getEssenceCostByType(FoodType foodType){
+        switch (foodType){
+            case CULINARY: return pureCulinaryEssence;
+            case FRUITS: return pureFruitsEssence;
+            case GRAINS: return pureGrainsEssence;
+            case PROTEINS: return pureProteinsEssence;
+            case SUGARS: return pureSugarsEssence;
+            case VEGETABLES: return pureVegetablesEssence;
+            default: return 0;
+        }
     }
 
     public int getTier() {
@@ -214,11 +227,11 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
             }
             buf.writeItemStack(recipe.getResultItem(), false);
             buf.writeInt(recipe.getPureCulinaryEssenceCost());
-            buf.writeInt(recipe.getPureFruitsEssence());
-            buf.writeInt(recipe.getPureGrainsEssence());
-            buf.writeInt(recipe.getPureProteinsEssence());
-            buf.writeInt(recipe.getPureSugarsEssence());
-            buf.writeInt(recipe.getPureVegetablesEssence());
+            buf.writeInt(recipe.getPureFruitsEssenceCost());
+            buf.writeInt(recipe.getPureGrainsEssenceCost());
+            buf.writeInt(recipe.getPureProteinsEssenceCost());
+            buf.writeInt(recipe.getPureSugarsEssenceCost());
+            buf.writeInt(recipe.getPureVegetablesEssenceCost());
             buf.writeInt(recipe.getTier());
         }
 

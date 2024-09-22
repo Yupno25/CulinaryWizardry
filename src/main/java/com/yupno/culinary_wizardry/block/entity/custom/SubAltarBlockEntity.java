@@ -53,8 +53,8 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
 
     private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
     protected final ContainerData data;
-    private final FoodType type;
-    private final int tier;
+    public final FoodType type;
+    public final int tier;
     private int eatingProgress = 0;
     private int maxEatingProgress = 28;
     private int culinaryEssence = 0;
