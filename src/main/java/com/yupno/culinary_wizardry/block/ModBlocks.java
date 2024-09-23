@@ -45,6 +45,14 @@ public class ModBlocks {
             () -> new FoodAltarTier2Block(BlockBehaviour.Properties.of(Material.WOOD)
                     .strength(2.5F).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
 
+    public static final RegistryObject<Block> FOOD_ALTAR_TIER3 = registerBlock("food_altar_tier3",
+            () -> new Block(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2.5F).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> FOOD_ALTAR_TIER4 = registerBlock("food_altar_tier4",
+            () -> new Block(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2.5F).requiresCorrectToolForDrops()), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
     public static final RegistryObject<Block> LOW_SUB_ALTAR_CULINARY = registerBlock("low_sub_altar_culinary",
             () -> new SubAltarBlock(BlockBehaviour.Properties.of(Material.WOOD)
                     .strength(2f).requiresCorrectToolForDrops(), FoodType.CULINARY, 1), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
@@ -72,6 +80,54 @@ public class ModBlocks {
     public static final RegistryObject<Block> MID_SUB_ALTAR_VEGETABLES = registerBlock("mid_sub_altar_vegetables",
             () -> new SubAltarBlock(BlockBehaviour.Properties.of(Material.WOOD)
                     .strength(2f).requiresCorrectToolForDrops(), FoodType.VEGETABLES, 2), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> HIGH_SUB_ALTAR_CULINARY = registerBlock("high_sub_altar_culinary",
+            () -> new SubAltarBlock(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops(), FoodType.CULINARY, 3), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> HIGH_SUB_ALTAR_FRUITS = registerBlock("high_sub_altar_fruits",
+            () -> new SubAltarBlock(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops(), FoodType.FRUITS, 3), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> HIGH_SUB_ALTAR_GRAINS = registerBlock("high_sub_altar_grains",
+            () -> new SubAltarBlock(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops(), FoodType.GRAINS, 3), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> HIGH_SUB_ALTAR_PROTEINS = registerBlock("high_sub_altar_proteins",
+            () -> new SubAltarBlock(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops(), FoodType.PROTEINS, 3), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> HIGH_SUB_ALTAR_SUGARS = registerBlock("high_sub_altar_sugars",
+            () -> new SubAltarBlock(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops(), FoodType.SUGARS, 3), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> HIGH_SUB_ALTAR_VEGETABLES = registerBlock("high_sub_altar_vegetables",
+            () -> new SubAltarBlock(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops(), FoodType.VEGETABLES, 3), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> TRANSCENDENT_SUB_ALTAR_CULINARY = registerBlock("transcendent_sub_altar_culinary",
+            () -> new SubAltarBlock(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops(), FoodType.CULINARY, 4), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> TRANSCENDENT_SUB_ALTAR_FRUITS = registerBlock("transcendent_sub_altar_fruits",
+            () -> new SubAltarBlock(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops(), FoodType.FRUITS, 4), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> TRANSCENDENT_SUB_ALTAR_GRAINS = registerBlock("transcendent_sub_altar_grains",
+            () -> new SubAltarBlock(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops(), FoodType.GRAINS, 4), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> TRANSCENDENT_SUB_ALTAR_PROTEINS = registerBlock("transcendent_sub_altar_proteins",
+            () -> new SubAltarBlock(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops(), FoodType.PROTEINS, 4), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> TRANSCENDENT_SUB_ALTAR_SUGARS = registerBlock("transcendent_sub_altar_sugars",
+            () -> new SubAltarBlock(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops(), FoodType.SUGARS, 4), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
+
+    public static final RegistryObject<Block> TRANSCENDENT_SUB_ALTAR_VEGETABLES = registerBlock("transcendent_sub_altar_vegetables",
+            () -> new SubAltarBlock(BlockBehaviour.Properties.of(Material.WOOD)
+                    .strength(2f).requiresCorrectToolForDrops(), FoodType.VEGETABLES, 4), ModCreativeModeTab.CULINARY_WIZARDRY_TAB);
 
 
 

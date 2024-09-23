@@ -37,7 +37,11 @@ public class ModBlockEntities {
                     BlockEntityType.Builder.of(SubAltarBlockEntity::new,
                             ModBlocks.LOW_SUB_ALTAR_CULINARY.get(), ModBlocks.MID_SUB_ALTAR_CULINARY.get(), ModBlocks.MID_SUB_ALTAR_FRUITS.get(),
                             ModBlocks.MID_SUB_ALTAR_GRAINS.get(), ModBlocks.MID_SUB_ALTAR_PROTEINS.get(), ModBlocks.MID_SUB_ALTAR_SUGARS.get(),
-                            ModBlocks.MID_SUB_ALTAR_VEGETABLES.get()).build(null));
+                            ModBlocks.MID_SUB_ALTAR_VEGETABLES.get(), ModBlocks.HIGH_SUB_ALTAR_CULINARY.get(), ModBlocks.HIGH_SUB_ALTAR_FRUITS.get(),
+                            ModBlocks.HIGH_SUB_ALTAR_GRAINS.get(), ModBlocks.HIGH_SUB_ALTAR_PROTEINS.get(), ModBlocks.HIGH_SUB_ALTAR_SUGARS.get(),
+                            ModBlocks.HIGH_SUB_ALTAR_VEGETABLES.get(), ModBlocks.TRANSCENDENT_SUB_ALTAR_CULINARY.get(), ModBlocks.TRANSCENDENT_SUB_ALTAR_FRUITS.get(),
+                            ModBlocks.TRANSCENDENT_SUB_ALTAR_GRAINS.get(), ModBlocks.TRANSCENDENT_SUB_ALTAR_PROTEINS.get(), ModBlocks.TRANSCENDENT_SUB_ALTAR_SUGARS.get(),
+                            ModBlocks.TRANSCENDENT_SUB_ALTAR_VEGETABLES.get()).build(null));
 
     public static void register(IEventBus eventBus){
         BLOCK_ENTITIES.register(eventBus);
