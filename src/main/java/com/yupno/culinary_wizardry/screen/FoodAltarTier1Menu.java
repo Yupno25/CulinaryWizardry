@@ -53,11 +53,11 @@ public class FoodAltarTier1Menu extends AbstractContainerMenu {
      * CRAFTING ANIMATION
      */
 
-    public int getEatingProgress() {
+    public int getCraftingProgress() {
         return this.data.get(0);
     }
 
-    public int getMaxEatingProgress() {
+    public int getMaxCraftingProgress() {
         return this.data.get(1);
     }
 

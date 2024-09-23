@@ -65,8 +65,8 @@ public class FoodAltarTier2Screen extends AbstractContainerScreen<FoodAltarTier2
         }
 
         /** CRAFTING ANIMATION */
-        int foodProgress = menu.getEatingProgress();
-        int seventhMaxFoodProgress = menu.getMaxEatingProgress() / 7;
+        int foodProgress = menu.getCraftingProgress();
+        int seventhMaxFoodProgress = menu.getMaxCraftingProgress() / 7;
 
         if (foodProgress > 0) {
             superBlit(pPoseStack, x, y, 176, 0, 8, 8);

@@ -6,7 +6,6 @@ import com.yupno.culinary_wizardry.CulinaryWizardry;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
@@ -36,8 +35,8 @@ public class FoodAltarTier1Screen extends AbstractContainerScreen<FoodAltarTier1
         }
 
         /** CRAFTING ANIMATION */
-        int foodProgress = menu.getEatingProgress();
-        int seventhMaxFoodProgress = menu.getMaxEatingProgress() / 7;
+        int foodProgress = menu.getCraftingProgress();
+        int seventhMaxFoodProgress = menu.getMaxCraftingProgress() / 7;
 
         if (foodProgress > 0) {
             superBlit(pPoseStack, x, y, 176, 0, 8, 8);

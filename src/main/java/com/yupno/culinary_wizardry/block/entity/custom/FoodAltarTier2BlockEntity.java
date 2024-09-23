@@ -9,17 +9,11 @@ import com.yupno.culinary_wizardry.utils.FoodType;
 import com.yupno.culinary_wizardry.utils.SimpleEssenceContainer;
 import com.yupno.culinary_wizardry.utils.SubAltarContainer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -27,7 +21,6 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.level.block.state.pattern.BlockPattern;
@@ -36,21 +29,15 @@ import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.SlabType;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.items.CapabilityItemHandler;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
 import java.util.*;
 
 public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implements MenuProvider {
     protected final ContainerData data;
-    private int eatingProgress = 0;
-    private int maxEatingProgress = 28;
+    private int craftingProgress = 0;
+    private int maxCraftingProgress = 28;
     private final int tier = 2;
 
     /**
@@ -87,9 +74,9 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
             public int get(int index) {
                 switch (index) {
                     case 0:
-                        return FoodAltarTier2BlockEntity.this.eatingProgress;
+                        return FoodAltarTier2BlockEntity.this.craftingProgress;
                     case 1:
-                        return FoodAltarTier2BlockEntity.this.maxEatingProgress;
+                        return FoodAltarTier2BlockEntity.this.maxCraftingProgress;
                     case 2:
                         return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.CULINARY).getSafeEssence();
                     case 3:
@@ -120,10 +107,10 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
             public void set(int index, int value) {
                 switch (index) {
                     case 0:
-                        FoodAltarTier2BlockEntity.this.eatingProgress = value;
+                        FoodAltarTier2BlockEntity.this.craftingProgress = value;
                         break;
                     case 1:
-                        FoodAltarTier2BlockEntity.this.maxEatingProgress = value;
+                        FoodAltarTier2BlockEntity.this.maxCraftingProgress = value;
                         break;
                     case 2, 3, 4, 5, 6, 7:
                         break;
@@ -171,7 +158,7 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag) {
         tag.put("inventory", itemHandler.serializeNBT());
-        tag.putInt("progress", eatingProgress);
+        tag.putInt("progress", craftingProgress);
         tag.putInt("internalTicks", internalTicks);
         tag.putBoolean("isComplete", isFullAltarShape());
 
@@ -188,7 +175,7 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
     public void load(CompoundTag nbt) {
         super.load(nbt);
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
-        eatingProgress = nbt.getInt("progress");
+        craftingProgress = nbt.getInt("progress");
         internalTicks = nbt.getInt("internalTicks");
         setFullAltarShape(nbt.getBoolean("isComplete"));
 
@@ -263,7 +250,7 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
         }
 
         if (entity.isFullAltarShape() && checkOrCraftItem(entity, false)) {
-            entity.eatingProgress++;
+            entity.craftingProgress++;
 
             for (FoodType foodType : FoodType.values()) {
                 SubAltarContainer subAltar = entity.subAltars.get(foodType);
@@ -273,7 +260,7 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
                     return;
 
                 setChanged(pLevel, pPos, pState);
-                if (entity.eatingProgress > entity.maxEatingProgress) {
+                if (entity.craftingProgress > entity.maxCraftingProgress) {
                     checkOrCraftItem(entity, true);
                     return;
                 }
@@ -281,7 +268,7 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
                 // Gets 1/maxProgress of the essence so that the essence drains slowly and not all at once
                 // Needs to round since the division is almost certainly not an int
                 // The overflow from that is saved to ensure that the full cost will be paid
-                float temp = (float) subAltar.getCurrentEssenceCost() / entity.maxEatingProgress;
+                float temp = (float) subAltar.getCurrentEssenceCost() / entity.maxCraftingProgress;
                 int temp2 = Math.round(temp + subAltar.getCurrentEssenceOverflow());
                 if (temp2 == Math.round(temp)) {
                     subAltar.setCurrentEssenceOverflow(subAltar.getCurrentEssenceOverflow() + temp - temp2);
@@ -362,7 +349,7 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
     }
 
     private void resetProgress() {
-        this.eatingProgress = 0;
+        this.craftingProgress = 0;
         for (FoodType foodType : FoodType.values()) {
             subAltars.get(foodType).setCurrentEssenceCost(0);
             subAltars.get(foodType).setRemainingEssenceCost(0);
