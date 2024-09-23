@@ -47,23 +47,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvider {
-    private final ItemStackHandler itemHandler = new ItemStackHandler(6) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            setChanged();
-        }
-
-        @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return switch (slot) {
-                case 5 -> false;
-                default -> super.isItemValid(slot, stack);
-            };
-        }
-    };
-
-    private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
+public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implements MenuProvider {
     protected final ContainerData data;
     private int eatingProgress = 0;
     private int maxEatingProgress = 28;
@@ -88,8 +72,6 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
             {"AwA", "wdw", "AwA"}
     };
     private BlockPattern[] altarShapes = new BlockPattern[height];
-    private boolean isFullAltarShape = false;
-    private int internalTicks = 0;
     private final Vec3i[] subAltarShifts = new Vec3i[]{
             new Vec3i(0, 3, 0),
             new Vec3i(0, -1, 0),
@@ -98,15 +80,6 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
             new Vec3i(1, 0, -1),
             new Vec3i(-1, 0, -1),
     };
-    private final Map<FoodType, SubAltarContainer> subAltars = Map.of(
-            FoodType.CULINARY, new SubAltarContainer(FoodType.CULINARY),
-            FoodType.FRUITS, new SubAltarContainer(FoodType.FRUITS),
-            FoodType.GRAINS, new SubAltarContainer(FoodType.GRAINS),
-            FoodType.PROTEINS, new SubAltarContainer(FoodType.PROTEINS),
-            FoodType.SUGARS, new SubAltarContainer(FoodType.SUGARS),
-            FoodType.VEGETABLES, new SubAltarContainer(FoodType.VEGETABLES)
-    );
-    private int[] usedItemSlots = {0, 1, 2, 3, 4};
 
     public FoodAltarTier2BlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.FOOD_ALTAR_TIER2_ENTITY.get(), pPos, pBlockState);
@@ -200,7 +173,7 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
         tag.put("inventory", itemHandler.serializeNBT());
         tag.putInt("progress", eatingProgress);
         tag.putInt("internalTicks", internalTicks);
-        tag.putBoolean("isComplete", isFullAltarShape);
+        tag.putBoolean("isComplete", isFullAltarShape());
 
         for (FoodType foodType : FoodType.values()) {
             tag.putInt("currentEssence" + foodType.getName(), subAltars.get(foodType).getCurrentEssenceCost());
@@ -217,7 +190,7 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
         eatingProgress = nbt.getInt("progress");
         internalTicks = nbt.getInt("internalTicks");
-        isFullAltarShape = nbt.getBoolean("isComplete");
+        setFullAltarShape(nbt.getBoolean("isComplete"));
 
         for (FoodType foodType : FoodType.values()) {
             subAltars.get(foodType).setCurrentEssenceCost(nbt.getInt("currentEssence" + foodType.getName()));
@@ -262,21 +235,17 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
         }
 
         if (foodTypes.isEmpty()) {
-            isFullAltarShape = true;
+            setFullAltarShape(true);
         } else {
             failedUpdate();
         }
     }
 
     private void failedUpdate() {
-        isFullAltarShape = false;
+        setFullAltarShape(false);
         for (FoodType foodType : FoodType.values()) {
             subAltars.get(foodType).setSubAltarBlockEntity(null);
         }
-    }
-
-    public boolean isFullAltarShape() {
-        return isFullAltarShape;
     }
 
     public int getTier() {
@@ -326,16 +295,6 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
         } else {
             entity.resetProgress();
             setChanged(pLevel, pPos, pState);
-        }
-    }
-
-    private static int calculateEssence(FoodAltarTier2BlockEntity entity, FoodType foodType) {
-        SubAltarContainer subAltar = entity.subAltars.get(foodType);
-        if (subAltar.getCurrentEssenceCost() != 0 && (subAltar.getCurrentEssenceCost() - subAltar.getRemainingEssenceCost()) == 0) {
-            return entity.subAltars.get(foodType).getSubAltarBlockEntity().getEssence() + entity.subAltars.get(foodType).getCurrentEssenceCost();
-        } else {
-            return entity.subAltars.get(foodType).getSubAltarBlockEntity().getEssence() +
-                    (entity.subAltars.get(foodType).getCurrentEssenceCost() - entity.subAltars.get(foodType).getRemainingEssenceCost());
         }
     }
 
@@ -411,49 +370,6 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
         }
     }
 
-    private static boolean canInsertItemIntoOutputSlot(SimpleEssenceContainer inventory, ItemStack output) {
-        return inventory.getItem(5).getItem() == output.getItem() || inventory.getItem(5).isEmpty();
-    }
-
-    private static boolean canInsertAmountIntoOutputSlot(SimpleEssenceContainer inventory) {
-        return inventory.getItem(5).getMaxStackSize() > inventory.getItem(5).getCount();
-    }
-
-    /**
-     * Servertick stuff
-     */
-
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
-    }
-
-    /**
-     * Basic stuff
-     */
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (side == null) {
-                return lazyItemHandler.cast();
-            }
-
-            if (isFullAltarShape()) {
-                return LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> index == 5, (index, stack) -> itemHandler.isItemValid(0, stack))).cast();
-            }
-        }
-
-        return super.getCapability(cap, side);
-    }
-
     @Override
     public Component getDisplayName() {
         return new TranslatableComponent("block.culinary_wizardry.food_altar_tier2");
@@ -463,26 +379,5 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory playerInventory, Player pPlayer) {
         return new FoodAltarTier2Menu(pContainerId, playerInventory, this, this.data);
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        lazyItemHandler = LazyOptional.of(() -> itemHandler);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        lazyItemHandler.invalidate();
-    }
-
-    public void drops() {
-        SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots());
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            inventory.setItem(i, itemHandler.getStackInSlot(i));
-        }
-
-        Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 }

@@ -47,23 +47,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvider {
-    private final ItemStackHandler itemHandler = new ItemStackHandler(6) {
-        @Override
-        protected void onContentsChanged(int slot) {
-            setChanged();
-        }
-
-        @Override
-        public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return switch (slot) {
-                case 5 -> false;
-                default -> super.isItemValid(slot, stack);
-            };
-        }
-    };
-
-    private LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
+public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implements MenuProvider {
     protected final ContainerData data;
     private int eatingProgress = 0;
     private int maxEatingProgress = 28;
@@ -88,13 +72,10 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
             {"AwA", "wdw", "AwA"}};
     private BlockPattern[] altarShapes = new BlockPattern[height];
     private final Vec3i subAltarShift = new Vec3i(0, 3, 0);
-    private boolean isFullAltarShape = false;
-    private int internalTicks = 0;
     private SubAltarBlockEntity subAltarBlockEntity = null;
     private int currentCulinaryEssenceCost = 0;
     private int remainingCulinaryEssenceCost = 0;
     private float currentCulinaryEssenceOverflow = 0;
-    private int[] usedItemSlots = {0, 1, 2, 3, 4};
 
     public FoodAltarTier1BlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.FOOD_ALTAR_TIER1_ENTITY.get(), pPos, pBlockState);
@@ -178,7 +159,7 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
         tag.put("inventory", itemHandler.serializeNBT());
         tag.putInt("progress", eatingProgress);
         tag.putInt("internalTicks", internalTicks);
-        tag.putBoolean("isComplete", isFullAltarShape);
+        tag.putBoolean("isComplete", isFullAltarShape());
         tag.putInt("currentCulinary", currentCulinaryEssenceCost);
         tag.putInt("remainingCulinary", remainingCulinaryEssenceCost);
         tag.putFloat("currentOverflow", currentCulinaryEssenceOverflow);
@@ -191,7 +172,7 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
         eatingProgress = nbt.getInt("progress");
         internalTicks = nbt.getInt("internalTicks");
-        isFullAltarShape = nbt.getBoolean("isComplete");
+        setFullAltarShape(nbt.getBoolean("isComplete"));
         currentCulinaryEssenceCost = nbt.getInt("currentCulinary");
         remainingCulinaryEssenceCost = nbt.getInt("remainingCulinary");
         currentCulinaryEssenceOverflow = nbt.getFloat("currentOverflow");
@@ -218,19 +199,15 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
             }
         }
 
-        isFullAltarShape = true;
+        setFullAltarShape(true);
 
         // Cache SubAltarBlockEntity
         subAltarBlockEntity = ((SubAltarBlockEntity) (level.getBlockEntity(new BlockPos(worldPosition.offset(subAltarShift)))));
     }
 
     private void failedUpdate() {
-        isFullAltarShape = false;
+        setFullAltarShape(false);
         subAltarBlockEntity = null;
-    }
-
-    public boolean isFullAltarShape() {
-        return isFullAltarShape;
     }
 
     public SubAltarBlockEntity getSubAltar() {
@@ -356,49 +333,6 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
         this.remainingCulinaryEssenceCost = 0;
     }
 
-    private static boolean canInsertItemIntoOutputSlot(SimpleEssenceContainer inventory, ItemStack output) {
-        return inventory.getItem(5).getItem() == output.getItem() || inventory.getItem(5).isEmpty();
-    }
-
-    private static boolean canInsertAmountIntoOutputSlot(SimpleEssenceContainer inventory) {
-        return inventory.getItem(5).getMaxStackSize() > inventory.getItem(5).getCount();
-    }
-
-    /**
-     * Servertick stuff
-     */
-
-    @Nullable
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public CompoundTag getUpdateTag() {
-        return saveWithoutMetadata();
-    }
-
-    /**
-     * Basic stuff
-     */
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
-        if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if (side == null) {
-                return lazyItemHandler.cast();
-            }
-
-            if (isFullAltarShape()) {
-                return LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> index == 5, (index, stack) -> itemHandler.isItemValid(0, stack))).cast();
-            }
-        }
-
-        return super.getCapability(cap, side);
-    }
-
     @Override
     public Component getDisplayName() {
         return new TranslatableComponent("block.culinary_wizardry.food_altar_tier1");
@@ -408,26 +342,5 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
     @Override
     public AbstractContainerMenu createMenu(int pContainerId, Inventory playerInventory, Player pPlayer) {
         return new FoodAltarTier1Menu(pContainerId, playerInventory, this, this.data);
-    }
-
-    @Override
-    public void onLoad() {
-        super.onLoad();
-        lazyItemHandler = LazyOptional.of(() -> itemHandler);
-    }
-
-    @Override
-    public void invalidateCaps() {
-        super.invalidateCaps();
-        lazyItemHandler.invalidate();
-    }
-
-    public void drops() {
-        SimpleContainer inventory = new SimpleContainer(itemHandler.getSlots());
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            inventory.setItem(i, itemHandler.getStackInSlot(i));
-        }
-
-        Containers.dropContents(this.level, this.worldPosition, inventory);
     }
 }
