@@ -6,7 +6,7 @@ import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
 import com.yupno.culinary_wizardry.recipe.FoodAltarRecipe;
 import com.yupno.culinary_wizardry.screen.FoodAltarTier2Menu;
 import com.yupno.culinary_wizardry.utils.FoodType;
-import com.yupno.culinary_wizardry.utils.SimpleFoodContainer;
+import com.yupno.culinary_wizardry.utils.SimpleEssenceContainer;
 import com.yupno.culinary_wizardry.utils.SubAltarContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -346,9 +346,9 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
         }
 
         Level level = entity.level;
-        SimpleFoodContainer inventory;
+        SimpleEssenceContainer inventory;
 
-        inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(),
+        inventory = new SimpleEssenceContainer(entity.itemHandler.getSlots(),
                 calculateEssence(entity, FoodType.CULINARY),
                 calculateEssence(entity, FoodType.FRUITS),
                 calculateEssence(entity, FoodType.GRAINS),
@@ -411,11 +411,11 @@ public class FoodAltarTier2BlockEntity extends BlockEntity implements MenuProvid
         }
     }
 
-    private static boolean canInsertItemIntoOutputSlot(SimpleFoodContainer inventory, ItemStack output) {
+    private static boolean canInsertItemIntoOutputSlot(SimpleEssenceContainer inventory, ItemStack output) {
         return inventory.getItem(5).getItem() == output.getItem() || inventory.getItem(5).isEmpty();
     }
 
-    private static boolean canInsertAmountIntoOutputSlot(SimpleFoodContainer inventory) {
+    private static boolean canInsertAmountIntoOutputSlot(SimpleEssenceContainer inventory) {
         return inventory.getItem(5).getMaxStackSize() > inventory.getItem(5).getCount();
     }
 

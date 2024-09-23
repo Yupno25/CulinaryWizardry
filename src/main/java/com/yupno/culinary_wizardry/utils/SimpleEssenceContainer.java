@@ -2,7 +2,7 @@ package com.yupno.culinary_wizardry.utils;
 
 import net.minecraft.world.SimpleContainer;
 
-public class SimpleFoodContainer extends SimpleContainer {
+public class SimpleEssenceContainer extends SimpleContainer {
     private final int culinaryEssence;
     private final int fruitsEssence;
     private final int grainsEssence;
@@ -11,7 +11,7 @@ public class SimpleFoodContainer extends SimpleContainer {
     private final int vegetablesEssence;
     private final int tier;
 
-    public SimpleFoodContainer(int slots, int culinaryEssence, int fruitsEssence, int grainsEssence, int proteinsEssence, int sugarsEssence, int vegetablesEssence, int tier) {
+    public SimpleEssenceContainer(int slots, int culinaryEssence, int fruitsEssence, int grainsEssence, int proteinsEssence, int sugarsEssence, int vegetablesEssence, int tier) {
         super(slots);
         this.culinaryEssence = culinaryEssence;
         this.fruitsEssence = fruitsEssence;

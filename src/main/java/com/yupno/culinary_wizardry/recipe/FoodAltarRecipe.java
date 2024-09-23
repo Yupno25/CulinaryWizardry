@@ -4,7 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.yupno.culinary_wizardry.CulinaryWizardry;
 import com.yupno.culinary_wizardry.utils.FoodType;
-import com.yupno.culinary_wizardry.utils.SimpleFoodContainer;
+import com.yupno.culinary_wizardry.utils.SimpleEssenceContainer;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +17,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
+public class FoodAltarRecipe implements Recipe<SimpleEssenceContainer> {
     private final ResourceLocation id;
     private final ItemStack output;
     private final int culinaryEssence;
@@ -49,7 +49,7 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
      */
 
     @Override
-    public boolean matches(SimpleFoodContainer pContainer, Level pLevel) {
+    public boolean matches(SimpleEssenceContainer pContainer, Level pLevel) {
         if (pContainer.getCulinaryEssence() < culinaryEssence || pContainer.getFruitsEssence() < fruitsEssence ||
                 pContainer.getGrainsEssence() < grainsEssence || pContainer.getProteinsEssence() < proteinsEssence ||
                 pContainer.getSugarsEssence() < sugarsEssence || pContainer.getVegetablesEssence() < vegetablesEssence)
@@ -83,7 +83,7 @@ public class FoodAltarRecipe implements Recipe<SimpleFoodContainer> {
     }
 
     @Override
-    public ItemStack assemble(SimpleFoodContainer pContainer) {
+    public ItemStack assemble(SimpleEssenceContainer pContainer) {
         return output;
     }
 

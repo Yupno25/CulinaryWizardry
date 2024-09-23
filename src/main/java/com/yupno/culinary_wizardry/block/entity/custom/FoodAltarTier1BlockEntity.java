@@ -5,7 +5,7 @@ import com.yupno.culinary_wizardry.block.ModBlocks;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
 import com.yupno.culinary_wizardry.recipe.FoodAltarRecipe;
 import com.yupno.culinary_wizardry.screen.FoodAltarTier1Menu;
-import com.yupno.culinary_wizardry.utils.SimpleFoodContainer;
+import com.yupno.culinary_wizardry.utils.SimpleEssenceContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -300,13 +300,13 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
             return false;
 
         Level level = entity.level;
-        SimpleFoodContainer inventory;
+        SimpleEssenceContainer inventory;
 
         if (entity.currentCulinaryEssenceCost != 0 && (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost) == 0) {
-            inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getEssence()
+            inventory = new SimpleEssenceContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getEssence()
                     + entity.currentCulinaryEssenceCost, 0, 0, 0, 0, 0, entity.getTier());
         } else {
-            inventory = new SimpleFoodContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getEssence()
+            inventory = new SimpleEssenceContainer(entity.itemHandler.getSlots(), subAltarBlockEntity.getEssence()
                     + (entity.currentCulinaryEssenceCost - entity.remainingCulinaryEssenceCost), 0,
                     0, 0, 0, 0, entity.getTier());
         }
@@ -356,11 +356,11 @@ public class FoodAltarTier1BlockEntity extends BlockEntity implements MenuProvid
         this.remainingCulinaryEssenceCost = 0;
     }
 
-    private static boolean canInsertItemIntoOutputSlot(SimpleFoodContainer inventory, ItemStack output) {
+    private static boolean canInsertItemIntoOutputSlot(SimpleEssenceContainer inventory, ItemStack output) {
         return inventory.getItem(5).getItem() == output.getItem() || inventory.getItem(5).isEmpty();
     }
 
-    private static boolean canInsertAmountIntoOutputSlot(SimpleFoodContainer inventory) {
+    private static boolean canInsertAmountIntoOutputSlot(SimpleEssenceContainer inventory) {
         return inventory.getItem(5).getMaxStackSize() > inventory.getItem(5).getCount();
     }
 
