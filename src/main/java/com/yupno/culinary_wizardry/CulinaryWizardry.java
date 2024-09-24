@@ -44,6 +44,8 @@ public class CulinaryWizardry {
         MenuScreens.register(ModMenuTypes.FOOD_ALTAR_TIER0_MENU.get(), FoodAltarTier0Screen::new);
         MenuScreens.register(ModMenuTypes.FOOD_ALTAR_TIER1_MENU.get(), FoodAltarTier1Screen::new);
         MenuScreens.register(ModMenuTypes.FOOD_ALTAR_TIER2_MENU.get(), FoodAltarTier2Screen::new);
+        MenuScreens.register(ModMenuTypes.FOOD_ALTAR_TIER3_MENU.get(), FoodAltarTier3Screen::new);
+        MenuScreens.register(ModMenuTypes.FOOD_ALTAR_TIER4_MENU.get(), FoodAltarTier4Screen::new);
         MenuScreens.register(ModMenuTypes.SUB_ALTAR_MENU.get(), SubAltarScreen::new);
     }
 

@@ -24,6 +24,12 @@ public class ModMenuTypes {
     public static final RegistryObject<MenuType<FoodAltarTier2Menu>> FOOD_ALTAR_TIER2_MENU =
             registerMenuType(FoodAltarTier2Menu::new, "food_altar_tier2_menu");
 
+    public static final RegistryObject<MenuType<FoodAltarTier3Menu>> FOOD_ALTAR_TIER3_MENU =
+            registerMenuType(FoodAltarTier3Menu::new, "food_altar_tier3_menu");
+
+    public static final RegistryObject<MenuType<FoodAltarTier4Menu>> FOOD_ALTAR_TIER4_MENU =
+            registerMenuType(FoodAltarTier4Menu::new, "food_altar_tier4_menu");
+
     public static final RegistryObject<MenuType<SubAltarMenu>> SUB_ALTAR_MENU =
             registerMenuType(SubAltarMenu::new, "sub_altar_menu");
 

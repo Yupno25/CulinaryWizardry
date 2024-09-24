@@ -1,5 +1,6 @@
 package com.yupno.culinary_wizardry.block.entity.custom;
 
+import com.mojang.logging.LogUtils;
 import com.yupno.culinary_wizardry.utils.FoodType;
 import com.yupno.culinary_wizardry.utils.SimpleEssenceContainer;
 import com.yupno.culinary_wizardry.utils.SubAltarContainer;
@@ -136,8 +137,12 @@ public class BaseFoodAltarBlockEntity extends BlockEntity {
             FoodType.VEGETABLES, new SubAltarContainer(FoodType.VEGETABLES)
     );
 
-    public static int calculateEssence(FoodAltarTier2BlockEntity entity, FoodType foodType) {
-        SubAltarContainer subAltar = entity.subAltars.get(foodType);
+    public static int calculateEssence(BlockEntity entity, FoodType foodType) {
+        SubAltarContainer subAltar = null;
+        if(entity instanceof BaseFoodAltarBlockEntity){
+            subAltar = ((BaseFoodAltarBlockEntity) entity).subAltars.get(foodType);
+        }
+
         if (subAltar.getCurrentEssenceCost() != 0 && (subAltar.getCurrentEssenceCost() - subAltar.getRemainingEssenceCost()) == 0) {
             return subAltar.getSubAltarBlockEntity().getEssence() + subAltar.getCurrentEssenceCost();
         } else {
