@@ -71,7 +71,7 @@ public class SubAltarScreen extends AbstractContainerScreen<SubAltarMenu> {
         /** TOOLTIP FOR ESSENCE BAR */
         if (isMouseAboveArea(pMouseX, pMouseY, x + 79, y + 9, 17, 51)) {
             renderTooltip(pPoseStack, new TranslatableComponent("translatable." + menu.getFoodType().getName() + "_essence")
-                    .append(": " + menu.getEssence() + "/" + menu.getMaxEssence()), pMouseX, pMouseY);
+                    .append(": " + String.format("%,d", menu.getEssence()) + "/" + String.format("%,d", menu.getMaxEssence())), pMouseX, pMouseY);
         }
     }
 

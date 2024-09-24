@@ -70,7 +70,7 @@ public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0
         /** TOOLTIP FOR CULINARY ESSENCE BAR */
         if (isMouseAboveArea(pMouseX, pMouseY, x + 151, y + 9, 17, 51)) {
             renderTooltip(pPoseStack, new TranslatableComponent("translatable.culinary_essence")
-                    .append(": " + menu.getCulinaryEssence() + "/" + menu.getMaxCulinaryEssence()), pMouseX, pMouseY);
+                    .append(": " + String.format("%,d", menu.getCulinaryEssence()) + "/" + String.format("%,d", menu.getMaxCulinaryEssence())), pMouseX, pMouseY);
         }
     }
 
