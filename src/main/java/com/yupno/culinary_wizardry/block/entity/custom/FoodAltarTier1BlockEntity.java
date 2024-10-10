@@ -280,6 +280,8 @@ public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implemen
             inventory.setItem(i, entity.itemHandler.getStackInSlot(i));
         }
 
+        // Reverses the order of chosen recipes, this leads to the first recipe chosen being the one with the most ingredients
+        // This prevents recipes from blocking each other
         List<FoodAltarRecipe> recipes = level.getRecipeManager().getAllRecipesFor(FoodAltarRecipe.Type.INSTANCE);
         Optional<FoodAltarRecipe> match = recipes.stream().sorted(Comparator.comparingInt(recipe -> ((FoodAltarRecipe) recipe).getRecipeList().size()).reversed())
                 .filter(recipe -> recipe.matches(inventory, level)).findFirst();
