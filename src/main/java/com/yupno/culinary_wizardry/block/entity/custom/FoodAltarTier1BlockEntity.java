@@ -47,8 +47,7 @@ public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implemen
      * A layer of only Air/Any Blocks doesn't work
      * A layer with only a center block and other than that Any Block doesn't work
      */
-    private final int height = 6; // Height of the whole structure
-    private final int thisAltarHeight = 1; // Height of this altar relative to the structure as a whole
+    private final int thisAltarHeight = 1; // Position of this altar relative to the structure as a whole
     private final int blocksToCenter = 1; // How many blocks it takes to get to the center of the layer
     private final String[][] altarLevels = new String[][]{
             {"bBb", "B?B", "bBb"},
@@ -56,7 +55,9 @@ public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implemen
             {"tAt", "A?A", "tAt"},
             {"AwA", "wuw", "AwA"},
             {"A?A", "?C?", "A?A"},
-            {"AwA", "wdw", "AwA"}};
+            {"AwA", "wdw", "AwA"}
+    };
+    private final int height = altarLevels.length; // Height of the whole structure
     private BlockPattern[] altarShapes = new BlockPattern[height];
     private final Vec3i subAltarShift = new Vec3i(0, 3, 0);
     private SubAltarBlockEntity subAltarBlockEntity = null;
