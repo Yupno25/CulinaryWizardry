@@ -8,6 +8,8 @@ import com.yupno.culinary_wizardry.utils.FoodType;
 import com.yupno.culinary_wizardry.utils.SimpleEssenceContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -35,6 +37,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
+import java.util.Random;
 
 public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvider {
     private final ItemStackHandler itemHandler = new ItemStackHandler(3) {
@@ -253,6 +256,16 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
     private static boolean canInsertAmountIntoOutputSlot(SimpleEssenceContainer inventory) {
         return inventory.getItem(1).getMaxStackSize() > inventory.getItem(1).getCount();
     }
+
+    /**
+     * Particles
+     * */
+    private static final int TIME_BETWEEN_PARTICLES = 10;
+
+    public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier0BlockEntity pBlockEntity) {
+
+    }
+
 
     /**
      * Servertick stuff

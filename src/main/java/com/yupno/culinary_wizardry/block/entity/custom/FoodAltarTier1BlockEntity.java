@@ -323,6 +323,16 @@ public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implemen
         this.remainingCulinaryEssenceCost = 0;
     }
 
+    /**
+     * Particles
+     * */
+    private static final int TIME_BETWEEN_PARTICLES = 10;
+
+    public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier1BlockEntity pBlockEntity) {
+
+    }
+
+
     @Override
     public Component getDisplayName() {
         return new TranslatableComponent("block.culinary_wizardry.food_altar_tier1");

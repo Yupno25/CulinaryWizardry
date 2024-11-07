@@ -359,6 +359,15 @@ public class FoodAltarTier3BlockEntity extends BaseFoodAltarBlockEntity implemen
         }
     }
 
+    /**
+     * Particles
+     * */
+    private static final int TIME_BETWEEN_PARTICLES = 10;
+
+    public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier3BlockEntity pBlockEntity) {
+
+    }
+
     @Override
     public Component getDisplayName() {
         return new TranslatableComponent("block.culinary_wizardry.food_altar_tier3");

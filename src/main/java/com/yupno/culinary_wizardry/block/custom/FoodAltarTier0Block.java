@@ -18,7 +18,9 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +35,9 @@ public class FoodAltarTier0Block extends BaseEntityBlock {
         pBuilder.add();
     }
 
-    private static final VoxelShape SHAPE = Block.box(1, 0,1, 15, 13, 15);
+    private static final VoxelShape blockBox = box(1, 0,1, 15, 13, 15);
+    private static final VoxelShape blockCutout = box(3, 3,3, 13, 13, 13);
+    private static final VoxelShape SHAPE = Shapes.join(blockBox, blockCutout, BooleanOp.ONLY_FIRST);
 
     @Override
     public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
@@ -84,8 +88,12 @@ public class FoodAltarTier0Block extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        if (pLevel.isClientSide) return null;
-        return createTickerHelper(pBlockEntityType, ModBlockEntities.FOOD_ALTAR_TIER0_ENTITY.get(),
-                FoodAltarTier0BlockEntity::serverTick);
+        if (pLevel.isClientSide){
+            return createTickerHelper(pBlockEntityType, ModBlockEntities.FOOD_ALTAR_TIER0_ENTITY.get(),
+                    FoodAltarTier0BlockEntity::clientTick);
+        }else {
+            return createTickerHelper(pBlockEntityType, ModBlockEntities.FOOD_ALTAR_TIER0_ENTITY.get(),
+                    FoodAltarTier0BlockEntity::serverTick);
+        }
     }
 }
