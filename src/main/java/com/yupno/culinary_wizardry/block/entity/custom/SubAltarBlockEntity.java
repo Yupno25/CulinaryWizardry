@@ -2,26 +2,23 @@ package com.yupno.culinary_wizardry.block.entity.custom;
 
 import com.yupno.culinary_wizardry.block.custom.SubAltarBlock;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
-import com.yupno.culinary_wizardry.screen.SubAltarMenu;
 import com.yupno.culinary_wizardry.utils.EssenceCalculation;
 import com.yupno.culinary_wizardry.utils.FoodType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -33,12 +30,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 
-public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
+public class SubAltarBlockEntity extends BlockEntity{
 
     private final ItemStackHandler itemHandler = new ItemStackHandler(1){
         @Override
         protected void onContentsChanged(int slot) {
+            level.markAndNotifyBlock(getBlockPos(), level.getChunkAt(getBlockPos()), getBlockState(), getBlockState(), Block.UPDATE_CLIENTS, 0);
             setChanged();
         }
 
@@ -61,6 +60,7 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
     private int maxEssence;
     private int bufferEssence = 0;
     private int bufferMaxEssence;
+    private int tick = 0;
 
     public SubAltarBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.SUB_ALTAR_BLOCK_ENTITY.get(), pPos, pBlockState);
@@ -118,6 +118,10 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
         bufferEssence = nbt.getInt("bufferEssence");
     }
 
+    public int getMaxEssence(){
+        return maxEssence;
+    }
+
     public int getEssence(){
         return essence;
     }
@@ -132,6 +136,18 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
 
     public FoodType getFoodType(){
         return foodType;
+    }
+
+    public ItemStackHandler getInventory(){
+        return itemHandler;
+    }
+
+    public void setStackInSlot(ItemStack stackInSlot){
+        itemHandler.setStackInSlot(0, stackInSlot);
+    }
+
+    public ItemStack getItemFromSlot(){
+        return itemHandler.getStackInSlot(0);
     }
 
     /**
@@ -172,7 +188,24 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     /**
-     * Servertick stuff
+     * Particles
+     * */
+    private static final int TIME_BETWEEN_PARTICLES = 10;
+
+    public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, SubAltarBlockEntity pBlockEntity) {
+        ItemStack item =  pBlockEntity.getItemFromSlot();
+        pBlockEntity.tick++;
+
+        if((pBlockEntity.getEssence() != pBlockEntity.getMaxEssence()) && !item.isEmpty() && pBlockEntity.tick % TIME_BETWEEN_PARTICLES == 0){
+            pBlockEntity.tick = 0;
+            Random random = pLevel.random;
+            pLevel.addParticle(new ItemParticleOption(ParticleTypes.ITEM, item), pPos.getX() + 0.5, pPos.getY()+ 0.5, pPos.getZ() + 0.5,
+                    random.nextFloat(-0.04F, 0.04F), -0.6, random.nextFloat(-0.04F, 0.04F));
+        }
+    }
+
+    /**
+     * Server Sync stuff
      * */
 
     @Nullable
@@ -185,6 +218,12 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
     public CompoundTag getUpdateTag() {
         return saveWithoutMetadata();
     }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        super.onDataPacket(net, pkt);
+    }
+
 
     /**
      * Basic stuff
@@ -202,25 +241,6 @@ public class SubAltarBlockEntity extends BlockEntity implements MenuProvider {
         }
 
         return super.getCapability(cap, side);
-    }
-
-    @Override
-    public Component getDisplayName() {
-        String name = "";
-        switch (tier) {
-            case 1: name = "low"; break;
-            case 2: name = "mid"; break;
-            case 3: name = "high"; break;
-            case 4: name = "transcendent"; break;
-        }
-
-        return new TranslatableComponent("block.culinary_wizardry." + name + "_sub_altar_" + getFoodType().getName());
-    }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory pPlayerInventory, Player pPlayer) {
-        return new SubAltarMenu(pContainerId, pPlayerInventory, this, this.data);
     }
 
     @Override

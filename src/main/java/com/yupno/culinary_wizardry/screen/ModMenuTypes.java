@@ -30,9 +30,6 @@ public class ModMenuTypes {
     public static final RegistryObject<MenuType<FoodAltarTier4Menu>> FOOD_ALTAR_TIER4_MENU =
             registerMenuType(FoodAltarTier4Menu::new, "food_altar_tier4_menu");
 
-    public static final RegistryObject<MenuType<SubAltarMenu>> SUB_ALTAR_MENU =
-            registerMenuType(SubAltarMenu::new, "sub_altar_menu");
-
 
 
     private static <T extends AbstractContainerMenu>RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name){
