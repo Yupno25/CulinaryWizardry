@@ -71,7 +71,7 @@ public class FoodAltarTier3Block extends BaseEntityBlock {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
 
             if (entity instanceof FoodAltarTier3BlockEntity) {
-                if (!((FoodAltarTier3BlockEntity) entity).isFullAltarShape())
+                if (!((FoodAltarTier3BlockEntity) entity).isFullAltar())
                     return InteractionResult.FAIL;
 
                 NetworkHooks.openGui(((ServerPlayer) pPlayer), (FoodAltarTier3BlockEntity) entity, pPos);

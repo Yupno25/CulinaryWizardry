@@ -1,11 +1,11 @@
 package com.yupno.culinary_wizardry.block.entity.custom;
 
-import com.mojang.logging.LogUtils;
 import com.yupno.culinary_wizardry.utils.FoodType;
 import com.yupno.culinary_wizardry.utils.SimpleEssenceContainer;
 import com.yupno.culinary_wizardry.utils.SubAltarContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -49,16 +49,16 @@ public class BaseFoodAltarBlockEntity extends BlockEntity {
 
     public LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
 
-    private boolean isFullAltarShape = false;
+    private boolean isFullAltar = false;
     public int internalTicks = 0;
     public int[] usedItemSlots = {0, 1, 2, 3, 4};
 
-    public boolean isFullAltarShape() {
-        return isFullAltarShape;
+    public boolean isFullAltar() {
+        return isFullAltar;
     }
 
-    public void setFullAltarShape(boolean isFullAltarShape) {
-        this.isFullAltarShape = isFullAltarShape;
+    public void setFullAltar(boolean isFullAltarShape) {
+        this.isFullAltar = isFullAltarShape;
     }
 
     public static boolean canInsertItemIntoOutputSlot(SimpleEssenceContainer inventory, ItemStack output) {
@@ -96,7 +96,7 @@ public class BaseFoodAltarBlockEntity extends BlockEntity {
                 return lazyItemHandler.cast();
             }
 
-            if (isFullAltarShape()) {
+            if (isFullAltar()) {
                 return LazyOptional.of(() -> new WrappedHandler(itemHandler, (index) -> index == 5, (index, stack) -> itemHandler.isItemValid(0, stack))).cast();
             }
         }
@@ -128,6 +128,25 @@ public class BaseFoodAltarBlockEntity extends BlockEntity {
     /**
      * ONLY FOR TIER 2 ALTAR AND ABOVE
      */
+
+    public final Vec3i[] xSubAltarShifts = new Vec3i[]{
+            new Vec3i(0, 0, 3),
+            new Vec3i(0, 0, -3),
+            new Vec3i(3, 0, 2),
+            new Vec3i(3, 0, -2),
+            new Vec3i(-3, 0, 2),
+            new Vec3i(-3, 0, -2),
+    };
+
+    public final Vec3i[] zSubAltarShifts = new Vec3i[]{
+            new Vec3i(3, 0, 0),
+            new Vec3i(-3, 0, 0),
+            new Vec3i(2, 0, 3),
+            new Vec3i(-2, 0, 3),
+            new Vec3i(2, 0, -3),
+            new Vec3i(-2, 0, -3),
+    };
+
     public final Map<FoodType, SubAltarContainer> subAltars = Map.of(
             FoodType.CULINARY, new SubAltarContainer(FoodType.CULINARY),
             FoodType.FRUITS, new SubAltarContainer(FoodType.FRUITS),
@@ -139,7 +158,7 @@ public class BaseFoodAltarBlockEntity extends BlockEntity {
 
     public static int calculateEssence(BlockEntity entity, FoodType foodType) {
         SubAltarContainer subAltar = null;
-        if(entity instanceof BaseFoodAltarBlockEntity){
+        if (entity instanceof BaseFoodAltarBlockEntity) {
             subAltar = ((BaseFoodAltarBlockEntity) entity).subAltars.get(foodType);
         }
 

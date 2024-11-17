@@ -156,7 +156,7 @@ public class FoodAltarTier3Menu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player pPlayer) {
         return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
-                pPlayer, ModBlocks.FOOD_ALTAR_TIER3.get()) && blockEntity.isFullAltarShape();
+                pPlayer, ModBlocks.FOOD_ALTAR_TIER3.get()) && blockEntity.isFullAltar();
     }
 
     private void addPlayerInventory(Inventory playerInventory) {

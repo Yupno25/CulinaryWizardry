@@ -1,10 +1,9 @@
 package com.yupno.culinary_wizardry.block.entity.custom;
 
-import com.google.common.base.Predicates;
-import com.yupno.culinary_wizardry.block.ModBlocks;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
 import com.yupno.culinary_wizardry.recipe.FoodAltarRecipe;
 import com.yupno.culinary_wizardry.screen.FoodAltarTier1Menu;
+import com.yupno.culinary_wizardry.utils.FoodType;
 import com.yupno.culinary_wizardry.utils.SimpleEssenceContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -18,15 +17,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.pattern.BlockInWorld;
-import net.minecraft.world.level.block.state.pattern.BlockPattern;
-import net.minecraft.world.level.block.state.pattern.BlockPatternBuilder;
-import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.properties.SlabType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,26 +31,6 @@ public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implemen
     private int craftingProgress = 0;
     private int maxCraftingProgress = 28;
     private final int tier = 1;
-
-    /**
-     * SUBALTARSHIFT, HEIGHT, ALTARSHAPE, THISALTARHEIGHT AND ALTARLEVELS ARE CLOSELY CONNECTED
-     * Height matches the number of Arrays in altarLevels
-     * <p>
-     * A layer of only Air/Any Blocks doesn't work
-     * A layer with only a center block and other than that Any Block doesn't work
-     */
-    private final int thisAltarHeight = 1; // Position of this altar relative to the structure as a whole
-    private final int blocksToCenter = 1; // How many blocks it takes to get to the center of the layer
-    private final String[][] altarLevels = new String[][]{
-            {"bBb", "B?B", "bBb"},
-            {"w?w", "?f?", "w?w"},
-            {"tAt", "A?A", "tAt"},
-            {"AwA", "wuw", "AwA"},
-            {"A?A", "?C?", "A?A"},
-            {"AwA", "wdw", "AwA"}
-    };
-    private final int height = altarLevels.length; // Height of the whole structure
-    private BlockPattern[] altarShapes = new BlockPattern[height];
     private final Vec3i subAltarShift = new Vec3i(0, 3, 0);
     private SubAltarBlockEntity subAltarBlockEntity = null;
     private int currentCulinaryEssenceCost = 0;
@@ -123,23 +95,6 @@ public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implemen
                 return 8;
             }
         };
-
-        EnumProperty<SlabType> TYPE = BlockStateProperties.SLAB_TYPE;
-
-        for (int i = 0; i < height; i++) {
-            altarShapes[i] = BlockPatternBuilder.start()
-                    .aisle(altarLevels[i][0], altarLevels[i][1], altarLevels[i][2])
-                    .where('?', BlockInWorld.hasState(BlockStatePredicate.ANY))
-                    .where('A', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.AIR)))
-                    .where('b', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.STONE_BRICKS)))
-                    .where('B', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.CHISELED_STONE_BRICKS)))
-                    .where('t', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.SOUL_TORCH)))
-                    .where('u', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.STONE_BRICK_SLAB).where(TYPE, Predicates.equalTo(SlabType.TOP))))
-                    .where('d', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.STONE_BRICK_SLAB).where(TYPE, Predicates.equalTo(SlabType.BOTTOM))))
-                    .where('w', BlockInWorld.hasState(BlockStatePredicate.forBlock(Blocks.STONE_BRICK_WALL)))
-                    .where('f', BlockInWorld.hasState(BlockStatePredicate.forBlock(ModBlocks.FOOD_ALTAR_TIER1.get())))
-                    .where('C', BlockInWorld.hasState(BlockStatePredicate.forBlock(ModBlocks.LOW_SUB_ALTAR_CULINARY.get()))).build();
-        }
     }
 
     @Override
@@ -147,7 +102,7 @@ public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implemen
         tag.put("inventory", itemHandler.serializeNBT());
         tag.putInt("progress", craftingProgress);
         tag.putInt("internalTicks", internalTicks);
-        tag.putBoolean("isComplete", isFullAltarShape());
+        tag.putBoolean("isComplete", isFullAltar());
         tag.putInt("currentCulinary", currentCulinaryEssenceCost);
         tag.putInt("remainingCulinary", remainingCulinaryEssenceCost);
         tag.putFloat("currentOverflow", currentCulinaryEssenceOverflow);
@@ -160,41 +115,27 @@ public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implemen
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
         craftingProgress = nbt.getInt("progress");
         internalTicks = nbt.getInt("internalTicks");
-        setFullAltarShape(nbt.getBoolean("isComplete"));
+        setFullAltar(nbt.getBoolean("isComplete"));
         currentCulinaryEssenceCost = nbt.getInt("currentCulinary");
         remainingCulinaryEssenceCost = nbt.getInt("remainingCulinary");
         currentCulinaryEssenceOverflow = nbt.getFloat("currentOverflow");
     }
 
     private void update() {
-        // Check for complete Altar Shape
-        for (int i = 0; i < altarShapes.length; i++) {
-            if (level == null) {
-                failedUpdate();
-                return;
-            }
+        BlockEntity blockEntity = level.getBlockEntity(worldPosition.offset(subAltarShift));
 
-            BlockPattern.BlockPatternMatch layerIsCorrect = altarShapes[i].find(level, worldPosition.offset(0, i - thisAltarHeight, 0));
-            if (layerIsCorrect == null) {
-                failedUpdate();
-                return;
-            }
+        if (blockEntity instanceof SubAltarBlockEntity subAltarBlock && subAltarBlock.getFoodType().equals(FoodType.CULINARY) && subAltarBlock.getTier() == tier) {
+            setFullAltar(true);
 
-            // Checks if this Block is actually the center Block of this layer
-            if (!layerIsCorrect.getFrontTopLeft().offset(-blocksToCenter, 0, -blocksToCenter).equals(worldPosition.offset(0, i - thisAltarHeight, 0))) {
-                failedUpdate();
-                return;
-            }
+            // Cache SubAltarBlockEntity
+            subAltarBlockEntity = subAltarBlock;
+        } else {
+            failedUpdate();
         }
-
-        setFullAltarShape(true);
-
-        // Cache SubAltarBlockEntity
-        subAltarBlockEntity = ((SubAltarBlockEntity) (level.getBlockEntity(new BlockPos(worldPosition.offset(subAltarShift)))));
     }
 
     private void failedUpdate() {
-        setFullAltarShape(false);
+        setFullAltar(false);
         subAltarBlockEntity = null;
     }
 
@@ -224,7 +165,7 @@ public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implemen
         }
 
 
-        if (entity.isFullAltarShape() && checkOrCraftItem(entity, false)) {
+        if (entity.isFullAltar() && checkOrCraftItem(entity, false)) {
             entity.craftingProgress++;
 
             SubAltarBlockEntity subAltarBlockEntity = entity.getSubAltar();
@@ -325,7 +266,7 @@ public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implemen
 
     /**
      * Particles
-     * */
+     */
     private static final int TIME_BETWEEN_PARTICLES = 10;
 
     public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier1BlockEntity pBlockEntity) {
