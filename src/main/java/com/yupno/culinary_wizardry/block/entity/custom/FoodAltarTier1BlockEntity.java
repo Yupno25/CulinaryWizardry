@@ -7,6 +7,7 @@ import com.yupno.culinary_wizardry.utils.FoodType;
 import com.yupno.culinary_wizardry.utils.SimpleEssenceContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -17,6 +18,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -25,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implements MenuProvider {
     protected final ContainerData data;
@@ -167,6 +170,7 @@ public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implemen
 
         if (entity.isFullAltar() && checkOrCraftItem(entity, false)) {
             entity.craftingProgress++;
+            pLevel.markAndNotifyBlock(pPos, pLevel.getChunkAt(pPos), pState, pState, Block.UPDATE_CLIENTS, 0);
 
             SubAltarBlockEntity subAltarBlockEntity = entity.getSubAltar();
 
@@ -262,15 +266,29 @@ public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implemen
         this.currentCulinaryEssenceCost = 0;
         this.currentCulinaryEssenceOverflow = 0;
         this.remainingCulinaryEssenceCost = 0;
+        level.markAndNotifyBlock(getBlockPos(), level.getChunkAt(getBlockPos()), getBlockState(), getBlockState(), Block.UPDATE_CLIENTS, 0);
     }
 
     /**
      * Particles
      */
-    private static final int TIME_BETWEEN_PARTICLES = 10;
 
-    public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier1BlockEntity pBlockEntity) {
+    public static void clientTick(Level pLevel, BlockPos blockPos, BlockState pState, FoodAltarTier1BlockEntity pBlockEntity) {
+        if (pBlockEntity.craftingProgress > 0 && pBlockEntity.craftingProgress % 3 == 0) {
+            BlockPos pos = blockPos.offset(pBlockEntity.subAltarShift);
 
+            pLevel.addParticle(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                    -pBlockEntity.subAltarShift.getX() * 0.1, -pBlockEntity.subAltarShift.getY() * 0.1, -pBlockEntity.subAltarShift.getZ() * 0.1);
+        }
+
+        if(pBlockEntity.craftingProgress == pBlockEntity.maxCraftingProgress){
+            Random random = new Random();
+            for (int i = 0; i < 12; i++) {
+                pLevel.addParticle(ParticleTypes.END_ROD, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5,
+                        random.nextFloat(-0.1F, 0.1F), 0.2, random.nextFloat(-0.1F, 0.1F));
+
+            }
+        }
     }
 
 

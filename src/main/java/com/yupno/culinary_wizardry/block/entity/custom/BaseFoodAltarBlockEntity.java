@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -70,7 +71,7 @@ public class BaseFoodAltarBlockEntity extends BlockEntity {
     }
 
     /**
-     * Servertick stuff
+     * Server Sync stuff
      */
 
     @Nullable
@@ -82,6 +83,11 @@ public class BaseFoodAltarBlockEntity extends BlockEntity {
     @Override
     public CompoundTag getUpdateTag() {
         return saveWithoutMetadata();
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        super.onDataPacket(net, pkt);
     }
 
     /**
@@ -128,6 +134,7 @@ public class BaseFoodAltarBlockEntity extends BlockEntity {
     /**
      * ONLY FOR TIER 2 ALTAR AND ABOVE
      */
+    public Vec3i[] subAltarShifts;
 
     public final Vec3i[] xSubAltarShifts = new Vec3i[]{
             new Vec3i(0, 0, 3),

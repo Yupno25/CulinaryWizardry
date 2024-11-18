@@ -8,6 +8,7 @@ import com.yupno.culinary_wizardry.utils.SimpleEssenceContainer;
 import com.yupno.culinary_wizardry.utils.SubAltarContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -18,6 +19,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -107,6 +109,17 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
         tag.putInt("progress", craftingProgress);
         tag.putInt("internalTicks", internalTicks);
         tag.putBoolean("isComplete", isFullAltar());
+        // Saves which direction the altarShape is in
+        int directionX;
+        if(subAltarShifts == null){
+            directionX = 0;
+        } else if (subAltarShifts[0].getZ() == 3) {
+            directionX = 1;
+        }else {
+            directionX = 2;
+        }
+        tag.putInt("directionIsX", directionX);
+
 
         for (FoodType foodType : FoodType.values()) {
             tag.putInt("currentEssence" + foodType.getName(), subAltars.get(foodType).getCurrentEssenceCost());
@@ -125,6 +138,13 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
         internalTicks = nbt.getInt("internalTicks");
         setFullAltar(nbt.getBoolean("isComplete"));
 
+        // Loads which direction the altarShape is in
+        if(nbt.getInt("directionIsX") == 1){
+            subAltarShifts = xSubAltarShifts;
+        } else if (nbt.getInt("directionIsX") == 2) {
+            subAltarShifts = zSubAltarShifts;
+        }
+
         for (FoodType foodType : FoodType.values()) {
             subAltars.get(foodType).setCurrentEssenceCost(nbt.getInt("currentEssence" + foodType.getName()));
             subAltars.get(foodType).setRemainingEssenceCost(nbt.getInt("remainingEssence" + foodType.getName()));
@@ -133,8 +153,6 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
     }
 
     private void update() {
-        Vec3i[] subAltarShifts;
-
         // Checks for direction of subAltars
         if (level.getBlockEntity(worldPosition.offset(xSubAltarShifts[0])) instanceof SubAltarBlockEntity) {
             subAltarShifts = xSubAltarShifts;
@@ -195,6 +213,7 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
 
         if (entity.isFullAltar() && checkOrCraftItem(entity, false)) {
             entity.craftingProgress++;
+            pLevel.markAndNotifyBlock(pPos, pLevel.getChunkAt(pPos), pState, pState, Block.UPDATE_CLIENTS, 0);
 
             for (FoodType foodType : FoodType.values()) {
                 SubAltarContainer subAltar = entity.subAltars.get(foodType);
@@ -301,15 +320,32 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
             subAltars.get(foodType).setRemainingEssenceCost(0);
             subAltars.get(foodType).setCurrentEssenceOverflow(0);
         }
+        level.markAndNotifyBlock(getBlockPos(), level.getChunkAt(getBlockPos()), getBlockState(), getBlockState(), Block.UPDATE_CLIENTS, 0);
     }
 
     /**
      * Particles
      */
-    private static final int TIME_BETWEEN_PARTICLES = 10;
 
-    public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier2BlockEntity pBlockEntity) {
+    public static void clientTick(Level pLevel, BlockPos blockPos, BlockState pState, FoodAltarTier2BlockEntity pBlockEntity) {
+        // Make it a separate method and put into basefoodaltar
+        if (pBlockEntity.subAltarShifts != null && pBlockEntity.craftingProgress > 0 && pBlockEntity.craftingProgress % 3 == 0) {
+            for (Vec3i offset : pBlockEntity.subAltarShifts) {
+                BlockPos pos = blockPos.offset(offset);
 
+                pLevel.addParticle(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                        -offset.getX() * 0.1, -offset.getY() * 0.1, -offset.getZ() * 0.1);
+            }
+        }
+
+        if(pBlockEntity.craftingProgress == pBlockEntity.maxCraftingProgress){
+            Random random = new Random();
+            for (int i = 0; i < 12; i++) {
+                pLevel.addParticle(ParticleTypes.END_ROD, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5,
+                        random.nextFloat(-0.1F, 0.1F), 0.2, random.nextFloat(-0.1F, 0.1F));
+
+            }
+        }
     }
 
     @Override
