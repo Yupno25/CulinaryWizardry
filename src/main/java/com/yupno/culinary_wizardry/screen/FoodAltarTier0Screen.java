@@ -13,6 +13,8 @@ import net.minecraft.world.entity.player.Inventory;
 public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0Menu> {
     private static final ResourceLocation TEXTURE =
             new ResourceLocation(CulinaryWizardry.MOD_ID, "textures/gui/food_altar_tier0_gui.png");
+    private final int imageHeight = 172;
+    private final int tallerInv = 4;
 
     public FoodAltarTier0Screen(FoodAltarTier0Menu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -79,6 +81,12 @@ public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0
         renderBackground(pPoseStack);
         super.render(pPoseStack, mouseX, mouseY, delta);
         renderTooltip(pPoseStack, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
+        this.font.draw(pPoseStack, this.title, (float)this.titleLabelX, (float)this.titleLabelY - tallerInv, 4210752);
+        this.font.draw(pPoseStack, this.playerInventoryTitle, (float)this.inventoryLabelX, (float)this.inventoryLabelY  + tallerInv, 4210752);
     }
 
     private boolean isMouseAboveArea(int pMouseX, int pMouseY, int x, int y, int width, int height) {

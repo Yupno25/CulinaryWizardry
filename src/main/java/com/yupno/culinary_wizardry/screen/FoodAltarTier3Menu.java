@@ -20,7 +20,7 @@ public class FoodAltarTier3Menu extends AbstractContainerMenu {
     private final ContainerData data;
 
     public FoodAltarTier3Menu(int pContainerId, Inventory inv, FriendlyByteBuf extraData) {
-        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(13));
+        this(pContainerId, inv, inv.player.level.getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(7));
     }
 
     public FoodAltarTier3Menu(int pContainerId, Inventory inv, BlockEntity entity, ContainerData data) {
@@ -34,19 +34,19 @@ public class FoodAltarTier3Menu extends AbstractContainerMenu {
         addPlayerHotbar(inv);
 
         this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-            this.addSlot(new SlotItemHandler(handler, 0, 61, 12));
-            this.addSlot(new SlotItemHandler(handler, 1, 53, 42));
-            this.addSlot(new SlotItemHandler(handler, 2, 80, 61));
-            this.addSlot(new SlotItemHandler(handler, 3, 107, 42));
-            this.addSlot(new SlotItemHandler(handler, 4, 99, 12));
-            this.addSlot(new ModResultSlot(handler, 5, 80, 36));
+            this.addSlot(new SlotItemHandler(handler, 0, 61, 13));
+            this.addSlot(new SlotItemHandler(handler, 1, 53, 43));
+            this.addSlot(new SlotItemHandler(handler, 2, 80, 62));
+            this.addSlot(new SlotItemHandler(handler, 3, 107, 43));
+            this.addSlot(new SlotItemHandler(handler, 4, 99, 13));
+            this.addSlot(new ModResultSlot(handler, 5, 80, 37));
         });
 
         addDataSlots(data);
     }
 
     public int[] getUsedItemSlots() {
-        return new int[]{data.get(8), data.get(9), data.get(10), data.get(11), data.get(12)};
+        return new int[]{data.get(2), data.get(3), data.get(4), data.get(5), data.get(6)};
     }
 
     /**
@@ -59,46 +59,6 @@ public class FoodAltarTier3Menu extends AbstractContainerMenu {
 
     public int getMaxCraftingProgress() {
         return this.data.get(1);
-    }
-
-    /**
-     * ITEM SLOT CULINARY ESSENCE
-     */
-
-    public boolean isPresent() {
-        return data.get(2) > 0;
-    }
-
-    public int getFillSize() {
-        return 20; // This is the width in pixels of the texture
-    }
-
-    public int getFillProgress() {
-        int progress = data.get(2);
-        int maxProgress = EssenceCalculation.calculateMaxEssence(blockEntity.getTier());  // Max Progress
-        int progressArrowSize = 20; // This is the height in pixels of your arrow
-
-        return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
-    }
-
-    /**
-     * SMALL ESSENCE BARS
-     */
-
-    public boolean isSmallPresent(int num) {
-        return (data.get(2 + num)) > 0;
-    }
-
-    public int getSmallFillSize() {
-        return 16; // This is the height in pixels of the texture
-    }
-
-    public int getSmallFillProgress(int num) {
-        int progress = data.get(2 + num);
-        int maxProgress = EssenceCalculation.calculateMaxEssence(blockEntity.getTier());  // Max Progress
-        int progressArrowSize = 16; // This is the width in pixels of your arrow
-
-        return maxProgress != 0 && progress != 0 ? progress * progressArrowSize / maxProgress : 0;
     }
 
 
@@ -162,14 +122,14 @@ public class FoodAltarTier3Menu extends AbstractContainerMenu {
     private void addPlayerInventory(Inventory playerInventory) {
         for (int i = 0; i < 3; ++i) {
             for (int l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 86 + i * 18));
+                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 87 + i * 18));
             }
         }
     }
 
     private void addPlayerHotbar(Inventory playerInventory) {
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 144));
+            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 145));
         }
     }
 }

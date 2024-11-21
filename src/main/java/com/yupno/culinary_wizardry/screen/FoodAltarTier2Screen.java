@@ -12,6 +12,8 @@ import net.minecraft.world.entity.player.Inventory;
 public class FoodAltarTier2Screen extends AbstractContainerScreen<FoodAltarTier2Menu> {
     private static final ResourceLocation TEXTURE =
             new ResourceLocation(CulinaryWizardry.MOD_ID, "textures/gui/food_altar_tier2_gui.png");
+    private final int imageHeight = 172;
+    private final int tallerInv = 4;
 
     public FoodAltarTier2Screen(FoodAltarTier2Menu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -27,42 +29,6 @@ public class FoodAltarTier2Screen extends AbstractContainerScreen<FoodAltarTier2
 
         /** THE INVENTORY */
         this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
-
-        /** ITEM SLOT CULINARY ESSENCE */
-        if (menu.isPresent()) {
-            blit(pPoseStack, x + 78, y + 34 + (menu.getFillSize() - menu.getFillProgress()),
-                    194, 30 + (menu.getFillSize() - menu.getFillProgress()), menu.getFillSize(), menu.getFillProgress());
-        }
-
-        /** SMALL FRUITS ESSENCE BAR*/
-        if (menu.isSmallPresent(1)) {
-            blit(pPoseStack, x + 57, y + 12 + (menu.getSmallFillSize() - menu.getSmallFillProgress(1)),
-                    177, 30 + (menu.getSmallFillSize() - menu.getSmallFillProgress(1)), 1, menu.getSmallFillProgress(1));
-        }
-
-        /** SMALL GRAINS ESSENCE BAR*/
-        if (menu.isSmallPresent(2)) {
-            blit(pPoseStack, x + 49, y + 42 + (menu.getSmallFillSize() - menu.getSmallFillProgress(2)),
-                    179, 30 + (menu.getSmallFillSize() - menu.getSmallFillProgress(2)), 1, menu.getSmallFillProgress(2));
-        }
-
-        /** SMALL PROTEINS ESSENCE BAR*/
-        if (menu.isSmallPresent(3)) {
-            blit(pPoseStack, x + 80, y + 80,
-                    177, 47, menu.getSmallFillProgress(3), 1);
-        }
-
-        /** SMALL SUGARS ESSENCE BAR*/
-        if (menu.isSmallPresent(4)) {
-            blit(pPoseStack, x + 126, y + 42 + (menu.getSmallFillSize() - menu.getSmallFillProgress(4)),
-                    183, 30 + (menu.getSmallFillSize() - menu.getSmallFillProgress(4)), 1, menu.getSmallFillProgress(4));
-        }
-
-        /** SMALL VEGETABLES ESSENCE BAR*/
-        if (menu.isSmallPresent(5)) {
-            blit(pPoseStack, x + 118, y + 12 + (menu.getSmallFillSize() - menu.getSmallFillProgress(5)),
-                    185, 30 + (menu.getSmallFillSize() - menu.getSmallFillProgress(5)), 1, menu.getSmallFillProgress(5));
-        }
 
         /** CRAFTING ANIMATION */
         int foodProgress = menu.getCraftingProgress();
@@ -99,7 +65,7 @@ public class FoodAltarTier2Screen extends AbstractContainerScreen<FoodAltarTier2
 
         for (int i = 0; i < xyItemSlot.length; i++) {
             if (usedItemslots[i] == i)
-                blit(pPoseStack, pX + xyItemSlot[i][0], pY + xyItemSlot[i][1], pUOffset, pVOffset, pUWidth, pVHeight);
+                blit(pPoseStack, pX + xyItemSlot[i][0], pY + tallerInv + xyItemSlot[i][1], pUOffset, pVOffset, pUWidth, pVHeight);
         }
     }
 
@@ -108,5 +74,11 @@ public class FoodAltarTier2Screen extends AbstractContainerScreen<FoodAltarTier2
         renderBackground(pPoseStack);
         super.render(pPoseStack, mouseX, mouseY, delta);
         renderTooltip(pPoseStack, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
+        this.font.draw(pPoseStack, this.title, (float)this.titleLabelX, (float)this.titleLabelY - tallerInv, 4210752);
+        this.font.draw(pPoseStack, this.playerInventoryTitle, (float)this.inventoryLabelX, (float)this.inventoryLabelY  + tallerInv, 4210752);
     }
 }

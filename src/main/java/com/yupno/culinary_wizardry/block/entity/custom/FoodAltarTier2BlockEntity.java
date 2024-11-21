@@ -43,26 +43,14 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
                     case 1:
                         return FoodAltarTier2BlockEntity.this.maxCraftingProgress;
                     case 2:
-                        return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.CULINARY).getSafeEssence();
-                    case 3:
-                        return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.FRUITS).getSafeEssence();
-                    case 4:
-                        return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.GRAINS).getSafeEssence();
-                    case 5:
-                        return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.PROTEINS).getSafeEssence();
-                    case 6:
-                        return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.SUGARS).getSafeEssence();
-                    case 7:
-                        return FoodAltarTier2BlockEntity.this.subAltars.get(FoodType.VEGETABLES).getSafeEssence();
-                    case 8:
                         return FoodAltarTier2BlockEntity.this.usedItemSlots[0];
-                    case 9:
+                    case 3:
                         return FoodAltarTier2BlockEntity.this.usedItemSlots[1];
-                    case 10:
+                    case 4:
                         return FoodAltarTier2BlockEntity.this.usedItemSlots[2];
-                    case 11:
+                    case 5:
                         return FoodAltarTier2BlockEntity.this.usedItemSlots[3];
-                    case 12:
+                    case 6:
                         return FoodAltarTier2BlockEntity.this.usedItemSlots[4];
                     default:
                         return 0;
@@ -77,28 +65,26 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
                     case 1:
                         FoodAltarTier2BlockEntity.this.maxCraftingProgress = value;
                         break;
-                    case 2, 3, 4, 5, 6, 7:
-                        break;
-                    case 8:
+                    case 2:
                         FoodAltarTier2BlockEntity.this.usedItemSlots[0] = value;
                         break;
-                    case 9:
+                    case 3:
                         FoodAltarTier2BlockEntity.this.usedItemSlots[1] = value;
                         break;
-                    case 10:
+                    case 4:
                         FoodAltarTier2BlockEntity.this.usedItemSlots[2] = value;
                         break;
-                    case 11:
+                    case 5:
                         FoodAltarTier2BlockEntity.this.usedItemSlots[3] = value;
                         break;
-                    case 12:
+                    case 6:
                         FoodAltarTier2BlockEntity.this.usedItemSlots[4] = value;
                         break;
                 }
             }
 
             public int getCount() {
-                return 13;
+                return 7;
             }
         };
     }

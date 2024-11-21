@@ -34,9 +34,9 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
         addPlayerHotbar(inv);
 
         this.blockEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-            this.addSlot(new SlotItemHandler(handler, 0, 48, 35));
-            this.addSlot(new ModResultSlot(handler, 1, 102, 35));
-            this.addSlot(new ModFoodSlot(handler, 2, 152, 64));
+            this.addSlot(new SlotItemHandler(handler, 0, 48, 32));
+            this.addSlot(new ModResultSlot(handler, 1, 102, 32));
+            this.addSlot(new ModFoodSlot(handler, 2, 152, 61));
         });
 
         addDataSlots(data);
@@ -153,14 +153,14 @@ public class FoodAltarTier0Menu extends AbstractContainerMenu {
     private void addPlayerInventory(Inventory playerInventory) {
         for (int i = 0; i < 3; ++i) {
             for (int l = 0; l < 9; ++l) {
-                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 86 + i * 18));
+                this.addSlot(new Slot(playerInventory, l + i * 9 + 9, 8 + l * 18, 87 + i * 18));
             }
         }
     }
 
     private void addPlayerHotbar(Inventory playerInventory) {
         for (int i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 144));
+            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 145));
         }
     }
 }

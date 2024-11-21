@@ -12,6 +12,8 @@ import net.minecraft.world.entity.player.Inventory;
 public class FoodAltarTier1Screen extends AbstractContainerScreen<FoodAltarTier1Menu> {
     private static final ResourceLocation TEXTURE =
             new ResourceLocation(CulinaryWizardry.MOD_ID, "textures/gui/food_altar_tier1_gui.png");
+    private final int imageHeight = 172;
+    private final int tallerInv = 4;
 
     public FoodAltarTier1Screen(FoodAltarTier1Menu pMenu, Inventory pPlayerInventory, Component pTitle) {
         super(pMenu, pPlayerInventory, pTitle);
@@ -27,12 +29,6 @@ public class FoodAltarTier1Screen extends AbstractContainerScreen<FoodAltarTier1
 
         /** THE INVENTORY */
         this.blit(pPoseStack, x, y, 0, 0, imageWidth, imageHeight);
-
-        /** ITEM SLOT CULINARY ESSENCE */
-        if (menu.isPresent()) {
-            blit(pPoseStack, x + 78, y + 34 + (menu.getFillSize() - menu.getFillProgress()),
-                    177, 30 + (menu.getFillSize() - menu.getFillProgress()), menu.getFillSize(), menu.getFillProgress());
-        }
 
         /** CRAFTING ANIMATION */
         int foodProgress = menu.getCraftingProgress();
@@ -69,7 +65,7 @@ public class FoodAltarTier1Screen extends AbstractContainerScreen<FoodAltarTier1
 
         for (int i = 0; i < xyItemSlot.length; i++) {
             if (usedItemSlots[i] == i)
-                blit(pPoseStack, pX + xyItemSlot[i][0], pY + xyItemSlot[i][1], pUOffset, pVOffset, pUWidth, pVHeight);
+                blit(pPoseStack, pX + xyItemSlot[i][0], pY + tallerInv + xyItemSlot[i][1], pUOffset, pVOffset, pUWidth, pVHeight);
         }
     }
 
@@ -78,5 +74,11 @@ public class FoodAltarTier1Screen extends AbstractContainerScreen<FoodAltarTier1
         renderBackground(pPoseStack);
         super.render(pPoseStack, mouseX, mouseY, delta);
         renderTooltip(pPoseStack, mouseX, mouseY);
+    }
+
+    @Override
+    protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
+        this.font.draw(pPoseStack, this.title, (float)this.titleLabelX, (float)this.titleLabelY - tallerInv, 4210752);
+        this.font.draw(pPoseStack, this.playerInventoryTitle, (float)this.inventoryLabelX, (float)this.inventoryLabelY  + tallerInv, 4210752);
     }
 }

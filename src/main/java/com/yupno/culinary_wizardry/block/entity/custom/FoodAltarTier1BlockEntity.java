@@ -50,16 +50,14 @@ public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implemen
                     case 1:
                         return FoodAltarTier1BlockEntity.this.maxCraftingProgress;
                     case 2:
-                        return FoodAltarTier1BlockEntity.this.getSafeCulinaryEssence();
-                    case 3:
                         return FoodAltarTier1BlockEntity.this.usedItemSlots[0];
-                    case 4:
+                    case 3:
                         return FoodAltarTier1BlockEntity.this.usedItemSlots[1];
-                    case 5:
+                    case 4:
                         return FoodAltarTier1BlockEntity.this.usedItemSlots[2];
-                    case 6:
+                    case 5:
                         return FoodAltarTier1BlockEntity.this.usedItemSlots[3];
-                    case 7:
+                    case 6:
                         return FoodAltarTier1BlockEntity.this.usedItemSlots[4];
                     default:
                         return 0;
@@ -75,27 +73,25 @@ public class FoodAltarTier1BlockEntity extends BaseFoodAltarBlockEntity implemen
                         FoodAltarTier1BlockEntity.this.maxCraftingProgress = value;
                         break;
                     case 2:
-                        break;
-                    case 3:
                         FoodAltarTier1BlockEntity.this.usedItemSlots[0] = value;
                         break;
-                    case 4:
+                    case 3:
                         FoodAltarTier1BlockEntity.this.usedItemSlots[1] = value;
                         break;
-                    case 5:
+                    case 4:
                         FoodAltarTier1BlockEntity.this.usedItemSlots[2] = value;
                         break;
-                    case 6:
+                    case 5:
                         FoodAltarTier1BlockEntity.this.usedItemSlots[3] = value;
                         break;
-                    case 7:
+                    case 6:
                         FoodAltarTier1BlockEntity.this.usedItemSlots[4] = value;
                         break;
                 }
             }
 
             public int getCount() {
-                return 8;
+                return 7;
             }
         };
     }
