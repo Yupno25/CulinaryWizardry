@@ -19,9 +19,8 @@ public class ModItems {
             () -> new Item(new Item.Properties().tab(ModCreativeModeTab.CULINARY_WIZARDRY_TAB)));
 
 
-
     /**
-     * OTHER STUFF
+     * Registering Logic
      */
 
     public static void register(IEventBus eventBus) {

@@ -1,11 +1,8 @@
-package com.yupno.culinary_wizardry.block.entity.custom;
+package com.yupno.culinary_wizardry.block.entity.custom.base;
 
-import com.yupno.culinary_wizardry.utils.FoodType;
 import com.yupno.culinary_wizardry.utils.SimpleEssenceContainer;
-import com.yupno.culinary_wizardry.utils.SubAltarContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
@@ -13,6 +10,7 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.Containers;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -26,9 +24,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
-import java.util.Map;
 
-public class BaseFoodAltarBlockEntity extends BlockEntity {
+public class CoreFoodAltarBE extends BlockEntity {
     public final ItemStackHandler itemHandler = new ItemStackHandler(6) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -43,23 +40,49 @@ public class BaseFoodAltarBlockEntity extends BlockEntity {
             };
         }
     };
-
-    public BaseFoodAltarBlockEntity(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState) {
-        super(pType, pPos, pBlockState);
-    }
-
     public LazyOptional<IItemHandler> lazyItemHandler = LazyOptional.empty();
-
     private boolean isFullAltar = false;
     public int internalTicks = 0;
     public int[] usedItemSlots = {0, 1, 2, 3, 4};
+    public int craftingProgress = 0;
+    public final int maxCraftingProgress = 28;
 
-    public boolean isFullAltar() {
-        return isFullAltar;
-    }
+    public final ContainerData data;
+    private final int tier;
 
-    public void setFullAltar(boolean isFullAltarShape) {
-        this.isFullAltar = isFullAltarShape;
+    public CoreFoodAltarBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState, int tier) {
+        super(pType, pPos, pBlockState);
+        this.tier = tier;
+
+        this.data = new ContainerData() {
+            public int get(int index) {
+                return switch (index) {
+                    case 0 -> CoreFoodAltarBE.this.craftingProgress;
+                    case 1 -> CoreFoodAltarBE.this.maxCraftingProgress;
+                    case 2 -> CoreFoodAltarBE.this.usedItemSlots[0];
+                    case 3 -> CoreFoodAltarBE.this.usedItemSlots[1];
+                    case 4 -> CoreFoodAltarBE.this.usedItemSlots[2];
+                    case 5 -> CoreFoodAltarBE.this.usedItemSlots[3];
+                    case 6 -> CoreFoodAltarBE.this.usedItemSlots[4];
+                    default -> 0;
+                };
+            }
+
+            public void set(int index, int value) {
+                switch (index) {
+                    case 0 -> CoreFoodAltarBE.this.craftingProgress = value;
+                    case 2 -> CoreFoodAltarBE.this.usedItemSlots[0] = value;
+                    case 3 -> CoreFoodAltarBE.this.usedItemSlots[1] = value;
+                    case 4 -> CoreFoodAltarBE.this.usedItemSlots[2] = value;
+                    case 5 -> CoreFoodAltarBE.this.usedItemSlots[3] = value;
+                    case 6 -> CoreFoodAltarBE.this.usedItemSlots[4] = value;
+                }
+            }
+
+            public int getCount() {
+                return 7;
+            }
+        };
     }
 
     public static boolean canInsertItemIntoOutputSlot(SimpleEssenceContainer inventory, ItemStack output) {
@@ -81,7 +104,7 @@ public class BaseFoodAltarBlockEntity extends BlockEntity {
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public @NotNull CompoundTag getUpdateTag() {
         return saveWithoutMetadata();
     }
 
@@ -91,7 +114,7 @@ public class BaseFoodAltarBlockEntity extends BlockEntity {
     }
 
     /**
-     * Basic stuff
+     * Input / Output Logic (for Hoppers and the like)
      */
 
     @Nonnull
@@ -109,6 +132,10 @@ public class BaseFoodAltarBlockEntity extends BlockEntity {
 
         return super.getCapability(cap, side);
     }
+
+    /**
+     * Basic stuff
+     */
 
     @Override
     public void onLoad() {
@@ -132,47 +159,17 @@ public class BaseFoodAltarBlockEntity extends BlockEntity {
     }
 
     /**
-     * ONLY FOR TIER 2 ALTAR AND ABOVE
+     * Getter and Setter Methods
      */
-    public Vec3i[] subAltarShifts;
+    public boolean isFullAltar() {
+        return isFullAltar;
+    }
 
-    public final Vec3i[] xSubAltarShifts = new Vec3i[]{
-            new Vec3i(0, 0, 3),
-            new Vec3i(0, 0, -3),
-            new Vec3i(3, 0, 2),
-            new Vec3i(3, 0, -2),
-            new Vec3i(-3, 0, 2),
-            new Vec3i(-3, 0, -2),
-    };
+    public void setFullAltar(boolean isFullAltarShape) {
+        this.isFullAltar = isFullAltarShape;
+    }
 
-    public final Vec3i[] zSubAltarShifts = new Vec3i[]{
-            new Vec3i(3, 0, 0),
-            new Vec3i(-3, 0, 0),
-            new Vec3i(2, 0, 3),
-            new Vec3i(-2, 0, 3),
-            new Vec3i(2, 0, -3),
-            new Vec3i(-2, 0, -3),
-    };
-
-    public final Map<FoodType, SubAltarContainer> subAltars = Map.of(
-            FoodType.CULINARY, new SubAltarContainer(FoodType.CULINARY),
-            FoodType.FRUITS, new SubAltarContainer(FoodType.FRUITS),
-            FoodType.GRAINS, new SubAltarContainer(FoodType.GRAINS),
-            FoodType.PROTEINS, new SubAltarContainer(FoodType.PROTEINS),
-            FoodType.SUGARS, new SubAltarContainer(FoodType.SUGARS),
-            FoodType.VEGETABLES, new SubAltarContainer(FoodType.VEGETABLES)
-    );
-
-    public static int calculateEssence(BlockEntity entity, FoodType foodType) {
-        SubAltarContainer subAltar = null;
-        if (entity instanceof BaseFoodAltarBlockEntity) {
-            subAltar = ((BaseFoodAltarBlockEntity) entity).subAltars.get(foodType);
-        }
-
-        if (subAltar.getCurrentEssenceCost() != 0 && (subAltar.getCurrentEssenceCost() - subAltar.getRemainingEssenceCost()) == 0) {
-            return subAltar.getSubAltarBlockEntity().getEssence() + subAltar.getCurrentEssenceCost();
-        } else {
-            return subAltar.getSubAltarBlockEntity().getEssence() + (subAltar.getCurrentEssenceCost() - subAltar.getRemainingEssenceCost());
-        }
+    public int getTier() {
+        return tier;
     }
 }

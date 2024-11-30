@@ -1,47 +1,26 @@
 package com.yupno.culinary_wizardry.block.custom;
 
+import com.yupno.culinary_wizardry.block.custom.base.BaseFoodAltarBlock;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
-import com.yupno.culinary_wizardry.block.entity.custom.FoodAltarTier4BlockEntity;
+import com.yupno.culinary_wizardry.block.entity.custom.FoodAltarTier4BE;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.network.NetworkHooks;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class FoodAltarTier4Block extends BaseEntityBlock {
+public class FoodAltarTier4Block extends BaseFoodAltarBlock {
     public FoodAltarTier4Block(Properties pProperties) {
         super(pProperties);
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> pBuilder) {
-        pBuilder.add();
-    }
-
-    private static final VoxelShape blockBox = box(1, 0,1, 15, 13, 15);
-    private static final VoxelShape blockCutout = box(3, 3,3, 13, 13, 13);
-    private static final VoxelShape SHAPE = Shapes.join(blockBox, blockCutout, BooleanOp.ONLY_FIRST);
-
-    @Override
-    public VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
-        return SHAPE;
     }
 
     /**
@@ -49,32 +28,27 @@ public class FoodAltarTier4Block extends BaseEntityBlock {
      */
 
     @Override
-    public RenderShape getRenderShape(BlockState pState) {
-        return RenderShape.MODEL;
-    }
-
-    @Override
-    public void onRemove(BlockState pState, Level pLevel, BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
+    public void onRemove(BlockState pState, @NotNull Level pLevel, @NotNull BlockPos pPos, BlockState pNewState, boolean pIsMoving) {
         if (pState.getBlock() != pNewState.getBlock()) {
             BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
-            if (blockEntity instanceof FoodAltarTier4BlockEntity) {
-                ((FoodAltarTier4BlockEntity) blockEntity).drops();
+            if (blockEntity instanceof FoodAltarTier4BE) {
+                ((FoodAltarTier4BE) blockEntity).drops();
             }
         }
         super.onRemove(pState, pLevel, pPos, pNewState, pIsMoving);
     }
 
     @Override
-    public InteractionResult use(BlockState pState, Level pLevel, BlockPos pPos,
-                                 Player pPlayer, InteractionHand pHand, BlockHitResult pHit) {
+    public @NotNull InteractionResult use(@NotNull BlockState pState, Level pLevel, @NotNull BlockPos pPos,
+                                          @NotNull Player pPlayer, @NotNull InteractionHand pHand, @NotNull BlockHitResult pHit) {
         if (!pLevel.isClientSide()) {
             BlockEntity entity = pLevel.getBlockEntity(pPos);
 
-            if (entity instanceof FoodAltarTier4BlockEntity) {
-                if (!((FoodAltarTier4BlockEntity) entity).isFullAltar())
+            if (entity instanceof FoodAltarTier4BE) {
+                if (!((FoodAltarTier4BE) entity).isFullAltar())
                     return InteractionResult.FAIL;
 
-                NetworkHooks.openGui(((ServerPlayer) pPlayer), (FoodAltarTier4BlockEntity) entity, pPos);
+                NetworkHooks.openGui(((ServerPlayer) pPlayer), (FoodAltarTier4BE) entity, pPos);
             } else {
                 throw new IllegalStateException("Our Container provider is missing!");
             }
@@ -85,19 +59,19 @@ public class FoodAltarTier4Block extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockPos pPos, BlockState pState) {
-        return new FoodAltarTier4BlockEntity(pPos, pState);
+    public BlockEntity newBlockEntity(@NotNull BlockPos pPos, @NotNull BlockState pState) {
+        return new FoodAltarTier4BE(pPos, pState);
     }
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, BlockState pState, BlockEntityType<T> pBlockEntityType) {
-        if (pLevel.isClientSide){
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level pLevel, @NotNull BlockState pState, @NotNull BlockEntityType<T> pBlockEntityType) {
+        if (pLevel.isClientSide) {
             return createTickerHelper(pBlockEntityType, ModBlockEntities.FOOD_ALTAR_TIER4_ENTITY.get(),
-                    FoodAltarTier4BlockEntity::clientTick);
-        }else {
+                    FoodAltarTier4BE::clientTick);
+        } else {
             return createTickerHelper(pBlockEntityType, ModBlockEntities.FOOD_ALTAR_TIER4_ENTITY.get(),
-                    FoodAltarTier4BlockEntity::serverTick);
+                    FoodAltarTier4BE::serverTick);
         }
     }
 }

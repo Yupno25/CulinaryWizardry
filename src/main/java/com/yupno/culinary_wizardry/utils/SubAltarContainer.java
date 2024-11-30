@@ -13,6 +13,10 @@ public class SubAltarContainer {
         this.foodType = foodType;
     }
 
+    /**
+     * Getter and Setter Methods
+     */
+
     public SubAltarBlockEntity getSubAltarBlockEntity() {
         return subAltarBlockEntity;
     }
@@ -43,12 +47,5 @@ public class SubAltarContainer {
 
     public void setCurrentEssenceOverflow(float currentEssenceOverflow) {
         this.currentEssenceOverflow = currentEssenceOverflow;
-    }
-
-    public int getSafeEssence() {
-        if (subAltarBlockEntity == null)
-            return 0;
-
-        return subAltarBlockEntity.getEssence();
     }
 }

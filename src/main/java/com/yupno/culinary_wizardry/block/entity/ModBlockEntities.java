@@ -14,29 +14,32 @@ public class ModBlockEntities {
             DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, CulinaryWizardry.MOD_ID);
 
 
-    public static final RegistryObject<BlockEntityType<FoodAltarTier0BlockEntity>> FOOD_ALTAR_TIER0_ENTITY =
+    /**
+     * BLOCK ENTITIES
+     */
+    public static final RegistryObject<BlockEntityType<FoodAltarTier0BE>> FOOD_ALTAR_TIER0_ENTITY =
             BLOCK_ENTITIES.register("food_altar_tier0_block_entity", () ->
-                    BlockEntityType.Builder.of(FoodAltarTier0BlockEntity::new,
-                    ModBlocks.FOOD_ALTAR_TIER0.get()).build(null));
+                    BlockEntityType.Builder.of(FoodAltarTier0BE::new,
+                            ModBlocks.FOOD_ALTAR_TIER0.get()).build(null));
 
-    public static final RegistryObject<BlockEntityType<FoodAltarTier1BlockEntity>> FOOD_ALTAR_TIER1_ENTITY =
+    public static final RegistryObject<BlockEntityType<FoodAltarTier1BE>> FOOD_ALTAR_TIER1_ENTITY =
             BLOCK_ENTITIES.register("food_altar_tier1_block_entity", () ->
-                    BlockEntityType.Builder.of(FoodAltarTier1BlockEntity::new,
+                    BlockEntityType.Builder.of(FoodAltarTier1BE::new,
                             ModBlocks.FOOD_ALTAR_TIER1.get()).build(null));
 
-    public static final RegistryObject<BlockEntityType<FoodAltarTier2BlockEntity>> FOOD_ALTAR_TIER2_ENTITY =
+    public static final RegistryObject<BlockEntityType<FoodAltarTier2BE>> FOOD_ALTAR_TIER2_ENTITY =
             BLOCK_ENTITIES.register("food_altar_tier2_block_entity", () ->
-                    BlockEntityType.Builder.of(FoodAltarTier2BlockEntity::new,
+                    BlockEntityType.Builder.of(FoodAltarTier2BE::new,
                             ModBlocks.FOOD_ALTAR_TIER2.get()).build(null));
 
-    public static final RegistryObject<BlockEntityType<FoodAltarTier3BlockEntity>> FOOD_ALTAR_TIER3_ENTITY =
+    public static final RegistryObject<BlockEntityType<FoodAltarTier3BE>> FOOD_ALTAR_TIER3_ENTITY =
             BLOCK_ENTITIES.register("food_altar_tier3_block_entity", () ->
-                    BlockEntityType.Builder.of(FoodAltarTier3BlockEntity::new,
+                    BlockEntityType.Builder.of(FoodAltarTier3BE::new,
                             ModBlocks.FOOD_ALTAR_TIER3.get()).build(null));
 
-    public static final RegistryObject<BlockEntityType<FoodAltarTier4BlockEntity>> FOOD_ALTAR_TIER4_ENTITY =
+    public static final RegistryObject<BlockEntityType<FoodAltarTier4BE>> FOOD_ALTAR_TIER4_ENTITY =
             BLOCK_ENTITIES.register("food_altar_tier4_block_entity", () ->
-                    BlockEntityType.Builder.of(FoodAltarTier4BlockEntity::new,
+                    BlockEntityType.Builder.of(FoodAltarTier4BE::new,
                             ModBlocks.FOOD_ALTAR_TIER4.get()).build(null));
 
     public static final RegistryObject<BlockEntityType<SubAltarBlockEntity>> SUB_ALTAR_BLOCK_ENTITY =
@@ -50,7 +53,10 @@ public class ModBlockEntities {
                             ModBlocks.TRANSCENDENT_SUB_ALTAR_GRAINS.get(), ModBlocks.TRANSCENDENT_SUB_ALTAR_PROTEINS.get(), ModBlocks.TRANSCENDENT_SUB_ALTAR_SUGARS.get(),
                             ModBlocks.TRANSCENDENT_SUB_ALTAR_VEGETABLES.get()).build(null));
 
-    public static void register(IEventBus eventBus){
+    /**
+     * Registering Logic
+     */
+    public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);
     }
 }

@@ -2,6 +2,7 @@ package com.yupno.culinary_wizardry.block.entity.custom;
 
 import com.yupno.culinary_wizardry.block.custom.SubAltarBlock;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
+import com.yupno.culinary_wizardry.block.entity.custom.base.WrappedHandler;
 import com.yupno.culinary_wizardry.utils.EssenceCalculation;
 import com.yupno.culinary_wizardry.utils.FoodType;
 import net.minecraft.core.BlockPos;
@@ -32,9 +33,9 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.Nonnull;
 import java.util.Random;
 
-public class SubAltarBlockEntity extends BlockEntity{
+public class SubAltarBlockEntity extends BlockEntity {
 
-    private final ItemStackHandler itemHandler = new ItemStackHandler(1){
+    private final ItemStackHandler itemHandler = new ItemStackHandler(1) {
         @Override
         protected void onContentsChanged(int slot) {
             level.markAndNotifyBlock(getBlockPos(), level.getChunkAt(getBlockPos()), getBlockState(), getBlockState(), Block.UPDATE_CLIENTS, 0);
@@ -43,7 +44,7 @@ public class SubAltarBlockEntity extends BlockEntity{
 
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
-            return switch (slot){
+            return switch (slot) {
                 case 0 -> stack.getItem().isEdible();
                 default -> super.isItemValid(slot, stack);
             };
@@ -55,42 +56,39 @@ public class SubAltarBlockEntity extends BlockEntity{
     private final FoodType foodType;
     private final int tier;
     private int eatingProgress = 0;
-    private int maxEatingProgress = 28;
+    private final int maxEatingProgress = 28;
     private int essence = 0;
-    private int maxEssence;
+    private final int maxEssence;
     private int bufferEssence = 0;
-    private int bufferMaxEssence;
+    private final int bufferMaxEssence;
     private int tick = 0;
 
     public SubAltarBlockEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.SUB_ALTAR_BLOCK_ENTITY.get(), pPos, pBlockState);
 
-        this.foodType = ((SubAltarBlock)pBlockState.getBlock()).getType();
-        this.tier = ((SubAltarBlock)pBlockState.getBlock()).getTier();
+        this.foodType = ((SubAltarBlock) pBlockState.getBlock()).getType();
+        this.tier = ((SubAltarBlock) pBlockState.getBlock()).getTier();
         maxEssence = EssenceCalculation.calculateMaxEssence(tier);
         bufferMaxEssence = maxEssence / 20;
 
         this.data = new ContainerData() {
             public int get(int index) {
-                switch (index) {
-                    case 0: return SubAltarBlockEntity.this.eatingProgress;
-                    case 1: return SubAltarBlockEntity.this.maxEatingProgress;
-                    case 2: return SubAltarBlockEntity.this.essence;
-                    case 3: return SubAltarBlockEntity.this.maxEssence;
-                    case 4: return SubAltarBlockEntity.this.bufferEssence;
-                    case 5: return SubAltarBlockEntity.this.bufferMaxEssence;
-                    default: return 0;
-                }
+                return switch (index) {
+                    case 0 -> SubAltarBlockEntity.this.eatingProgress;
+                    case 1 -> SubAltarBlockEntity.this.maxEatingProgress;
+                    case 2 -> SubAltarBlockEntity.this.essence;
+                    case 3 -> SubAltarBlockEntity.this.maxEssence;
+                    case 4 -> SubAltarBlockEntity.this.bufferEssence;
+                    case 5 -> SubAltarBlockEntity.this.bufferMaxEssence;
+                    default -> 0;
+                };
             }
 
             public void set(int index, int value) {
-                switch(index) {
-                    case 0: SubAltarBlockEntity.this.eatingProgress = value; break;
-                    case 1: SubAltarBlockEntity.this.maxEatingProgress = value; break;
-                    case 2: SubAltarBlockEntity.this.essence = value; break;
-                    case 3: SubAltarBlockEntity.this.maxEssence = value; break;
-                    case 4: SubAltarBlockEntity.this.bufferEssence = value; break;
-                    case 5: SubAltarBlockEntity.this.bufferMaxEssence = value; break;
+                switch (index) {
+                    case 0 -> SubAltarBlockEntity.this.eatingProgress = value;
+                    case 2 -> SubAltarBlockEntity.this.essence = value;
+                    case 4 -> SubAltarBlockEntity.this.bufferEssence = value;
                 }
             }
 
@@ -110,7 +108,7 @@ public class SubAltarBlockEntity extends BlockEntity{
     }
 
     @Override
-    public void load(CompoundTag nbt) {
+    public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
         essence = nbt.getInt("essence");
@@ -118,57 +116,32 @@ public class SubAltarBlockEntity extends BlockEntity{
         bufferEssence = nbt.getInt("bufferEssence");
     }
 
-    public int getMaxEssence(){
-        return maxEssence;
-    }
-
-    public int getEssence(){
-        return essence;
-    }
-
-    public void setEssence(int newEssence){
-        essence = newEssence;
-    }
-
-    public int getTier(){
-        return tier;
-    }
-
-    public FoodType getFoodType(){
-        return foodType;
-    }
-
-    public ItemStackHandler getInventory(){
-        return itemHandler;
-    }
-
-    public void setStackInSlot(ItemStack stackInSlot){
-        itemHandler.setStackInSlot(0, stackInSlot);
-    }
-
-    public ItemStack getItemFromSlot(){
-        return itemHandler.getStackInSlot(0);
-    }
-
     /**
-     * RECIPE STUFF
-     * */
+     * Essence Processing Logic
+     */
 
     public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, SubAltarBlockEntity entity) {
-        if(entity.bufferEssence != 0 && entity.essence < entity.maxEssence){
+        bufferEssence(entity);
+        essenceProcessing(pLevel, pPos, pState, entity);
+    }
+
+    private static void bufferEssence(SubAltarBlockEntity entity) {
+        if (entity.bufferEssence != 0 && entity.essence < entity.maxEssence) {
             int temp = entity.maxEssence - entity.essence;
             entity.essence = Math.min(entity.essence + entity.bufferEssence, entity.maxEssence);
             entity.bufferEssence = Math.max(entity.bufferEssence - temp, 0);
         }
+    }
 
-        if(entity.itemHandler.getStackInSlot(0).isEdible() && entity.essence < entity.maxEssence && entity.bufferEssence == 0){
+    private static void essenceProcessing(Level pLevel, BlockPos pPos, BlockState pState, SubAltarBlockEntity entity) {
+        if (entity.itemHandler.getStackInSlot(0).isEdible() && entity.essence < entity.maxEssence && entity.bufferEssence == 0) {
             entity.eatingProgress++;
             setChanged(pLevel, pPos, pState);
 
-            if(entity.eatingProgress > entity.maxEatingProgress){
+            if (entity.eatingProgress > entity.maxEatingProgress) {
                 int temp = entity.essence + EssenceCalculation.calculateFoodEssence(entity.itemHandler.getStackInSlot(0), entity.tier, entity.getFoodType());
 
-                if(temp > entity.maxEssence)
+                if (temp > entity.maxEssence)
                     entity.bufferEssence = Math.min(temp - entity.maxEssence, entity.bufferMaxEssence);
 
                 entity.essence = Math.min(temp, entity.maxEssence);
@@ -177,7 +150,7 @@ public class SubAltarBlockEntity extends BlockEntity{
                 entity.itemHandler.extractItem(0, 1, false);
                 entity.resetFoodProgress();
             }
-        }else {
+        } else {
             entity.resetFoodProgress();
             setChanged(pLevel, pPos, pState);
         }
@@ -189,24 +162,24 @@ public class SubAltarBlockEntity extends BlockEntity{
 
     /**
      * Particles
-     * */
+     */
     private static final int TIME_BETWEEN_PARTICLES = 10;
 
     public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, SubAltarBlockEntity pBlockEntity) {
-        ItemStack item =  pBlockEntity.getItemFromSlot();
+        ItemStack item = pBlockEntity.getItemFromSlot();
         pBlockEntity.tick++;
 
-        if((pBlockEntity.getEssence() != pBlockEntity.getMaxEssence()) && !item.isEmpty() && pBlockEntity.tick % TIME_BETWEEN_PARTICLES == 0){
+        if ((pBlockEntity.getEssence() != pBlockEntity.getMaxEssence()) && !item.isEmpty() && pBlockEntity.tick % TIME_BETWEEN_PARTICLES == 0) {
             pBlockEntity.tick = 0;
             Random random = pLevel.random;
-            pLevel.addParticle(new ItemParticleOption(ParticleTypes.ITEM, item), pPos.getX() + 0.5, pPos.getY()+ 0.5, pPos.getZ() + 0.5,
+            pLevel.addParticle(new ItemParticleOption(ParticleTypes.ITEM, item), pPos.getX() + 0.5, pPos.getY() + 0.5, pPos.getZ() + 0.5,
                     random.nextFloat(-0.04F, 0.04F), -0.6, random.nextFloat(-0.04F, 0.04F));
         }
     }
 
     /**
      * Server Sync stuff
-     * */
+     */
 
     @Nullable
     @Override
@@ -215,7 +188,7 @@ public class SubAltarBlockEntity extends BlockEntity{
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public @NotNull CompoundTag getUpdateTag() {
         return saveWithoutMetadata();
     }
 
@@ -226,14 +199,14 @@ public class SubAltarBlockEntity extends BlockEntity{
 
 
     /**
-     * Basic stuff
-     * */
+     * Input / Output Logic (for Hoppers and the like)
+     */
 
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @javax.annotation.Nullable Direction side) {
         if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
-            if(side == null) {
+            if (side == null) {
                 return lazyItemHandler.cast();
             }
 
@@ -243,6 +216,10 @@ public class SubAltarBlockEntity extends BlockEntity{
         return super.getCapability(cap, side);
     }
 
+    /**
+     * Basic stuff
+     */
+
     @Override
     public void onLoad() {
         super.onLoad();
@@ -250,7 +227,7 @@ public class SubAltarBlockEntity extends BlockEntity{
     }
 
     @Override
-    public void invalidateCaps()  {
+    public void invalidateCaps() {
         super.invalidateCaps();
         lazyItemHandler.invalidate();
     }
@@ -262,5 +239,41 @@ public class SubAltarBlockEntity extends BlockEntity{
         }
 
         Containers.dropContents(this.level, this.worldPosition, inventory);
+    }
+
+    /**
+     * Getter and Setter Methods
+     */
+
+    public int getMaxEssence() {
+        return maxEssence;
+    }
+
+    public int getEssence() {
+        return essence;
+    }
+
+    public void setEssence(int newEssence) {
+        essence = newEssence;
+    }
+
+    public int getTier() {
+        return tier;
+    }
+
+    public FoodType getFoodType() {
+        return foodType;
+    }
+
+    public ItemStackHandler getInventory() {
+        return itemHandler;
+    }
+
+    public void setStackInSlot(ItemStack stackInSlot) {
+        itemHandler.setStackInSlot(0, stackInSlot);
+    }
+
+    public ItemStack getItemFromSlot() {
+        return itemHandler.getStackInSlot(0);
     }
 }

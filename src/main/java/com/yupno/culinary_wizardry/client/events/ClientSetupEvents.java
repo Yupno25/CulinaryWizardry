@@ -2,18 +2,13 @@ package com.yupno.culinary_wizardry.client.events;
 
 import com.yupno.culinary_wizardry.CulinaryWizardry;
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
-import com.yupno.culinary_wizardry.block.entity.render.FoodAltarTier0Renderer;
-import com.yupno.culinary_wizardry.block.entity.render.FoodAltarTier1Renderer;
-import com.yupno.culinary_wizardry.block.entity.render.FoodAltarTier2Renderer;
-import com.yupno.culinary_wizardry.block.entity.render.FoodAltarTier3Renderer;
-import com.yupno.culinary_wizardry.block.entity.render.FoodAltarTier4Renderer;
+import com.yupno.culinary_wizardry.block.entity.render.*;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import com.yupno.culinary_wizardry.block.entity.render.SubAltarRenderer;
 
-@Mod.EventBusSubscriber(modid= CulinaryWizardry.MOD_ID, bus= Mod.EventBusSubscriber.Bus.MOD, value= Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = CulinaryWizardry.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientSetupEvents {
     @SubscribeEvent
     public static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {

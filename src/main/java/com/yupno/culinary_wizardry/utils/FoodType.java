@@ -8,7 +8,7 @@ public enum FoodType {
     SUGARS("sugars"),
     VEGETABLES("vegetables");
 
-    private String name;
+    private final String name;
 
     FoodType(String name) {
         this.name = name;

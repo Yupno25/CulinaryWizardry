@@ -1,4 +1,4 @@
-package com.yupno.culinary_wizardry.block.entity.custom;
+package com.yupno.culinary_wizardry.block.entity.custom.base;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;

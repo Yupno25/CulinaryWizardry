@@ -14,6 +14,9 @@ public class ModMenuTypes {
     public static final DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(ForgeRegistries.CONTAINERS, CulinaryWizardry.MOD_ID);
 
+    /**
+     * MENUS
+     */
 
     public static final RegistryObject<MenuType<FoodAltarTier0Menu>> FOOD_ALTAR_TIER0_MENU =
             registerMenuType(FoodAltarTier0Menu::new, "food_altar_tier0_menu");
@@ -31,12 +34,15 @@ public class ModMenuTypes {
             registerMenuType(FoodAltarTier4Menu::new, "food_altar_tier4_menu");
 
 
+    /**
+     * Registering Logic
+     */
 
-    private static <T extends AbstractContainerMenu>RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name){
+    private static <T extends AbstractContainerMenu> RegistryObject<MenuType<T>> registerMenuType(IContainerFactory<T> factory, String name) {
         return MENUS.register(name, () -> IForgeMenuType.create(factory));
     }
 
-    public static void register(IEventBus eventBus){
+    public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);
     }
 }

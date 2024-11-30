@@ -1,8 +1,7 @@
-package com.yupno.culinary_wizardry.block.entity.custom;
+package com.yupno.culinary_wizardry.block.entity.custom.base;
 
-import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
+import com.yupno.culinary_wizardry.block.entity.custom.SubAltarBlockEntity;
 import com.yupno.culinary_wizardry.recipe.FoodAltarRecipe;
-import com.yupno.culinary_wizardry.screen.FoodAltarTier2Menu;
 import com.yupno.culinary_wizardry.utils.FoodType;
 import com.yupno.culinary_wizardry.utils.SimpleEssenceContainer;
 import com.yupno.culinary_wizardry.utils.SubAltarContainer;
@@ -10,84 +9,52 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implements MenuProvider {
-    protected final ContainerData data;
-    private int craftingProgress = 0;
-    private int maxCraftingProgress = 28;
-    private final int tier = 2;
-
-    public FoodAltarTier2BlockEntity(BlockPos pPos, BlockState pBlockState) {
-        super(ModBlockEntities.FOOD_ALTAR_TIER2_ENTITY.get(), pPos, pBlockState);
-        this.data = new ContainerData() {
-            public int get(int index) {
-                switch (index) {
-                    case 0:
-                        return FoodAltarTier2BlockEntity.this.craftingProgress;
-                    case 1:
-                        return FoodAltarTier2BlockEntity.this.maxCraftingProgress;
-                    case 2:
-                        return FoodAltarTier2BlockEntity.this.usedItemSlots[0];
-                    case 3:
-                        return FoodAltarTier2BlockEntity.this.usedItemSlots[1];
-                    case 4:
-                        return FoodAltarTier2BlockEntity.this.usedItemSlots[2];
-                    case 5:
-                        return FoodAltarTier2BlockEntity.this.usedItemSlots[3];
-                    case 6:
-                        return FoodAltarTier2BlockEntity.this.usedItemSlots[4];
-                    default:
-                        return 0;
-                }
-            }
-
-            public void set(int index, int value) {
-                switch (index) {
-                    case 0:
-                        FoodAltarTier2BlockEntity.this.craftingProgress = value;
-                        break;
-                    case 1:
-                        FoodAltarTier2BlockEntity.this.maxCraftingProgress = value;
-                        break;
-                    case 2:
-                        FoodAltarTier2BlockEntity.this.usedItemSlots[0] = value;
-                        break;
-                    case 3:
-                        FoodAltarTier2BlockEntity.this.usedItemSlots[1] = value;
-                        break;
-                    case 4:
-                        FoodAltarTier2BlockEntity.this.usedItemSlots[2] = value;
-                        break;
-                    case 5:
-                        FoodAltarTier2BlockEntity.this.usedItemSlots[3] = value;
-                        break;
-                    case 6:
-                        FoodAltarTier2BlockEntity.this.usedItemSlots[4] = value;
-                        break;
-                }
-            }
-
-            public int getCount() {
-                return 7;
-            }
-        };
+/**
+ * ONLY FOR TIER 2 ALTAR AND ABOVE
+ */
+public class BaseFoodAltarBE extends CoreFoodAltarBE {
+    public BaseFoodAltarBE(BlockEntityType<?> pType, BlockPos pPos, BlockState pBlockState, int tier) {
+        super(pType, pPos, pBlockState, tier);
     }
+
+    public Vec3i[] subAltarShifts;
+
+    public final Vec3i[] xSubAltarShifts = new Vec3i[]{
+            new Vec3i(0, 0, 3),
+            new Vec3i(0, 0, -3),
+            new Vec3i(3, 0, 2),
+            new Vec3i(3, 0, -2),
+            new Vec3i(-3, 0, 2),
+            new Vec3i(-3, 0, -2),
+    };
+
+    public final Vec3i[] zSubAltarShifts = new Vec3i[]{
+            new Vec3i(3, 0, 0),
+            new Vec3i(-3, 0, 0),
+            new Vec3i(2, 0, 3),
+            new Vec3i(-2, 0, 3),
+            new Vec3i(2, 0, -3),
+            new Vec3i(-2, 0, -3),
+    };
+
+    public final Map<FoodType, SubAltarContainer> subAltars = Map.of(
+            FoodType.CULINARY, new SubAltarContainer(FoodType.CULINARY),
+            FoodType.FRUITS, new SubAltarContainer(FoodType.FRUITS),
+            FoodType.GRAINS, new SubAltarContainer(FoodType.GRAINS),
+            FoodType.PROTEINS, new SubAltarContainer(FoodType.PROTEINS),
+            FoodType.SUGARS, new SubAltarContainer(FoodType.SUGARS),
+            FoodType.VEGETABLES, new SubAltarContainer(FoodType.VEGETABLES)
+    );
 
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag) {
@@ -97,11 +64,11 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
         tag.putBoolean("isComplete", isFullAltar());
         // Saves which direction the altarShape is in
         int directionX;
-        if(subAltarShifts == null){
+        if (subAltarShifts == null) {
             directionX = 0;
         } else if (subAltarShifts[0].getZ() == 3) {
             directionX = 1;
-        }else {
+        } else {
             directionX = 2;
         }
         tag.putInt("directionIsX", directionX);
@@ -117,7 +84,7 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
     }
 
     @Override
-    public void load(CompoundTag nbt) {
+    public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
         craftingProgress = nbt.getInt("progress");
@@ -125,7 +92,7 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
         setFullAltar(nbt.getBoolean("isComplete"));
 
         // Loads which direction the altarShape is in
-        if(nbt.getInt("directionIsX") == 1){
+        if (nbt.getInt("directionIsX") == 1) {
             subAltarShifts = xSubAltarShifts;
         } else if (nbt.getInt("directionIsX") == 2) {
             subAltarShifts = zSubAltarShifts;
@@ -138,7 +105,11 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
         }
     }
 
-    private void update() {
+    /**
+     * Multiblock Logic
+     */
+
+    public void checkForMultiblock() {
         // Checks for direction of subAltars
         if (level.getBlockEntity(worldPosition.offset(xSubAltarShifts[0])) instanceof SubAltarBlockEntity) {
             subAltarShifts = xSubAltarShifts;
@@ -176,27 +147,42 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
         }
     }
 
-    private void failedUpdate() {
+    public void failedUpdate() {
         setFullAltar(false);
         for (FoodType foodType : FoodType.values()) {
             subAltars.get(foodType).setSubAltarBlockEntity(null);
         }
     }
 
-    public int getTier() {
-        return tier;
+    /**
+     * Particles
+     */
+
+    public static void craftingAnimationParticles(Level pLevel, BlockPos blockPos, BaseFoodAltarBE pBlockEntity) {
+        if (pBlockEntity.subAltarShifts != null && pBlockEntity.craftingProgress > 0 && pBlockEntity.craftingProgress % 3 == 0) {
+            for (Vec3i offset : pBlockEntity.subAltarShifts) {
+                BlockPos pos = blockPos.offset(offset);
+
+                pLevel.addParticle(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                        -offset.getX() * 0.1, -offset.getY() * 0.1, -offset.getZ() * 0.1);
+            }
+        }
+
+        if (pBlockEntity.craftingProgress == pBlockEntity.maxCraftingProgress) {
+            Random random = new Random();
+            for (int i = 0; i < 12; i++) {
+                pLevel.addParticle(ParticleTypes.END_ROD, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5,
+                        random.nextFloat(-0.1F, 0.1F), 0.2, random.nextFloat(-0.1F, 0.1F));
+
+            }
+        }
     }
 
     /**
-     * RECIPE STUFF
+     * Crafting Logic
      */
-    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier2BlockEntity entity) {
-        entity.internalTicks++;
-        if (entity.internalTicks % 20 == 0) {
-            entity.internalTicks = 0;
-            entity.update();
-        }
 
+    public static void craftingLogic(BaseFoodAltarBE entity, Level pLevel, BlockPos pPos, BlockState pState) {
         if (entity.isFullAltar() && checkOrCraftItem(entity, false)) {
             entity.craftingProgress++;
             pLevel.markAndNotifyBlock(pPos, pLevel.getChunkAt(pPos), pState, pState, Block.UPDATE_CLIENTS, 0);
@@ -234,7 +220,7 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
         }
     }
 
-    private static boolean checkOrCraftItem(FoodAltarTier2BlockEntity entity, boolean craft) {
+    public static boolean checkOrCraftItem(BaseFoodAltarBE entity, boolean craft) {
         for (FoodType foodType : FoodType.values()) {
             if (entity.subAltars.get(foodType).getSubAltarBlockEntity() == null)
                 return false;
@@ -278,12 +264,10 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
             }
 
             if (craft) {
-                if (match.isPresent()) {
-                    entity.itemHandler.setStackInSlot(5, new ItemStack(match.get().getResultItem().getItem(),
-                            entity.itemHandler.getStackInSlot(5).getCount() + 1));
+                entity.itemHandler.setStackInSlot(5, new ItemStack(match.get().getResultItem().getItem(),
+                        entity.itemHandler.getStackInSlot(5).getCount() + 1));
 
-                    entity.resetProgress();
-                }
+                entity.resetProgress();
             } else {
                 for (FoodType foodType : FoodType.values()) {
                     SubAltarContainer subAltar = entity.subAltars.get(foodType);
@@ -299,7 +283,20 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
         return false;
     }
 
-    private void resetProgress() {
+    public static int calculateEssence(BlockEntity entity, FoodType foodType) {
+        SubAltarContainer subAltar = null;
+        if (entity instanceof BaseFoodAltarBE) {
+            subAltar = ((BaseFoodAltarBE) entity).subAltars.get(foodType);
+        }
+
+        if (subAltar.getCurrentEssenceCost() != 0 && (subAltar.getCurrentEssenceCost() - subAltar.getRemainingEssenceCost()) == 0) {
+            return subAltar.getSubAltarBlockEntity().getEssence() + subAltar.getCurrentEssenceCost();
+        } else {
+            return subAltar.getSubAltarBlockEntity().getEssence() + (subAltar.getCurrentEssenceCost() - subAltar.getRemainingEssenceCost());
+        }
+    }
+
+    public void resetProgress() {
         this.craftingProgress = 0;
         for (FoodType foodType : FoodType.values()) {
             subAltars.get(foodType).setCurrentEssenceCost(0);
@@ -307,41 +304,5 @@ public class FoodAltarTier2BlockEntity extends BaseFoodAltarBlockEntity implemen
             subAltars.get(foodType).setCurrentEssenceOverflow(0);
         }
         level.markAndNotifyBlock(getBlockPos(), level.getChunkAt(getBlockPos()), getBlockState(), getBlockState(), Block.UPDATE_CLIENTS, 0);
-    }
-
-    /**
-     * Particles
-     */
-
-    public static void clientTick(Level pLevel, BlockPos blockPos, BlockState pState, FoodAltarTier2BlockEntity pBlockEntity) {
-        // Make it a separate method and put into basefoodaltar
-        if (pBlockEntity.subAltarShifts != null && pBlockEntity.craftingProgress > 0 && pBlockEntity.craftingProgress % 3 == 0) {
-            for (Vec3i offset : pBlockEntity.subAltarShifts) {
-                BlockPos pos = blockPos.offset(offset);
-
-                pLevel.addParticle(ParticleTypes.END_ROD, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
-                        -offset.getX() * 0.1, -offset.getY() * 0.1, -offset.getZ() * 0.1);
-            }
-        }
-
-        if(pBlockEntity.craftingProgress == pBlockEntity.maxCraftingProgress){
-            Random random = new Random();
-            for (int i = 0; i < 12; i++) {
-                pLevel.addParticle(ParticleTypes.END_ROD, blockPos.getX() + 0.5, blockPos.getY() + 0.5, blockPos.getZ() + 0.5,
-                        random.nextFloat(-0.1F, 0.1F), 0.2, random.nextFloat(-0.1F, 0.1F));
-
-            }
-        }
-    }
-
-    @Override
-    public Component getDisplayName() {
-        return new TranslatableComponent("block.culinary_wizardry.food_altar_tier2");
-    }
-
-    @Nullable
-    @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory playerInventory, Player pPlayer) {
-        return new FoodAltarTier2Menu(pContainerId, playerInventory, this, this.data);
     }
 }

@@ -1,6 +1,7 @@
 package com.yupno.culinary_wizardry.block.entity.custom;
 
 import com.yupno.culinary_wizardry.block.entity.ModBlockEntities;
+import com.yupno.culinary_wizardry.block.entity.custom.base.WrappedHandler;
 import com.yupno.culinary_wizardry.recipe.FoodAltarRecipe;
 import com.yupno.culinary_wizardry.screen.FoodAltarTier0Menu;
 import com.yupno.culinary_wizardry.utils.EssenceCalculation;
@@ -8,9 +9,8 @@ import com.yupno.culinary_wizardry.utils.FoodType;
 import com.yupno.culinary_wizardry.utils.SimpleEssenceContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ItemParticleOption;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.Packet;
@@ -37,9 +37,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 import java.util.Optional;
-import java.util.Random;
 
-public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvider {
+public class FoodAltarTier0BE extends BlockEntity implements MenuProvider {
     private final ItemStackHandler itemHandler = new ItemStackHandler(3) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -62,55 +61,33 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
     private int remainingCulinaryEssenceCost = 0;
     private float currentCulinaryEssenceOverflow = 0;
     private int progress = 0;
-    private int maxProgress = 72;
+    private final int maxProgress = 72;
     private int eatingProgress = 0;
-    private int maxEatingProgress = 28;
+    private final int maxEatingProgress = 28;
     private int culinaryEssence = 0;
-    private int maxCulinaryEssence = 1000;
+    private final int maxCulinaryEssence = 1000;
     private final int tier = 0;
 
-    public FoodAltarTier0BlockEntity(BlockPos pPos, BlockState pBlockState) {
+    public FoodAltarTier0BE(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.FOOD_ALTAR_TIER0_ENTITY.get(), pPos, pBlockState);
         this.data = new ContainerData() {
             public int get(int index) {
-                switch (index) {
-                    case 0:
-                        return FoodAltarTier0BlockEntity.this.progress;
-                    case 1:
-                        return FoodAltarTier0BlockEntity.this.maxProgress;
-                    case 2:
-                        return FoodAltarTier0BlockEntity.this.eatingProgress;
-                    case 3:
-                        return FoodAltarTier0BlockEntity.this.maxEatingProgress;
-                    case 4:
-                        return FoodAltarTier0BlockEntity.this.culinaryEssence;
-                    case 5:
-                        return FoodAltarTier0BlockEntity.this.maxCulinaryEssence;
-                    default:
-                        return 0;
-                }
+                return switch (index) {
+                    case 0 -> FoodAltarTier0BE.this.progress;
+                    case 1 -> FoodAltarTier0BE.this.maxProgress;
+                    case 2 -> FoodAltarTier0BE.this.eatingProgress;
+                    case 3 -> FoodAltarTier0BE.this.maxEatingProgress;
+                    case 4 -> FoodAltarTier0BE.this.culinaryEssence;
+                    case 5 -> FoodAltarTier0BE.this.maxCulinaryEssence;
+                    default -> 0;
+                };
             }
 
             public void set(int index, int value) {
                 switch (index) {
-                    case 0:
-                        FoodAltarTier0BlockEntity.this.progress = value;
-                        break;
-                    case 1:
-                        FoodAltarTier0BlockEntity.this.maxProgress = value;
-                        break;
-                    case 2:
-                        FoodAltarTier0BlockEntity.this.eatingProgress = value;
-                        break;
-                    case 3:
-                        FoodAltarTier0BlockEntity.this.maxEatingProgress = value;
-                        break;
-                    case 4:
-                        FoodAltarTier0BlockEntity.this.culinaryEssence = value;
-                        break;
-                    case 5:
-                        FoodAltarTier0BlockEntity.this.maxCulinaryEssence = value;
-                        break;
+                    case 0 -> FoodAltarTier0BE.this.progress = value;
+                    case 2 -> FoodAltarTier0BE.this.eatingProgress = value;
+                    case 4 -> FoodAltarTier0BE.this.culinaryEssence = value;
                 }
             }
 
@@ -133,7 +110,7 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
     }
 
     @Override
-    public void load(CompoundTag nbt) {
+    public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
         itemHandler.deserializeNBT(nbt.getCompound("inventory"));
         culinaryEssence = nbt.getInt("culinaryEssence");
@@ -144,16 +121,16 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
         currentCulinaryEssenceOverflow = nbt.getFloat("currentOverflow");
     }
 
-    public int getTier() {
-        return tier;
-    }
-
     /**
      * RECIPE STUFF
      */
 
-    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier0BlockEntity entity) {
-        // Handles Food to Culinary Essence conversion
+    public static void serverTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier0BE entity) {
+        culinaryEssenceConversion(pLevel, pPos, pState, entity);
+        craftingLogic(pLevel, pPos, pState, entity);
+    }
+
+    private static void culinaryEssenceConversion(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier0BE entity) {
         if (entity.itemHandler.getStackInSlot(2).isEdible() && entity.culinaryEssence < entity.maxCulinaryEssence) {
             entity.eatingProgress++;
             setChanged(pLevel, pPos, pState);
@@ -169,11 +146,11 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
             entity.resetFoodProgress();
             setChanged(pLevel, pPos, pState);
         }
+    }
 
-
+    private static void craftingLogic(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier0BE entity) {
         if (checkOrCraftItem(entity, false)) {
             entity.progress++;
-
 
             setChanged(pLevel, pPos, pState);
             if (entity.progress > entity.maxProgress) {
@@ -200,7 +177,7 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
         }
     }
 
-    private static boolean checkOrCraftItem(FoodAltarTier0BlockEntity entity, boolean craft) {
+    private static boolean checkOrCraftItem(FoodAltarTier0BE entity, boolean craft) {
         Level level = entity.level;
         SimpleEssenceContainer inventory;
 
@@ -259,16 +236,14 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
 
     /**
      * Particles
-     * */
-    private static final int TIME_BETWEEN_PARTICLES = 10;
-
-    public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier0BlockEntity pBlockEntity) {
+     */
+    public static void clientTick(Level pLevel, BlockPos pPos, BlockState pState, FoodAltarTier0BE pBlockEntity) {
 
     }
 
 
     /**
-     * Servertick stuff
+     * Server Sync stuff
      */
 
     @Nullable
@@ -278,12 +253,17 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
     }
 
     @Override
-    public CompoundTag getUpdateTag() {
+    public @NotNull CompoundTag getUpdateTag() {
         return saveWithoutMetadata();
     }
 
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
+        super.onDataPacket(net, pkt);
+    }
+
     /**
-     * Basic stuff
+     * Input / Output Logic (for Hoppers and the like)
      */
 
     @Nonnull
@@ -305,14 +285,17 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
         return super.getCapability(cap, side);
     }
 
+    /**
+     * Basic stuff
+     */
     @Override
-    public Component getDisplayName() {
+    public @NotNull Component getDisplayName() {
         return new TranslatableComponent("block.culinary_wizardry.food_altar_tier0");
     }
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int pContainerId, Inventory playerInventory, Player pPlayer) {
+    public AbstractContainerMenu createMenu(int pContainerId, @NotNull Inventory playerInventory, @NotNull Player pPlayer) {
         return new FoodAltarTier0Menu(pContainerId, playerInventory, this, this.data);
     }
 
@@ -335,5 +318,13 @@ public class FoodAltarTier0BlockEntity extends BlockEntity implements MenuProvid
         }
 
         Containers.dropContents(this.level, this.worldPosition, inventory);
+    }
+
+    /**
+     * Getter and Setter Methods
+     */
+
+    public int getTier() {
+        return tier;
     }
 }

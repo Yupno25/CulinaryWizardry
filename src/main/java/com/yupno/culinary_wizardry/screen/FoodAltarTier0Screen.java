@@ -3,12 +3,14 @@ package com.yupno.culinary_wizardry.screen;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.yupno.culinary_wizardry.CulinaryWizardry;
+import com.yupno.culinary_wizardry.screen.base.ScreenHelper;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0Menu> {
     private static final ResourceLocation TEXTURE =
@@ -21,7 +23,7 @@ public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0
     }
 
     @Override
-    protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+    protected void renderBg(@NotNull PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, TEXTURE);
@@ -70,26 +72,22 @@ public class FoodAltarTier0Screen extends AbstractContainerScreen<FoodAltarTier0
         }
 
         /** TOOLTIP FOR CULINARY ESSENCE BAR */
-        if (isMouseAboveArea(pMouseX, pMouseY, x + 151, y + 9, 17, 51)) {
+        if (ScreenHelper.isMouseAboveArea(pMouseX, pMouseY, x + 151, y + 9, 17, 51)) {
             renderTooltip(pPoseStack, new TranslatableComponent("translatable.culinary_essence")
                     .append(": " + String.format("%,d", menu.getCulinaryEssence()) + "/" + String.format("%,d", menu.getMaxCulinaryEssence())), pMouseX, pMouseY);
         }
     }
 
     @Override
-    public void render(PoseStack pPoseStack, int mouseX, int mouseY, float delta) {
+    public void render(@NotNull PoseStack pPoseStack, int mouseX, int mouseY, float delta) {
         renderBackground(pPoseStack);
         super.render(pPoseStack, mouseX, mouseY, delta);
         renderTooltip(pPoseStack, mouseX, mouseY);
     }
 
     @Override
-    protected void renderLabels(PoseStack pPoseStack, int pMouseX, int pMouseY) {
-        this.font.draw(pPoseStack, this.title, (float)this.titleLabelX, (float)this.titleLabelY - tallerInv, 4210752);
-        this.font.draw(pPoseStack, this.playerInventoryTitle, (float)this.inventoryLabelX, (float)this.inventoryLabelY  + tallerInv, 4210752);
-    }
-
-    private boolean isMouseAboveArea(int pMouseX, int pMouseY, int x, int y, int width, int height) {
-        return (pMouseX >= x && pMouseX <= x + width) && (pMouseY >= y && pMouseY <= y + height);
+    protected void renderLabels(@NotNull PoseStack pPoseStack, int pMouseX, int pMouseY) {
+        this.font.draw(pPoseStack, this.title, (float) this.titleLabelX, (float) this.titleLabelY - tallerInv, 4210752);
+        this.font.draw(pPoseStack, this.playerInventoryTitle, (float) this.inventoryLabelX, (float) this.inventoryLabelY + tallerInv, 4210752);
     }
 }

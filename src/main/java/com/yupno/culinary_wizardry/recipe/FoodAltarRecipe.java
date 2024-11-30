@@ -12,6 +12,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -49,7 +50,7 @@ public class FoodAltarRecipe implements Recipe<SimpleEssenceContainer> {
      */
 
     @Override
-    public boolean matches(SimpleEssenceContainer pContainer, Level pLevel) {
+    public boolean matches(SimpleEssenceContainer pContainer, @NotNull Level pLevel) {
         if (pContainer.getCulinaryEssence() < culinaryEssence || pContainer.getFruitsEssence() < fruitsEssence ||
                 pContainer.getGrainsEssence() < grainsEssence || pContainer.getProteinsEssence() < proteinsEssence ||
                 pContainer.getSugarsEssence() < sugarsEssence || pContainer.getVegetablesEssence() < vegetablesEssence)
@@ -60,8 +61,8 @@ public class FoodAltarRecipe implements Recipe<SimpleEssenceContainer> {
 
         // Converts the recipeItems into an ItemStack List
         List<String> recipeList = new ArrayList<>();
-        for (int i = 0; i < recipeItems.size(); i++) {
-            recipeList.add(recipeItems.get(i).getItems()[0].getItem().toString());
+        for (Ingredient recipeItem : recipeItems) {
+            recipeList.add(recipeItem.getItems()[0].getItem().toString());
         }
 
         if (recipeList.size() > 1 && pContainer.getTier() == 0)
@@ -75,15 +76,15 @@ public class FoodAltarRecipe implements Recipe<SimpleEssenceContainer> {
                 containerList.add(pContainer.getItem(i).getItem().toString());
         }
 
-        for (int i = 0; i < containerList.size(); i++) {
-            recipeList.remove(containerList.get(i));
+        for (String s : containerList) {
+            recipeList.remove(s);
         }
 
         return recipeList.isEmpty();
     }
 
     @Override
-    public ItemStack assemble(SimpleEssenceContainer pContainer) {
+    public @NotNull ItemStack assemble(@NotNull SimpleEssenceContainer pContainer) {
         return output;
     }
 
@@ -93,14 +94,14 @@ public class FoodAltarRecipe implements Recipe<SimpleEssenceContainer> {
     }
 
     @Override
-    public ItemStack getResultItem() {
+    public @NotNull ItemStack getResultItem() {
         return output.copy();
     }
 
     public List<String> getRecipeList() {
         List<String> recipeList = new ArrayList<>();
-        for (int i = 0; i < recipeItems.size(); i++) {
-            recipeList.add(recipeItems.get(i).getItems()[0].getItem().toString());
+        for (Ingredient recipeItem : recipeItems) {
+            recipeList.add(recipeItem.getItems()[0].getItem().toString());
         }
         return recipeList;
     }
@@ -130,22 +131,14 @@ public class FoodAltarRecipe implements Recipe<SimpleEssenceContainer> {
     }
 
     public int getEssenceCostByType(FoodType foodType) {
-        switch (foodType) {
-            case CULINARY:
-                return culinaryEssence;
-            case FRUITS:
-                return fruitsEssence;
-            case GRAINS:
-                return grainsEssence;
-            case PROTEINS:
-                return proteinsEssence;
-            case SUGARS:
-                return sugarsEssence;
-            case VEGETABLES:
-                return vegetablesEssence;
-            default:
-                return 0;
-        }
+        return switch (foodType) {
+            case CULINARY -> culinaryEssence;
+            case FRUITS -> fruitsEssence;
+            case GRAINS -> grainsEssence;
+            case PROTEINS -> proteinsEssence;
+            case SUGARS -> sugarsEssence;
+            case VEGETABLES -> vegetablesEssence;
+        };
     }
 
     public int getTier() {
@@ -153,17 +146,17 @@ public class FoodAltarRecipe implements Recipe<SimpleEssenceContainer> {
     }
 
     @Override
-    public ResourceLocation getId() {
+    public @NotNull ResourceLocation getId() {
         return id;
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<?> getSerializer() {
         return Serializer.INSTANCE;
     }
 
     @Override
-    public RecipeType<?> getType() {
+    public @NotNull RecipeType<?> getType() {
         return Type.INSTANCE;
     }
 
@@ -181,7 +174,7 @@ public class FoodAltarRecipe implements Recipe<SimpleEssenceContainer> {
                 new ResourceLocation(CulinaryWizardry.MOD_ID, "food_altar");
 
         @Override
-        public FoodAltarRecipe fromJson(ResourceLocation id, JsonObject json) {
+        public @NotNull FoodAltarRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject json) {
             ItemStack output = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "output"));
 
             JsonArray ingredients = GsonHelper.getAsJsonArray(json, "ingredients");
@@ -208,7 +201,7 @@ public class FoodAltarRecipe implements Recipe<SimpleEssenceContainer> {
         /* MAKE SURE FROM AND TO NETWORK HAVE THE SAME ORDER OF OPERATIONS */
 
         @Override
-        public FoodAltarRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
+        public FoodAltarRecipe fromNetwork(@NotNull ResourceLocation id, FriendlyByteBuf buf) {
             NonNullList<Ingredient> inputs = NonNullList.withSize(buf.readInt(), Ingredient.EMPTY);
 
             for (int i = 0; i < inputs.size(); i++) {

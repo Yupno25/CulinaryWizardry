@@ -130,7 +130,7 @@ public class ModBlocks {
 
 
     /**
-     * OTHER STUFF
+     * Registering Logic
      */
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block, CreativeModeTab tab) {

@@ -22,6 +22,10 @@ public class SimpleEssenceContainer extends SimpleContainer {
         this.tier = tier;
     }
 
+    /**
+     * Getter Methods
+     */
+
     public int getCulinaryEssence() {
         return culinaryEssence;
     }

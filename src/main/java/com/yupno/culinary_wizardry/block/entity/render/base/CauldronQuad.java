@@ -1,4 +1,4 @@
-package com.yupno.culinary_wizardry.utils;
+package com.yupno.culinary_wizardry.block.entity.render.base;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
