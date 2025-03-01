@@ -127,7 +127,7 @@ public class BaseFoodAltarBE extends CoreFoodAltarBE {
                 BlockEntity blockEntity = level.getBlockEntity(worldPosition.offset(offset));
 
                 if (blockEntity instanceof SubAltarBlockEntity subAltarBlock) {
-                    if (foodTypes.contains(subAltarBlock.getFoodType()) && subAltarBlock.getTier() == getTier()) {
+                    if (foodTypes.contains(subAltarBlock.getFoodType()) && subAltarBlock.getTier() <= getTier()) {
                         foodTypes.remove(subAltarBlock.getFoodType());
                         // Caches SubAltarBlockEntities
                         subAltars.get(subAltarBlock.getFoodType()).setSubAltarBlockEntity(subAltarBlock);
