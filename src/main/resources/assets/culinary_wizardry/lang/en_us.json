@@ -2,11 +2,13 @@
   "item.culinary_wizardry.example_item": "Example Item",
 
   "block.culinary_wizardry.example_block": "Example Block",
+  "block.culinary_wizardry.food_altar": "Gastromancer's Altar",
   "block.culinary_wizardry.food_altar_tier0": "Crude Gastromancer's Altar",
   "block.culinary_wizardry.food_altar_tier1": "Bad Gastromancer's Altar",
   "block.culinary_wizardry.food_altar_tier2": "Good Gastromancer's Altar",
   "block.culinary_wizardry.food_altar_tier3": "Excellent Gastromancer's Altar",
   "block.culinary_wizardry.food_altar_tier4": "Transcendent Gastromancer's Altar",
+  "block.culinary_wizardry.sub_altar": "Sub Altar",
   "block.culinary_wizardry.low_sub_altar_culinary": "Low Culinary Sub Altar",
   "block.culinary_wizardry.mid_sub_altar_culinary": "Mid Culinary Sub Altar",
   "block.culinary_wizardry.mid_sub_altar_fruits": "Mid Fruits Sub Altar",

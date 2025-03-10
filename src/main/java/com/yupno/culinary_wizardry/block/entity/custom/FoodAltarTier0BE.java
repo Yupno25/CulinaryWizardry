@@ -65,11 +65,13 @@ public class FoodAltarTier0BE extends BlockEntity implements MenuProvider {
     private int eatingProgress = 0;
     private final int maxEatingProgress = 28;
     private int culinaryEssence = 0;
-    private final int maxCulinaryEssence = 1000;
+    private final int maxCulinaryEssence;
     private final int tier = 0;
 
     public FoodAltarTier0BE(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.FOOD_ALTAR_TIER0_ENTITY.get(), pPos, pBlockState);
+        maxCulinaryEssence = EssenceCalculation.calculateMaxEssence(tier);
+
         this.data = new ContainerData() {
             public int get(int index) {
                 return switch (index) {

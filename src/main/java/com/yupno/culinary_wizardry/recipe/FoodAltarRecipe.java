@@ -30,8 +30,10 @@ public class FoodAltarRecipe implements Recipe<SimpleEssenceContainer> {
     private final int tier;
     private final NonNullList<Ingredient> recipeItems;
 
-    public FoodAltarRecipe(ResourceLocation id, ItemStack output, int culinaryEssence, int fruitsEssence, int grainsEssence,
-                           int proteinsEssence, int sugarsEssence, int vegetablesEssence, int tier, NonNullList<Ingredient> recipeItems) {
+    public FoodAltarRecipe(
+        ResourceLocation id, ItemStack output, int culinaryEssence, int fruitsEssence, int grainsEssence,
+        int proteinsEssence, int sugarsEssence, int vegetablesEssence, int tier, NonNullList<Ingredient> recipeItems
+    ) {
         this.id = id;
         this.output = output;
         this.culinaryEssence = culinaryEssence;
@@ -52,11 +54,11 @@ public class FoodAltarRecipe implements Recipe<SimpleEssenceContainer> {
     @Override
     public boolean matches(SimpleEssenceContainer pContainer, @NotNull Level pLevel) {
         if (pContainer.getCulinaryEssence() < culinaryEssence || pContainer.getFruitsEssence() < fruitsEssence ||
-                pContainer.getGrainsEssence() < grainsEssence || pContainer.getProteinsEssence() < proteinsEssence ||
-                pContainer.getSugarsEssence() < sugarsEssence || pContainer.getVegetablesEssence() < vegetablesEssence)
+            pContainer.getGrainsEssence() < grainsEssence || pContainer.getProteinsEssence() < proteinsEssence ||
+            pContainer.getSugarsEssence() < sugarsEssence || pContainer.getVegetablesEssence() < vegetablesEssence)
             return false;
 
-        if (pContainer.getTier() < tier)
+        if (pContainer.getTier() < tier || recipeItems.size() > 5 || recipeItems.size() == 0 || (tier == 0 && recipeItems.size() > 1))
             return false;
 
         // Converts the recipeItems into an ItemStack List
@@ -146,6 +148,11 @@ public class FoodAltarRecipe implements Recipe<SimpleEssenceContainer> {
     }
 
     @Override
+    public @NotNull NonNullList<Ingredient> getIngredients() {
+        return recipeItems;
+    }
+
+    @Override
     public @NotNull ResourceLocation getId() {
         return id;
     }
@@ -171,7 +178,7 @@ public class FoodAltarRecipe implements Recipe<SimpleEssenceContainer> {
     public static class Serializer implements RecipeSerializer<FoodAltarRecipe> {
         public static final Serializer INSTANCE = new Serializer();
         public static final ResourceLocation ID =
-                new ResourceLocation(CulinaryWizardry.MOD_ID, "food_altar");
+            new ResourceLocation(CulinaryWizardry.MOD_ID, "food_altar");
 
         @Override
         public @NotNull FoodAltarRecipe fromJson(@NotNull ResourceLocation id, @NotNull JsonObject json) {
@@ -192,8 +199,10 @@ public class FoodAltarRecipe implements Recipe<SimpleEssenceContainer> {
                 inputs.set(i, Ingredient.fromJson(ingredients.get(i)));
             }
 
-            return new FoodAltarRecipe(id, output, culinaryEssence, fruitsEssence, grainsEssence,
-                    proteinsEssence, sugarsEssence, vegetablesEssence, tier, inputs);
+            return new FoodAltarRecipe(
+                id, output, culinaryEssence, fruitsEssence, grainsEssence,
+                proteinsEssence, sugarsEssence, vegetablesEssence, tier, inputs
+            );
         }
 
         /* MAKE SURE FROM AND TO NETWORK HAVE THE SAME ORDER OF OPERATIONS */
@@ -216,8 +225,10 @@ public class FoodAltarRecipe implements Recipe<SimpleEssenceContainer> {
             int sugarsEssence = buf.readInt();
             int vegetablesEssence = buf.readInt();
             int tier = buf.readInt();
-            return new FoodAltarRecipe(id, output, culinaryEssence, fruitsEssence, grainsEssence,
-                    proteinsEssence, sugarsEssence, vegetablesEssence, tier, inputs);
+            return new FoodAltarRecipe(
+                id, output, culinaryEssence, fruitsEssence, grainsEssence,
+                proteinsEssence, sugarsEssence, vegetablesEssence, tier, inputs
+            );
         }
 
         @Override

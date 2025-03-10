@@ -3,15 +3,6 @@
   "ingredients": [
     {
       "item": "minecraft:diamond"
-    },
-    {
-      "item": "minecraft:diamond"
-    },
-    {
-      "item": "minecraft:diamond"
-    },
-    {
-      "item": "minecraft:diamond"
     }
   ],
   "output": {
@@ -23,5 +14,5 @@
   "proteins_essence": 0,
   "sugars_essence": 25,
   "vegetables_essence": 0,
-  "tier": 1
+  "tier": 0
 }

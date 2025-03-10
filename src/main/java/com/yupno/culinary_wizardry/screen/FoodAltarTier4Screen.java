@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class FoodAltarTier4Screen extends AbstractContainerScreen<FoodAltarTier4Menu> {
     private static final ResourceLocation TEXTURE =
-            new ResourceLocation(CulinaryWizardry.MOD_ID, "textures/gui/food_altar_tier2_gui.png");
+            new ResourceLocation(CulinaryWizardry.MOD_ID, "textures/gui/food_altar_gui.png");
     private final int imageHeight = 172;
     private final ScreenHelper screenHelper = new ScreenHelper();
 
